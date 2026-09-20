@@ -1,0 +1,203 @@
+@import "tailwindcss";
+
+:root {
+  --color-bg: #F8FAF8;
+  --color-primary: #1E3A2B;
+  --color-secondary: #8FA98F;
+  --color-tint: #C3D5BE;
+  --color-text-primary: #1E3A2B;
+  --color-text-muted: #4A584E;
+  --color-surface: #FFFFFF;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  html, body {
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #F8FAF8;
+    color: #1E3A2B;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    overflow-x: hidden;
+  }
+}
+
+/* Studio Radial Lighting matching #F8FAF8 brand background */
+.bg-studio {
+  background: radial-gradient(circle at 65% 45%, #FFFFFF 0%, #F8FAF8 55%, #EDF2EB 100%);
+}
+
+/* Brand Card Shadow matching #1E3A2B at 5%-8% opacity */
+.shadow-brand-card {
+  box-shadow: 0 10px 30px -5px rgba(30, 58, 43, 0.07), 0 4px 10px -3px rgba(30, 58, 43, 0.04);
+}
+
+.shadow-brand-pop {
+  box-shadow: 0 20px 45px -10px rgba(30, 58, 43, 0.12), 0 8px 16px -4px rgba(30, 58, 43, 0.06);
+}
+
+/* 3D Perspective & Preserves */
+.perspective-container {
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* Floating Animations */
+@keyframes floatPhone {
+  0%, 100% {
+    transform: translateY(0px) rotate(-1.5deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(-0.5deg);
+  }
+}
+
+@keyframes floatCap {
+  0%, 100% {
+    transform: translateY(0px) rotate(8deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(11deg);
+  }
+}
+
+@keyframes floatBall {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-16px) rotate(4deg);
+  }
+}
+
+@keyframes floatSneaker {
+  0%, 100% {
+    transform: translateY(0px) rotate(-4deg);
+  }
+  50% {
+    transform: translateY(-18px) rotate(-2deg);
+  }
+}
+
+@keyframes floatHeadphones {
+  0%, 100% {
+    transform: translateY(0px) rotate(6deg);
+  }
+  50% {
+    transform: translateY(-16px) rotate(2deg);
+  }
+}
+
+@keyframes floatCard1 {
+  0%, 100% {
+    transform: translateY(0px) rotate(2deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(4deg);
+  }
+}
+
+@keyframes floatCard2 {
+  0%, 100% {
+    transform: translateY(0px) rotate(-3deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(-1deg);
+  }
+}
+
+@keyframes floatCard3 {
+  0%, 100% {
+    transform: translateY(0px) rotate(5deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(7deg);
+  }
+}
+
+@keyframes floatSphere {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.05);
+  }
+}
+
+@keyframes shadowPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.32;
+  }
+  50% {
+    transform: scale(0.92);
+    opacity: 0.18;
+  }
+}
+
+.animate-float-phone {
+  animation: floatPhone 6s ease-in-out infinite;
+}
+
+.animate-float-cap {
+  animation: floatCap 5.2s ease-in-out infinite;
+}
+
+.animate-float-ball {
+  animation: floatBall 6.8s ease-in-out infinite;
+}
+
+.animate-float-sneaker {
+  animation: floatSneaker 5.8s ease-in-out infinite;
+}
+
+.animate-float-headphones {
+  animation: floatHeadphones 6.4s ease-in-out infinite;
+}
+
+.animate-float-card-1 {
+  animation: floatCard1 4.8s ease-in-out infinite;
+}
+
+.animate-float-card-2 {
+  animation: floatCard2 6.2s ease-in-out infinite;
+}
+
+.animate-float-card-3 {
+  animation: floatCard3 5.5s ease-in-out infinite;
+}
+
+.animate-float-sphere {
+  animation: floatSphere 4.5s ease-in-out infinite;
+}
+
+.animate-shadow-pulse {
+  animation: shadowPulse 6s ease-in-out infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 38s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
