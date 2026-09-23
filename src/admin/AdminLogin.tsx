@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, Lock, Mail, ArrowRight, ShieldCheck, HelpCircle, X, CheckCircle2 } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, ArrowRight, ShieldCheck, HelpCircle, X, CheckCircle2, Sun, Moon } from 'lucide-react';
 import { useCMS } from '../context/CMSContext';
 import { useRouter } from './router';
+import { useAdminTheme } from './context/AdminThemeContext';
 import { CommerceForgeLogo } from '../components/CommerceForgeLogo';
 import { useToast } from './components/Toast';
 
@@ -9,9 +10,10 @@ export const AdminLogin: React.FC = () => {
   const { login } = useCMS();
   const { navigate } = useRouter();
   const { showToast } = useToast();
+  const { theme, isDark, toggleTheme } = useAdminTheme();
 
   const [email, setEmail] = useState('admin@commerceforge.agency');
-  const [password, setPassword] = useState('studio2026');
+  const [password, setPassword] = useState('devteam2026');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -54,34 +56,82 @@ export const AdminLogin: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#0A160F] flex items-center justify-center p-4 relative overflow-hidden">
+    <div className={`min-h-screen w-full flex items-center justify-center p-4 relative overflow-hidden transition-colors ${
+      isDark ? 'bg-[#0A160F]' : 'bg-[#F8FAF9]'
+    }`}>
+      {/* Top Bar with Theme Switcher and Back to Public Site */}
+      <div className="absolute top-4 sm:top-6 inset-x-4 sm:inset-x-8 flex items-center justify-between z-20">
+        <button
+          onClick={() => navigate('/')}
+          className={`text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border transition-colors cursor-pointer ${
+            isDark ? 'bg-white/5 hover:bg-white/10 text-white/70 hover:text-white border-white/10' : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-300 shadow-xs'
+          }`}
+        >
+          <span>← Public Website</span>
+        </button>
+
+        {/* Theme Switcher Button */}
+        <div className="flex items-center gap-2">
+          <span className={`text-[11px] font-bold uppercase tracking-wider hidden sm:inline ${
+            isDark ? 'text-white/60' : 'text-slate-500'
+          }`}>
+            {isDark ? 'Dark Theme' : 'Light Theme'}
+          </span>
+          <button
+            type="button"
+            onClick={toggleTheme}
+            role="switch"
+            aria-checked={!isDark}
+            aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+            title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+            className={`p-2 rounded-xl border flex items-center justify-center transition-all cursor-pointer ${
+              isDark
+                ? 'bg-white/10 hover:bg-white/20 text-[#B7E84B] border-white/15'
+                : 'bg-white hover:bg-slate-100 text-amber-600 border-slate-300 shadow-xs'
+            }`}
+          >
+            {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
+        </div>
+      </div>
+
       {/* Subtle background ambient glows */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-radial from-[#B7E84B]/10 to-transparent blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-radial from-[#1E3A2B]/40 to-transparent blur-3xl pointer-events-none" />
 
-      <div className="w-full max-w-md relative z-10">
+      <div className="w-full max-w-md relative z-10 my-12">
         {/* Brand Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white p-2 shadow-xl shadow-black/30 border border-white/20 mb-4">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white p-2 shadow-xl shadow-black/20 border border-white/20 mb-4">
             <CommerceForgeLogo className="w-full h-full object-contain" />
           </div>
-          <h1 className="text-2xl font-black tracking-tight text-white uppercase">
+          <h1 className={`text-2xl font-black tracking-tight uppercase ${isDark ? 'text-white' : 'text-[#1E3A2B]'}`}>
             Commerce<span className="text-[#B7E84B]">Forge</span> CMS
           </h1>
-          <p className="text-xs font-semibold text-white/50 tracking-wider uppercase mt-1">
-            Studio Content Management System
+          <p className={`text-xs font-semibold tracking-wider uppercase mt-1 ${isDark ? 'text-white/50' : 'text-slate-500'}`}>
+            Dev Team Content Management System
           </p>
         </div>
 
         {/* Login Card */}
-        <div className="bg-[#12241A] border border-[#B7E84B]/25 rounded-3xl p-7 sm:p-8 shadow-2xl backdrop-blur-md">
-          <div className="flex items-center justify-between pb-5 border-b border-white/10 mb-6">
+        <div className={`border rounded-3xl p-7 sm:p-8 shadow-2xl backdrop-blur-md transition-colors ${
+          isDark ? 'bg-[#12241A] border-[#B7E84B]/25 text-white' : 'bg-white border-slate-200 text-slate-900 shadow-slate-200/50'
+        }`}>
+          <div className={`flex items-center justify-between pb-5 border-b mb-6 ${
+            isDark ? 'border-white/10' : 'border-slate-100'
+          }`}>
             <div>
-              <h2 className="text-lg font-bold text-white tracking-tight">Admin Sign In</h2>
-              <p className="text-xs text-white/60">Access website content controls</p>
+              <h2 className={`text-lg font-bold tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                Admin Sign In
+              </h2>
+              <p className={`text-xs ${isDark ? 'text-white/60' : 'text-slate-500'}`}>
+                Access website content controls
+              </p>
             </div>
-            <div className="px-2.5 py-1 rounded-full bg-[#EAF3E8]/10 text-[#B7E84B] border border-[#B7E84B]/30 text-[10px] font-bold flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5" />
+            <div className={`px-2.5 py-1 rounded-full border text-[10px] font-bold flex items-center gap-1.5 ${
+              isDark ? 'bg-[#EAF3E8]/10 text-[#B7E84B] border-[#B7E84B]/30' : 'bg-[#EAF3E8] text-[#1E3A2B] border-[#B7E84B]'
+            }`}>
+              <ShieldCheck className="w-3.5 h-3.5 text-[#2D5A40]" />
               <span>Protected Portal</span>
             </div>
           </div>
@@ -95,18 +145,26 @@ export const AdminLogin: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email Field */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-white/80 mb-2">
+              <label className={`block text-xs font-bold uppercase tracking-wider mb-2 ${
+                isDark ? 'text-white/80' : 'text-slate-700'
+              }`}>
                 Admin Email
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-white/40 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Mail className={`w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none ${
+                  isDark ? 'text-white/40' : 'text-slate-400'
+                }`} />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@commerceforge.agency"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/5 border border-white/15 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#B7E84B] focus:ring-1 focus:ring-[#B7E84B] transition-all"
+                  className={`w-full pl-10 pr-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-1 focus:ring-[#B7E84B] ${
+                    isDark
+                      ? 'bg-white/5 border-white/15 text-white placeholder:text-white/30 focus:border-[#B7E84B]'
+                      : 'bg-slate-50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-[#2D5A40]'
+                  }`}
                 />
               </div>
             </div>
@@ -114,7 +172,9 @@ export const AdminLogin: React.FC = () => {
             {/* Password Field */}
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label className="text-xs font-bold uppercase tracking-wider text-white/80">
+                <label className={`text-xs font-bold uppercase tracking-wider ${
+                  isDark ? 'text-white/80' : 'text-slate-700'
+                }`}>
                   Password
                 </label>
                 <button
@@ -124,25 +184,35 @@ export const AdminLogin: React.FC = () => {
                     setForgotSuccess(false);
                     setForgotEmail(email);
                   }}
-                  className="text-[11px] font-bold text-[#B7E84B] hover:underline"
+                  className={`text-[11px] font-bold hover:underline ${
+                    isDark ? 'text-[#B7E84B]' : 'text-[#2D5A40]'
+                  }`}
                 >
                   Forgot password?
                 </button>
               </div>
               <div className="relative">
-                <Lock className="w-4 h-4 text-white/40 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Lock className={`w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none ${
+                  isDark ? 'text-white/40' : 'text-slate-400'
+                }`} />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="w-full pl-10 pr-11 py-3 rounded-xl bg-white/5 border border-white/15 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#B7E84B] focus:ring-1 focus:ring-[#B7E84B] transition-all"
+                  className={`w-full pl-10 pr-11 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-1 focus:ring-[#B7E84B] ${
+                    isDark
+                      ? 'bg-white/5 border-white/15 text-white placeholder:text-white/30 focus:border-[#B7E84B]'
+                      : 'bg-slate-50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-[#2D5A40]'
+                  }`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                  className={`absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors ${
+                    isDark ? 'text-white/40 hover:text-white' : 'text-slate-400 hover:text-slate-700'
+                  }`}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -166,12 +236,16 @@ export const AdminLogin: React.FC = () => {
             </button>
           </form>
 
-          {/* Development Notice */}
-          <div className="mt-6 pt-5 border-t border-white/10 flex items-start gap-2.5 text-[11px] text-white/50 leading-relaxed">
-            <HelpCircle className="w-4 h-4 text-[#B7E84B] shrink-0 mt-0.5" />
+          {/* Notice */}
+          <div className={`mt-6 pt-5 border-t flex items-start gap-2.5 text-[11px] leading-relaxed ${
+            isDark ? 'border-white/10 text-white/50' : 'border-slate-200 text-slate-500'
+          }`}>
+            <HelpCircle className={`w-4 h-4 shrink-0 mt-0.5 ${isDark ? 'text-[#B7E84B]' : 'text-[#2D5A40]'}`} />
             <div>
-              <span className="font-semibold text-white/80">Decoupled Auth Provider: </span>
-              In current development mode, you can sign in with any valid email and 6+ character password. When you connect Firebase Authentication later, it will validate against your Firestore/Firebase Auth accounts without changing the UI.
+              <span className={`font-semibold ${isDark ? 'text-white/80' : 'text-slate-800'}`}>
+                Decoupled Auth Provider:{' '}
+              </span>
+              In development mode, enter any email and 6+ character password (or click Sign In directly). Connect Firebase Authentication anytime in CMS Settings.
             </div>
           </div>
         </div>

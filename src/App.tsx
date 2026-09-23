@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
 import { RouterProvider, useRouter } from './admin/router';
 import { CMSProvider, useCMS } from './context/CMSContext';
 import { ToastProvider } from './admin/components/Toast';
@@ -14,6 +15,8 @@ import { FaqSection } from './components/FaqSection';
 import { CtaBanner } from './components/CtaBanner';
 import { Footer } from './components/Footer';
 import { InquiryModal } from './components/InquiryModal';
+import { PublicThemeProvider, usePublicTheme } from './context/PublicThemeContext';
+import { ThemeToggle } from './components/ThemeToggle';
 
 // Dedicated Separate Pages
 import { AboutPage } from './components/AboutPage';
@@ -28,6 +31,7 @@ function PublicWebsite() {
   const [selectedPackage, setSelectedPackage] = useState<string>('STANDARD ($260)');
   const { isPreviewMode, setIsPreviewMode } = useCMS();
   const { currentPath, navigate } = useRouter();
+  const { isDark } = usePublicTheme();
 
   // Scroll to targeted section
   const scrollToSection = (sectionId: string) => {
@@ -44,8 +48,8 @@ function PublicWebsite() {
   // SEO Page Title updates
   useEffect(() => {
     const titles: Record<string, string> = {
-      '/': 'CommerceForge — Web Design & Performance Studio',
-      '/about': 'About Our Studio & Craft — CommerceForge',
+      '/': 'CommerceForge — Web Design & Performance Dev Team',
+      '/about': 'About Our Dev Team & Craft — CommerceForge',
       '/work': 'Selected Work & Rebuild Case Studies — CommerceForge',
       '/packages': 'Productized Packages & Rates — CommerceForge',
       '/faqs': 'Frequently Asked Questions — CommerceForge',
@@ -53,7 +57,7 @@ function PublicWebsite() {
       '/hire-us': 'Hire Us & Start a Project — CommerceForge',
       '/contact': 'Hire Us & Start a Project — CommerceForge',
     };
-    document.title = titles[currentPath] || 'CommerceForge — Web Performance Studio';
+    document.title = titles[currentPath] || 'CommerceForge — Web Performance Dev Team';
   }, [currentPath]);
 
   const handleOpenInquiryWithPackage = (pkgName: string) => {
@@ -115,25 +119,28 @@ function PublicWebsite() {
       default:
         return (
           <>
-            {/* 2. Home Page Hero Section: Headline at TOP, Before & After Feature BELOW and BIG */}
-            <section 
+            {/* 2. Home Page Hero Section: Streamlined Headline + Centerpiece Before & After Frame */}
+            <motion.section 
               id="hero"
-              className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 pt-6 sm:pt-10 pb-16 lg:pb-24"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
+              className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 pt-3 sm:pt-6 pb-12 lg:pb-16"
               aria-label="Hero Showcase"
             >
-              {/* TOP: Headline, Subheadline, CTAs & Guarantees */}
-              <div className="w-full max-w-4xl mx-auto mb-10 lg:mb-14">
+              {/* TOP: Concise Headline, Subheadline & Primary Actions */}
+              <div className="w-full max-w-3xl mx-auto mb-3 sm:mb-5">
                 <HeroContent 
                   onCtaClick={() => setIsInquiryOpen(true)} 
                   onExplorePackages={() => navigate('/packages')}
                 />
               </div>
 
-              {/* BELOW: Interactive Before & After Feature (Enlarged) */}
+              {/* CENTERPIECE: Interactive Before & After Feature Frame */}
               <div className="w-full max-w-[1340px] mx-auto">
                 <HeroMedia />
               </div>
-            </section>
+            </motion.section>
 
             {/* 3. Performance & Trust Metrics Bar */}
             <MetricsBar />
@@ -147,7 +154,7 @@ function PublicWebsite() {
             {/* 8. Dynamic Sections configured for Home Page in CMS */}
             <DynamicSectionRenderer page="home" onHireClick={() => setIsInquiryOpen(true)} />
 
-            {/* 9. About the Studio Teaser */}
+            {/* 9. About the Dev Team Teaser */}
             <AboutSection onCtaClick={() => setIsInquiryOpen(true)} />
 
             {/* 10. Frequently Asked Questions */}
@@ -162,9 +169,19 @@ function PublicWebsite() {
 
   return (
     <div 
-      id="scrollable-studio-website"
-      className="min-h-screen w-full bg-[#F8FAF8] text-[#1E3A2B] relative selection:bg-[#B7E84B]/40 selection:text-[#0F241A] overflow-x-hidden"
+      id="scrollable-team-website"
+      className={`min-h-screen w-full relative selection:bg-[#B7E84B]/40 selection:text-[#0F241A] overflow-x-hidden transition-colors duration-300 ${
+        isDark ? 'bg-[#0B0F17] text-white' : 'bg-[#FAFAF9] text-[#064E3B]'
+      }`}
     >
+      {/* WCAG 2.1 AA Skip to Content Link */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2.5 focus:bg-[#B7E84B] focus:text-[#0F241A] focus:font-black focus:text-xs focus:uppercase focus:tracking-wider focus:rounded-xl focus:shadow-2xl focus:ring-4 focus:ring-emerald-400 focus:outline-none"
+      >
+        Skip to main content
+      </a>
+
       {/* Discreet Preview Mode Status Bar */}
       {isPreviewMode && (
         <div className="sticky top-0 z-50 bg-[#0E1F16] border-b border-[#B7E84B]/40 text-white px-4 py-2 flex flex-wrap items-center justify-between gap-3 text-xs shadow-lg">
@@ -190,12 +207,20 @@ function PublicWebsite() {
         </div>
       )}
 
-      {/* Studio Background Ambient Radial Accents */}
+      {/* Ambient Radial Accents */}
       <div 
-        className="fixed top-0 right-0 w-[600px] h-[600px] bg-radial from-[#B7E84B]/15 via-[#8FA98F]/5 to-transparent pointer-events-none opacity-80 blur-3xl -z-10" 
+        className={`fixed top-0 right-0 w-[600px] h-[600px] pointer-events-none opacity-80 blur-3xl -z-10 transition-opacity duration-500 ${
+          isDark 
+            ? 'bg-radial from-[#B7E84B]/10 via-[#064E3B]/10 to-transparent' 
+            : 'bg-radial from-[#B7E84B]/15 via-[#8FA98F]/5 to-transparent'
+        }`} 
       />
       <div 
-        className="fixed -bottom-20 -left-20 w-[500px] h-[500px] bg-radial from-[#1E3A2B]/8 to-transparent pointer-events-none rounded-full blur-3xl -z-10" 
+        className={`fixed -bottom-20 -left-20 w-[500px] h-[500px] pointer-events-none rounded-full blur-3xl -z-10 transition-opacity duration-500 ${
+          isDark 
+            ? 'bg-radial from-[#064E3B]/15 to-transparent' 
+            : 'bg-radial from-[#064E3B]/8 to-transparent'
+        }`} 
       />
 
       {/* 1. Sticky Navigation Header */}
@@ -209,8 +234,11 @@ function PublicWebsite() {
         {renderCurrentPage()}
       </main>
 
-      {/* Studio Footer */}
+      {/* Dev Team Footer */}
       <Footer onNavigate={scrollToSection} />
+
+      {/* Floating Theme Toggle Shortcut (Accessible fixed at bottom right) */}
+      <ThemeToggle variant="floating" />
 
       {/* Project Inquiry & Quote Modal */}
       <InquiryModal
@@ -236,9 +264,11 @@ export default function App() {
   return (
     <RouterProvider>
       <CMSProvider>
-        <ToastProvider>
-          <MainAppShell />
-        </ToastProvider>
+        <PublicThemeProvider>
+          <ToastProvider>
+            <MainAppShell />
+          </ToastProvider>
+        </PublicThemeProvider>
       </CMSProvider>
     </RouterProvider>
   );

@@ -25,7 +25,7 @@
   }
 }
 
-/* Studio Radial Lighting matching #F8FAF8 brand background */
+/* Radial Lighting matching #F8FAF8 brand background */
 .bg-studio {
   background: radial-gradient(circle at 65% 45%, #FFFFFF 0%, #F8FAF8 55%, #EDF2EB 100%);
 }

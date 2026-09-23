@@ -119,7 +119,7 @@ export const InfoDrawer: React.FC<InfoDrawerProps> = ({ activeNav, onClose, onHi
                 Featured Work
               </h2>
               <p className="text-sm text-[#4A584E] mt-2 leading-relaxed">
-                A selection of high-growth e-commerce storefronts forged by our studio team.
+                A selection of high-growth e-commerce storefronts forged by our dev team.
               </p>
             </div>
 

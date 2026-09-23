@@ -1,5 +1,6 @@
 import React from 'react';
 import { Search, Compass, Code2, Rocket, ArrowRight, Zap, CheckCircle2, ShieldCheck, Heart, Sparkles } from 'lucide-react';
+import { motion } from 'motion/react';
 import { useCMS } from '../context/CMSContext';
 
 interface ProcessSectionProps {
@@ -61,7 +62,14 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ onCtaClick }) =>
   const ctaText = processData?.ctaText || 'START STEP 01: FREE DISCOVERY AUDIT';
 
   return (
-    <section id="process" className="w-full py-16 sm:py-24 bg-[#F8FAF8] border-t border-[#1E3A2B]/10">
+    <motion.section 
+      id="process" 
+      initial={{ opacity: 0, y: 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
+      className="w-full py-16 sm:py-24 bg-[#F8FAF8] border-t border-[#1E3A2B]/10"
+    >
       <div className="max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12">
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EAF3E8] border border-[#B7E84B]/40 mb-3">
@@ -126,6 +134,6 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ onCtaClick }) =>
           </button>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { CheckCircle2, ArrowRight, ShieldCheck, Zap, Sparkles, Send, Clock, Mail } from 'lucide-react';
+import { motion } from 'motion/react';
 import { DynamicSectionRenderer } from './DynamicSectionRenderer';
 
 export const HireUsPage: React.FC = () => {
@@ -30,7 +31,12 @@ export const HireUsPage: React.FC = () => {
   return (
     <div className="w-full">
       {/* Top Hero Banner */}
-      <section className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 pt-8 sm:pt-14 pb-10">
+      <motion.section 
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
+        className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 pt-8 sm:pt-14 pb-10"
+      >
         <div className="text-center max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EAF3E8] border border-[#B7E84B]/40 mb-4 shadow-xs">
             <span className="w-2 h-2 rounded-full bg-[#B7E84B] animate-pulse" />
@@ -47,10 +53,16 @@ export const HireUsPage: React.FC = () => {
             Tell us about your brand, current challenges, and goals. We analyze your website and reply with a breakdown, speed audit, and recommended scope within 24 hours.
           </p>
         </div>
-      </section>
+      </motion.section>
 
       {/* Main Two-Column Layout */}
-      <section className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 py-8">
+      <motion.section 
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
+        className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 py-8"
+      >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           {/* Left Column: Form */}
           <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-10 border border-[#1E3A2B]/10 shadow-sm">
@@ -210,7 +222,7 @@ export const HireUsPage: React.FC = () => {
           <div className="lg:col-span-5 space-y-6">
             <div className="bg-[#12241A] text-white rounded-3xl p-6 sm:p-8 space-y-6">
               <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-[#B7E84B] text-[#0F241A] inline-block">
-                STUDIO PROMISES
+                DEV TEAM PROMISES
               </span>
 
               <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight">
@@ -277,7 +289,7 @@ export const HireUsPage: React.FC = () => {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Dynamic Sections configured in CMS for Hire Us Page */}
       <DynamicSectionRenderer page="hire-us" />

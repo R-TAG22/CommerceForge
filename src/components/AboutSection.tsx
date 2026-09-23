@@ -1,5 +1,6 @@
 import React from 'react';
 import { Shield, Sparkles, Heart, Award, ArrowRight, Code, Zap, CheckCircle2 } from 'lucide-react';
+import { motion } from 'motion/react';
 import { useCMS } from '../context/CMSContext';
 
 interface AboutSectionProps {
@@ -35,18 +36,25 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onCtaClick }) => {
   const paragraphs = brandData?.storyParagraphs?.length ? brandData.storyParagraphs : defaultParagraphs;
   const values = brandData?.values?.length ? brandData.values : defaultValues;
   const quote = brandData?.quote || '"A fast website is not an afterthought — it is the foundation of digital revenue."';
-  const quoteAuthor = brandData?.quoteAuthor || 'CommerceForge Studio Engineering Lead';
+  const quoteAuthor = brandData?.quoteAuthor || 'CommerceForge Dev Team Lead';
 
   return (
-    <section id="about" className="w-full py-16 sm:py-24 bg-white border-t border-[#1E3A2B]/10">
+    <motion.section 
+      id="about" 
+      initial={{ opacity: 0, y: 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
+      className="w-full py-16 sm:py-24 bg-white border-t border-[#1E3A2B]/10"
+    >
       <div className="max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-          {/* Left Column: Studio Mission & Story */}
+          {/* Left Column: Dev Team Mission & Story */}
           <div className="lg:col-span-6 xl:col-span-7">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EAF3E8] border border-[#B7E84B]/40 mb-3">
               <span className="w-1.5 h-1.5 rounded-full bg-[#B7E84B]" />
               <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#1E3A2B]">
-                {brandData?.eyebrow || 'ABOUT THE STUDIO'}
+                {brandData?.eyebrow || 'ABOUT THE DEV TEAM'}
               </span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#1E3A2B] tracking-tight uppercase leading-tight">
@@ -87,13 +95,13 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onCtaClick }) => {
             </div>
           </div>
 
-          {/* Right Column: Studio Card & Metrics Badge */}
+          {/* Right Column: Dev Team Card & Metrics Badge */}
           <div className="lg:col-span-6 xl:col-span-5">
             <div className="relative rounded-3xl p-7 sm:p-8 bg-[#F8FAF8] border border-[#1E3A2B]/10 shadow-sm">
               <div className="flex items-center justify-between pb-6 border-b border-[#1E3A2B]/8">
                 <div>
                   <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#2D5A40]">
-                    STUDIO STANDARDS
+                    DEV TEAM STANDARDS
                   </span>
                   <h3 className="text-xl font-black text-[#1E3A2B] mt-0.5">
                     Production Standards
@@ -142,6 +150,6 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onCtaClick }) => {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };

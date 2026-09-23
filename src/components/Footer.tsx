@@ -36,7 +36,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
     }
   };
 
-  const copyrightText = footerData?.copyrightText || `© ${new Date().getFullYear()} CommerceForge Studio. All rights reserved. Transparent web design for local businesses.`;
+  const copyrightText = footerData?.copyrightText || `© ${new Date().getFullYear()} CommerceForge Dev Team. All rights reserved. Transparent web design for local businesses.`;
   const email = footerData?.contactEmail || (footerData as any)?.email || 'contact@commerceforge.agency';
   const locationText = footerData?.locationText || 'Built with pride in the Philippines 🇵🇭';
 
@@ -45,7 +45,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
       <div className="max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12">
         {/* Top 4-Column Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-white/10">
-          {/* Column 1: Studio Brand & Mission */}
+          {/* Column 1: Dev Team Brand & Mission */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3">
               <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-white p-1">
@@ -56,7 +56,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   {headerData?.brandName || 'CommerceForge'}
                 </span>
                 <span className="text-[9px] uppercase tracking-[0.2em] text-[#B7E84B]/70 font-bold -mt-0.5">
-                  {headerData?.tagline || 'WEB PERFORMANCE STUDIO'}
+                  {headerData?.tagline || 'WEB PERFORMANCE DEV TEAM'}
                 </span>
               </div>
             </div>
@@ -152,7 +152,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </ul>
           </div>
 
-          {/* Column 4: Studio & Help */}
+          {/* Column 4: Dev Team & Help */}
           <div>
             <h4 className="text-xs font-bold uppercase tracking-[0.16em] text-white/40 mb-4">
               Information
@@ -163,7 +163,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   onClick={() => handleFooterNav('about')}
                   className="hover:text-[#B7E84B] transition-colors cursor-pointer"
                 >
-                  About the Studio
+                  About the Dev Team
                 </button>
               </li>
               <li>

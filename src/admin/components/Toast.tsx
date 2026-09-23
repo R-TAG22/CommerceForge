@@ -35,14 +35,20 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      {/* Toast container */}
-      <div className="fixed bottom-5 right-5 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none">
+      {/* Toast container with accessible live announcements */}
+      <div 
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="fixed bottom-5 right-5 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none"
+      >
         {toasts.map((toast) => {
           const isSuccess = toast.type === 'success';
           const isError = toast.type === 'error';
           return (
             <div
               key={toast.id}
+              role="alert"
               className={`pointer-events-auto flex items-start gap-3 p-4 rounded-xl border shadow-xl backdrop-blur-md transition-all animate-in fade-in slide-in-from-bottom-3 duration-200 ${
                 isSuccess
                   ? 'bg-[#12241A] text-white border-[#B7E84B]/40 shadow-[0_10px_25px_-5px_rgba(183,232,75,0.15)]'
@@ -51,18 +57,20 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                   : 'bg-[#1E293B] text-white border-slate-700'
               }`}
             >
-              <div className="shrink-0 mt-0.5">
+              <div className="shrink-0 mt-0.5" aria-hidden="true">
                 {isSuccess && <CheckCircle2 className="w-5 h-5 text-[#B7E84B]" />}
                 {isError && <AlertCircle className="w-5 h-5 text-red-400" />}
                 {!isSuccess && !isError && <Info className="w-5 h-5 text-blue-400" />}
               </div>
               <div className="flex-1 min-w-0">
                 <h5 className="text-xs font-bold uppercase tracking-wider">{toast.title}</h5>
-                {toast.message && <p className="text-xs text-white/80 mt-0.5 leading-relaxed">{toast.message}</p>}
+                {toast.message && <p className="text-xs text-white/90 mt-0.5 leading-relaxed">{toast.message}</p>}
               </div>
               <button
+                type="button"
                 onClick={() => removeToast(toast.id)}
-                className="text-white/50 hover:text-white shrink-0 -mr-1 -mt-1 p-1 rounded-lg hover:bg-white/10"
+                aria-label="Dismiss notification"
+                className="text-white/70 hover:text-white shrink-0 -mr-1 -mt-1 p-1.5 rounded-lg hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>

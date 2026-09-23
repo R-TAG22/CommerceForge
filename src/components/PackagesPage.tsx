@@ -1,5 +1,6 @@
 import React from 'react';
 import { Check, ArrowRight, Sparkles, Clock, ShieldCheck, HelpCircle, CheckCircle2, Zap } from 'lucide-react';
+import { motion } from 'motion/react';
 import { useCMS } from '../context/CMSContext';
 import { DynamicSectionRenderer } from './DynamicSectionRenderer';
 
@@ -114,7 +115,12 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({ onSelectPackage, onH
   return (
     <div className="w-full">
       {/* Page Hero Header */}
-      <section className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 pt-8 sm:pt-14 pb-8">
+      <motion.section 
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
+        className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 pt-8 sm:pt-14 pb-8"
+      >
         <div className="text-center max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EAF3E8] border border-[#B7E84B]/40 mb-4 shadow-xs">
             <span className="w-2 h-2 rounded-full bg-[#B7E84B] animate-pulse" />
@@ -147,10 +153,16 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({ onSelectPackage, onH
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Packages Grid */}
-      <section className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 py-8">
+      <motion.section 
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
+        className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 py-8"
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 items-stretch">
           {packagesList.map((pkg: any) => {
             const isStandard = pkg.popular || pkg.name === 'STANDARD';
@@ -257,10 +269,16 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({ onSelectPackage, onH
             <span className="text-[10px] text-[#6A786E] block mt-0.5">Includes global CDN, SSL, & automated backups</span>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Process & Transparency Checklist */}
-      <section className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 py-8">
+      <motion.section 
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
+        className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 py-8"
+      >
         <div className="bg-[#12241A] rounded-3xl p-8 sm:p-12 text-white flex flex-col lg:flex-row items-center justify-between gap-8 shadow-xl">
           <div className="max-w-2xl">
             <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-[#B7E84B] text-[#0F241A] mb-3 inline-block">
@@ -300,10 +318,16 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({ onSelectPackage, onH
             START YOUR PROJECT TODAY
           </button>
         </div>
-      </section>
+      </motion.section>
 
       {/* Scope & Pricing FAQs */}
-      <section className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 py-10">
+      <motion.section 
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
+        className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 py-10"
+      >
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-8">
             <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-[#1E3A2B]">
@@ -343,7 +367,7 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({ onSelectPackage, onH
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Dynamic Sections configured in CMS for Packages Page */}
       <DynamicSectionRenderer page="packages" onHireClick={onHireClick} />

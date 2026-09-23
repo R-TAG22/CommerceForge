@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight, Mail, CheckCircle2 } from 'lucide-react';
+import { motion } from 'motion/react';
 import { useCMS } from '../context/CMSContext';
 
 interface CtaBannerProps {
@@ -24,7 +25,14 @@ export const CtaBanner: React.FC<CtaBannerProps> = ({ onCtaClick }) => {
   ];
 
   return (
-    <section id="contact" className="w-full py-14 sm:py-20 max-w-[1720px] mx-auto px-3.5 sm:px-6 lg:px-10 xl:px-12">
+    <motion.section 
+      id="contact" 
+      initial={{ opacity: 0, y: 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
+      className="w-full py-14 sm:py-20 max-w-[1720px] mx-auto px-3.5 sm:px-6 lg:px-10 xl:px-12"
+    >
       <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-gradient-to-br from-[#1E3A2B] via-[#162C20] to-[#0E1F16] text-white p-6 sm:p-12 lg:p-16 shadow-[0_24px_60px_-15px_rgba(30,58,43,0.35)]">
         {/* Glow acccents */}
         <div className="absolute top-0 right-0 w-[450px] h-[450px] bg-radial from-[#B7E84B]/20 to-transparent pointer-events-none blur-3xl" />
@@ -76,6 +84,6 @@ export const CtaBanner: React.FC<CtaBannerProps> = ({ onCtaClick }) => {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };

@@ -12,6 +12,8 @@ import {
   Database,
   ShieldCheck,
   Zap,
+  Plus,
+  Palette,
 } from 'lucide-react';
 import { useCMS } from '../../context/CMSContext';
 import { useRouter } from '../router';
@@ -61,12 +63,14 @@ export const DashboardOverview: React.FC = () => {
   ];
 
   const quickSections = [
+    { title: 'Theme & Brand Styler', desc: 'Design tokens: colors, typography, border-radius & button variants', path: '/admin/theme' },
+    { title: 'Dynamic Page Sections', desc: 'Add, reorder, hide & customize custom page sections', path: '/admin/sections' },
     { title: 'Hero Section', desc: 'Main headline, value proposition & primary CTA', path: '/admin/hero' },
     { title: 'Portfolio Projects', desc: '8 client showcase studies, before/after metrics & screenshots', path: '/admin/portfolio' },
     { title: 'Packages & Rates', desc: 'Transparent productized tiers ($159, $260, $810, ₱4,000)', path: '/admin/packages' },
     { title: 'Statistics & Clients', desc: 'Conversion rate metrics & client logo roster', path: '/admin/statistics' },
     { title: 'Why Rebuild / Comparison', desc: 'Old way vs modern rebuild comparison cards', path: '/admin/comparison' },
-    { title: 'Brand & Studio Standards', desc: 'About CommerceForge, Core Web Vitals score & values', path: '/admin/brand' },
+    { title: 'Brand & Dev Team Standards', desc: 'About CommerceForge, Core Web Vitals score & values', path: '/admin/brand' },
     { title: 'FAQ Accordion', desc: '7 customer questions & transparent answers', path: '/admin/faq' },
     { title: 'Bottom CTA Banner', desc: 'Free quote invitation, guarantees & contact email', path: '/admin/cta' },
   ];
@@ -90,11 +94,22 @@ export const DashboardOverview: React.FC = () => {
 
         <div className="flex items-center gap-3">
           <button
+            type="button"
+            onClick={() => navigate('/admin/sections')}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#B7E84B] text-[#0F241A] text-xs font-black uppercase tracking-wider hover:bg-[#a5d83a] transition-all shadow-md active:scale-95 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none"
+            aria-label="Add new dynamic section to website"
+          >
+            <Plus className="w-4 h-4" />
+            <span>+ Add Section</span>
+          </button>
+
+          <button
+            type="button"
             onClick={() => {
               setPreviewMode(true);
               navigate('/');
             }}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold uppercase tracking-wider transition-colors border border-white/15"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold uppercase tracking-wider transition-colors border border-white/15 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none"
           >
             <Eye className="w-4 h-4 text-[#B7E84B]" />
             <span>Preview Draft</span>

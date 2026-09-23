@@ -11,14 +11,19 @@ import {
   Shield,
   FileCode,
   Sparkles,
+  Sun,
+  Moon,
+  Palette,
 } from 'lucide-react';
 import { useCMS } from '../../context/CMSContext';
+import { useAdminTheme } from '../context/AdminThemeContext';
 import { useToast } from '../components/Toast';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { initialWebsiteData } from '../../services/providers/mock/initialData';
 
 export const SettingsPage: React.FC = () => {
   const { draftContent, updateSection, resetToPublished } = useCMS();
+  const { theme, isDark, setTheme, toggleTheme } = useAdminTheme();
   const { showToast } = useToast();
 
   const [copiedChecklist, setCopiedChecklist] = useState(false);
@@ -119,6 +124,117 @@ export const auth = getAuth(app);`;
           <p className="text-xs text-white/60">
             Export backups, manage storage providers, and review your Firebase integration checklist
           </p>
+        </div>
+      </div>
+
+      {/* CMS Theme & Appearance Section */}
+      <div className={`p-6 rounded-2xl border transition-colors ${
+        isDark ? 'bg-[#12241A] border-white/10' : 'bg-white border-slate-200 shadow-xs'
+      }`}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-black/10 dark:border-white/10">
+          <div>
+            <div className="flex items-center gap-2">
+              <Palette className="w-4 h-4 text-[#B7E84B]" />
+              <h2 className={`text-base font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                CMS Theme & UI Appearance
+              </h2>
+            </div>
+            <p className={`text-xs mt-1 ${isDark ? 'text-white/60' : 'text-slate-500'}`}>
+              Customize your admin panel interface with Dark Dev Mode or Crisp Light mode. Includes instant toggle switch button.
+            </p>
+          </div>
+
+          {/* Switch Button */}
+          <div className="flex items-center gap-3">
+            <span className={`text-xs font-bold uppercase tracking-wider ${isDark ? 'text-white/70' : 'text-slate-600'}`}>
+              {isDark ? 'Dark Mode' : 'Light Mode'}
+            </span>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={!isDark}
+              aria-label="Toggle admin light and dark theme"
+              onClick={toggleTheme}
+              className={`relative inline-flex h-7 w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#B7E84B] focus:ring-offset-2 ${
+                isDark ? 'bg-[#1E3A2B]' : 'bg-[#B7E84B]'
+              }`}
+            >
+              <span
+                className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out flex items-center justify-center ${
+                  isDark ? 'translate-x-0' : 'translate-x-7'
+                }`}
+              >
+                {isDark ? (
+                  <Moon className="w-3.5 h-3.5 text-[#0F241A]" />
+                ) : (
+                  <Sun className="w-3.5 h-3.5 text-amber-600" />
+                )}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* Theme Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5">
+          {/* Dark Mode Card */}
+          <button
+            type="button"
+            onClick={() => setTheme('dark')}
+            className={`p-4 rounded-xl border text-left transition-all cursor-pointer flex items-start gap-4 ${
+              isDark
+                ? 'bg-[#1E3A2B] border-[#B7E84B] ring-2 ring-[#B7E84B]/40 shadow-md'
+                : 'bg-slate-50 hover:bg-slate-100 border-slate-200'
+            }`}
+          >
+            <div className="w-10 h-10 rounded-lg bg-[#0E1B13] border border-white/20 flex items-center justify-center text-[#B7E84B] shrink-0">
+              <Moon className="w-5 h-5" />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <span className={`text-sm font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                  Dark Dev Mode (Default)
+                </span>
+                {isDark && (
+                  <span className="px-2 py-0.5 rounded-full bg-[#B7E84B] text-[#0F241A] text-[10px] font-black uppercase">
+                    Active
+                  </span>
+                )}
+              </div>
+              <p className={`text-xs mt-1 leading-relaxed ${isDark ? 'text-white/70' : 'text-slate-500'}`}>
+                Deep charcoal and obsidian backdrop with forest green and neon lime accents. Ideal for low-light code editing.
+              </p>
+            </div>
+          </button>
+
+          {/* Light Mode Card */}
+          <button
+            type="button"
+            onClick={() => setTheme('light')}
+            className={`p-4 rounded-xl border text-left transition-all cursor-pointer flex items-start gap-4 ${
+              !isDark
+                ? 'bg-white border-[#1E3A2B] ring-2 ring-[#1E3A2B]/20 shadow-md'
+                : 'bg-[#162C20] hover:bg-[#1a3527] border-white/5'
+            }`}
+          >
+            <div className="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-amber-600 shrink-0">
+              <Sun className="w-5 h-5" />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <span className={`text-sm font-bold uppercase tracking-wider ${!isDark ? 'text-slate-900' : 'text-white'}`}>
+                  Crisp Light Mode
+                </span>
+                {!isDark && (
+                  <span className="px-2 py-0.5 rounded-full bg-[#1E3A2B] text-white text-[10px] font-black uppercase">
+                    Active
+                  </span>
+                )}
+              </div>
+              <p className={`text-xs mt-1 leading-relaxed ${!isDark ? 'text-slate-600' : 'text-white/70'}`}>
+                High-contrast crisp white canvas with slate borders and distinct typography. Clean, modern, and accessible in bright environments.
+              </p>
+            </div>
+          </button>
         </div>
       </div>
 

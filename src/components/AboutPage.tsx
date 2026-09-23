@@ -151,7 +151,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onHireClick }) => {
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EAF3E8] border border-[#B7E84B]/40 shadow-xs">
               <span className="w-2 h-2 rounded-full bg-[#B7E84B] animate-pulse" />
               <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.16em] text-[#1E3A2B]">
-                ABOUT COMMERCEFORGE STUDIO
+                ABOUT COMMERCEFORGE DEV TEAM
               </span>
             </div>
 
@@ -248,7 +248,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onHireClick }) => {
             <circle cx="90" cy="450" r="6" stroke="#B7E84B" strokeWidth="1" opacity="0.5" className="animate-ping" />
           </svg>
 
-          {/* Top Badge: Studio Mission */}
+          {/* Top Badge: Dev Team Mission */}
           <div className="relative z-10 flex items-center justify-between mb-4 sm:mb-6">
             <div className="flex items-center gap-2">
               <span className="relative flex h-2 w-2">
@@ -256,7 +256,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onHireClick }) => {
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#B7E84B] shadow-[0_0_8px_#B7E84B]"></span>
               </span>
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#8FA98F]">
-                COMMERCEFORGE STUDIO
+                COMMERCEFORGE DEV TEAM
               </span>
             </div>
             <span className="text-[9px] font-mono text-[#8FA98F]/70 px-2 py-0.5 rounded-full bg-white/5 border border-white/10">
@@ -734,12 +734,19 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onHireClick }) => {
       {/* ========================================================================= */}
       {/* MEET THE TEAM SECTION (Clean & Responsive 4 Columns)                      */}
       {/* ========================================================================= */}
-      <section id="meet-the-team" className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 py-16 sm:py-24 border-t border-[#1E3A2B]/10">
+      <motion.section 
+        id="meet-the-team" 
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
+        className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 py-16 sm:py-24 border-t border-[#1E3A2B]/10"
+      >
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EAF3E8] border border-[#B7E84B]/40 mb-4 shadow-xs">
             <span className="w-2 h-2 rounded-full bg-[#B7E84B] animate-pulse" />
             <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.16em] text-[#1E3A2B]">
-              CORE STUDIO LEADERSHIP
+              CORE DEV TEAM LEADERSHIP
             </span>
           </div>
 
@@ -839,16 +846,22 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onHireClick }) => {
             </div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
       {/* ========================================================================= */}
-      {/* STUDIO CRAFT PRINCIPLES                                                   */}
+      {/* DEV TEAM CRAFT PRINCIPLES                                                 */}
       {/* ========================================================================= */}
-      <section className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 pb-16 sm:pb-24">
+      <motion.section 
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
+        className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 pb-16 sm:pb-24"
+      >
         <div className="bg-[#12241A] rounded-3xl p-8 sm:p-12 text-white shadow-xl">
           <div className="max-w-3xl mb-8">
             <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-[#B7E84B] text-[#0F241A] mb-3 inline-block">
-              OUR STUDIO ETHOS
+              OUR DEV TEAM ETHOS
             </span>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black uppercase tracking-tight">
               WHY COMMERCEFORGE BUILDS DIFFERENTLY.
@@ -890,7 +903,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onHireClick }) => {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* ========================================================================= */}
       {/* CAPABILITIES DEEP-DIVE MODAL (Triggered by 'VIEW OUR CAPABILITIES →')     */}
@@ -919,7 +932,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onHireClick }) => {
 
               <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-[#8FA98F] mb-1">
                 <Sparkles className="w-3.5 h-3.5 text-[#B7E84B]" />
-                <span>STUDIO CAPABILITIES</span>
+                <span>DEV TEAM CAPABILITIES</span>
               </div>
 
               <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-[#1E3A2B] leading-tight mb-2">
@@ -991,7 +1004,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onHireClick }) => {
                     }}
                     className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#1E3A2B] text-[#B7E84B] text-xs font-black uppercase tracking-wider hover:bg-[#15271d] transition-all cursor-pointer"
                   >
-                    <span>Hire Studio</span>
+                    <span>Hire Dev Team</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 )}

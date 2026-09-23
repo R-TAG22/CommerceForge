@@ -55,7 +55,7 @@ export class MockMediaProvider implements IMediaService {
       fileType: file.type || 'image/png',
       url: dataUrl,
       altText: metadata?.altText || file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '),
-      uploadedBy: 'Studio Admin',
+      uploadedBy: 'Dev Team Admin',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -63,6 +63,15 @@ export class MockMediaProvider implements IMediaService {
     this.mediaList.unshift(newAsset);
     this.persist();
     return newAsset;
+  }
+
+  async updateMediaAltText(id: string, altText: string): Promise<MediaAsset> {
+    const item = this.mediaList.find((m) => m.id === id);
+    if (!item) throw new Error(`Media item ${id} not found`);
+    item.altText = altText;
+    item.updatedAt = new Date().toISOString();
+    this.persist();
+    return { ...item };
   }
 
   async deleteMedia(id: string): Promise<void> {

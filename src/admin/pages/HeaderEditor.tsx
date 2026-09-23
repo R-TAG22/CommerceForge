@@ -89,7 +89,7 @@ export const HeaderEditor: React.FC = () => {
             <span>Navigation Settings</span>
           </div>
           <h1 className="text-2xl font-black uppercase tracking-tight text-white">Header & Top Bar</h1>
-          <p className="text-xs text-white/60">Configure studio branding, links, and the top CTA button</p>
+          <p className="text-xs text-white/60">Configure dev team branding, links, and the top CTA button</p>
         </div>
 
         <div className="flex items-center gap-3">

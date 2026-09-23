@@ -54,7 +54,7 @@ export class MockAuthProvider implements IAuthService {
     const user: AdminUser = {
       id: `admin-${Date.now()}`,
       email: email,
-      name: email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) || 'Studio Admin',
+      name: email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) || 'Dev Team Admin',
       role: 'superadmin',
       lastLogin: new Date().toISOString(),
     };

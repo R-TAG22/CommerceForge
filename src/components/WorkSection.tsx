@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { ExternalLink, ArrowRight, Zap, Check, Sparkles, Pause, Play, ChevronLeft, ChevronRight, X, Globe } from 'lucide-react';
+import { motion } from 'motion/react';
 import { useCMS } from '../context/CMSContext';
 import { PortfolioProject } from '../types/cms';
 
@@ -340,7 +341,14 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onHireClick }) => {
   };
 
   return (
-    <section id="work" className="w-full py-16 sm:py-24 max-w-[1720px] mx-auto px-3.5 sm:px-6 lg:px-10 xl:px-12 overflow-hidden">
+    <motion.section 
+      id="work" 
+      initial={{ opacity: 0, y: 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
+      className="w-full py-16 sm:py-24 max-w-[1720px] mx-auto px-3.5 sm:px-6 lg:px-10 xl:px-12 overflow-hidden"
+    >
       {/* Section Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-12">
         <div>
@@ -732,6 +740,6 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onHireClick }) => {
           </div>
         </div>
       )}
-    </section>
+    </motion.section>
   );
 };

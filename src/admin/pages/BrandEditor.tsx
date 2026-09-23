@@ -19,7 +19,7 @@ export const BrandEditor: React.FC = () => {
     setIsSaving(true);
     try {
       await updateSection('about', about);
-      showToast('success', 'Brand Draft Saved', 'Studio standards updated in draft.');
+      showToast('success', 'Brand Draft Saved', 'Dev team standards updated in draft.');
     } catch (err: unknown) {
       showToast('error', 'Save Failed', err instanceof Error ? err.message : 'Save failed');
     } finally {
@@ -42,7 +42,7 @@ export const BrandEditor: React.FC = () => {
   const handleAddValue = () => {
     const newValue: BrandValueItem = {
       id: `val-${Date.now()}`,
-      title: 'New Studio Standard',
+      title: 'New Dev Team Standard',
       description: 'Standard description detailing our craft or engineering quality.',
       icon: 'ShieldCheck',
       sortOrder: about.values.length,
@@ -83,11 +83,11 @@ export const BrandEditor: React.FC = () => {
         <div>
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#B7E84B] mb-1">
             <Award className="w-4 h-4" />
-            <span>Studio Ethos & Standards</span>
+            <span>Dev Team Ethos & Standards</span>
           </div>
           <h1 className="text-2xl font-black uppercase tracking-tight text-white">Brand & About Section</h1>
           <p className="text-xs text-white/60">
-            Configure studio philosophy, engineering manifesto, and Core Web Vitals guarantees
+            Configure dev team philosophy, engineering manifesto, and Core Web Vitals guarantees
           </p>
         </div>
 
@@ -195,11 +195,11 @@ export const BrandEditor: React.FC = () => {
         </div>
       </div>
 
-      {/* Core Studio Standards / Values */}
+      {/* Core Dev Team Standards / Values */}
       <div className="p-6 rounded-2xl bg-[#12241A] border border-white/10 space-y-4">
         <div className="flex items-center justify-between border-b border-white/10 pb-3">
           <div>
-            <h2 className="text-sm font-bold uppercase tracking-wider text-white">4 Studio Pillars & Values</h2>
+            <h2 className="text-sm font-bold uppercase tracking-wider text-white">4 Dev Team Pillars & Values</h2>
             <p className="text-xs text-white/50">Displayed in the right-side cards grid</p>
           </div>
           <button

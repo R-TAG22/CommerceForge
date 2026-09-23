@@ -18,6 +18,7 @@ import { FooterEditor } from './pages/FooterEditor';
 import { MediaLibrary } from './pages/MediaLibrary';
 import { SettingsPage } from './pages/SettingsPage';
 import { SectionsEditor } from './pages/SectionsEditor';
+import { ThemeEditor } from './pages/ThemeEditor';
 import { AdminThemeProvider } from './context/AdminThemeContext';
 
 export const AdminRouter: React.FC = () => {
@@ -78,6 +79,8 @@ export const AdminRouter: React.FC = () => {
         return <MediaLibrary />;
       case '/admin/settings':
         return <SettingsPage />;
+      case '/admin/theme':
+        return <ThemeEditor />;
       default:
         return <DashboardOverview />;
     }

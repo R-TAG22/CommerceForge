@@ -269,6 +269,26 @@ export interface CustomSectionItem {
   badge?: string;
 }
 
+export type SectionTemplateType =
+  | 'rich-text-media'
+  | 'logo-cloud'
+  | 'feature-cards'
+  | 'testimonials'
+  | 'cta-banner'
+  | 'raw-embed'
+  | 'cards'
+  | 'banner'
+  | 'text-split'
+  | 'callout'
+  | 'features';
+
+export type SectionBackgroundStyle =
+  | 'dark-studio'
+  | 'crisp-light'
+  | 'forest-muted'
+  | 'charcoal-glass'
+  | 'custom';
+
 export interface CustomPageSection extends BaseEntity {
   page: 'home' | 'about' | 'work' | 'packages' | 'faqs' | 'hire-us';
   title: string;
@@ -276,15 +296,47 @@ export interface CustomPageSection extends BaseEntity {
   badge?: string;
   content: string;
   layout: 'cards' | 'banner' | 'text-split' | 'callout' | 'features';
+  templateType?: SectionTemplateType;
+  backgroundStyle?: SectionBackgroundStyle;
+  anchorId?: string;
   textColor?: string;
   backgroundColor?: string;
   accentColor?: string;
   buttonText?: string;
   buttonUrl?: string;
   buttonVariant?: 'primary' | 'secondary' | 'outline';
+  secondaryButtonText?: string;
+  secondaryButtonUrl?: string;
+  mediaUrl?: string;
+  mediaAlt?: string;
+  mediaPosition?: 'left' | 'right';
+  embedCode?: string;
+  logos?: { id: string; name: string; logoUrl?: string; text?: string }[];
+  testimonials?: {
+    id: string;
+    quote: string;
+    author: string;
+    role: string;
+    company?: string;
+    rating?: number;
+    avatarUrl?: string;
+  }[];
   items?: CustomSectionItem[];
   sortOrder: number;
   published: boolean;
+}
+
+export interface ThemeSettings {
+  primaryBrandColor: string;
+  backgroundTone: 'dark' | 'slate' | 'pure-dark';
+  accentHoverColor: string;
+  headingFont: 'Inter' | 'Plus Jakarta Sans' | 'DM Sans' | 'Outfit' | 'Roboto Mono';
+  bodyFont: 'Inter' | 'Plus Jakarta Sans' | 'DM Sans' | 'Outfit' | 'Roboto Mono';
+  baseFontSize: number;
+  lineHeight: number;
+  borderRadius: number;
+  buttonVariant: 'pill' | 'rounded-rectangle' | 'sharp-box' | 'glow';
+  cardElevation: 'solid' | 'frosted';
 }
 
 export interface WebsiteContent {
@@ -300,6 +352,7 @@ export interface WebsiteContent {
   cta: CTASectionContent;
   footer: FooterContentData;
   customSections?: CustomPageSection[];
+  themeSettings?: ThemeSettings;
   lastUpdated: string;
   version: number;
 }

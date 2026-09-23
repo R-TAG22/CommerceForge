@@ -1,9 +1,12 @@
 import React from 'react';
 import { Zap, TrendingUp, Clock, ShieldCheck, Award, Heart, Sparkles, Star } from 'lucide-react';
+import { motion } from 'motion/react';
 import { useCMS } from '../context/CMSContext';
+import { usePublicTheme } from '../context/PublicThemeContext';
 
 export const MetricsBar: React.FC = () => {
   const { activeContent } = useCMS();
+  const { isDark } = usePublicTheme();
   const statsData = activeContent?.statistics;
 
   const iconMap: Record<string, any> = {
@@ -71,7 +74,18 @@ export const MetricsBar: React.FC = () => {
     : defaultClients;
 
   return (
-    <section id="metrics-bar-section" className="w-full py-8 sm:py-14 border-y border-[#1E3A2B]/10 bg-white/70 backdrop-blur-xs">
+    <motion.section 
+      id="metrics-bar-section" 
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
+      className={`w-full py-8 sm:py-14 border-y transition-colors duration-300 ${
+        isDark 
+          ? 'bg-[#0B0F17]/60 border-[#B7E84B]/15 backdrop-blur-md' 
+          : 'bg-white/80 border-[#064E3B]/10 backdrop-blur-xs'
+      }`}
+    >
       <div className="max-w-[1720px] mx-auto px-3.5 sm:px-6 lg:px-10 xl:px-12">
         {/* 4 Performance Metric Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
@@ -80,38 +94,69 @@ export const MetricsBar: React.FC = () => {
             return (
               <div 
                 key={idx}
-                className="p-3.5 sm:p-6 rounded-2xl bg-[#F8FAF8] border border-[#1E3A2B]/10 hover:border-[#B7E84B] hover:shadow-sm transition-all duration-300 group"
+                className={`p-3.5 sm:p-6 rounded-2xl border transition-all duration-300 group ${
+                  isDark
+                    ? 'bg-white/5 border-white/10 hover:border-[#B7E84B] hover:shadow-[0_0_25px_rgba(183,232,75,0.15)] backdrop-blur-md'
+                    : 'bg-[#FAFAF9] border-[#064E3B]/10 hover:border-[#059669] hover:shadow-md'
+                }`}
               >
                 <div className="flex items-center gap-2 sm:gap-2.5 mb-1.5 sm:mb-2">
-                  <div className="p-1.5 sm:p-2 rounded-xl bg-[#EAF3E8] text-[#1E3A2B] group-hover:scale-110 group-hover:bg-[#B7E84B] group-hover:text-[#0F241A] transition-all shrink-0">
+                  <div className={`p-1.5 sm:p-2 rounded-xl transition-all shrink-0 group-hover:scale-110 ${
+                    isDark
+                      ? 'bg-[#064E3B] text-[#B7E84B] group-hover:bg-[#B7E84B] group-hover:text-[#0B0F17]'
+                      : 'bg-[#EAF3E8] text-[#064E3B] group-hover:bg-[#064E3B] group-hover:text-white'
+                  }`}>
                     <Icon className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
                   </div>
-                  <span className="text-xl sm:text-3xl lg:text-4xl font-black text-[#1E3A2B] tracking-tight truncate">
+                  <span className={`text-xl sm:text-3xl lg:text-4xl font-black tracking-tight truncate ${
+                    isDark ? 'text-white' : 'text-[#064E3B]'
+                  }`}>
                     {m.value}
                   </span>
                 </div>
-                <h4 className="text-xs sm:text-sm font-bold text-[#1E3A2B] tracking-tight">{m.label}</h4>
-                <p className="text-[11px] sm:text-xs text-[#4A584E] mt-0.5 sm:mt-1 font-medium leading-tight">{m.desc}</p>
+                <h4 className={`text-xs sm:text-sm font-bold tracking-tight ${
+                  isDark ? 'text-white' : 'text-[#064E3B]'
+                }`}>
+                  {m.label}
+                </h4>
+                <p className={`text-[11px] sm:text-xs mt-0.5 sm:mt-1 font-medium leading-tight ${
+                  isDark ? 'text-white/60' : 'text-[#064E3B]/70'
+                }`}>
+                  {m.desc}
+                </p>
               </div>
             );
           })}
         </div>
 
         {/* Client Brands Row */}
-        <div className="mt-8 sm:mt-12 pt-6 border-t border-[#1E3A2B]/8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="text-[11px] uppercase tracking-[0.2em] font-bold text-[#4A584E] shrink-0">
+        <div className={`mt-8 sm:mt-12 pt-6 border-t flex flex-col sm:flex-row items-center justify-between gap-4 ${
+          isDark ? 'border-white/10' : 'border-[#064E3B]/10'
+        }`}>
+          <span className={`text-[11px] uppercase tracking-[0.2em] font-bold shrink-0 ${
+            isDark ? 'text-[#B7E84B]' : 'text-[#064E3B]/70'
+          }`}>
             Trusted by growing local brands:
           </span>
-          <div className="flex flex-wrap items-center justify-center sm:justify-end gap-x-6 gap-y-2 text-xs sm:text-sm font-bold text-[#1E3A2B]/80">
+          <div className={`flex flex-wrap items-center justify-center sm:justify-end gap-x-6 gap-y-2 text-xs sm:text-sm font-bold ${
+            isDark ? 'text-white/80' : 'text-[#064E3B]/80'
+          }`}>
             {clientNames.map((name, i) => (
-              <span key={i} className="hover:text-[#2D5A40] transition-colors cursor-default">
+              <span key={i} className={`transition-colors cursor-default ${
+                isDark ? 'hover:text-[#B7E84B]' : 'hover:text-[#059669]'
+              }`}>
                 {name}
-                {i < clientNames.length - 1 && <span className="text-[#1E3A2B]/20 ml-6 select-none">•</span>}
+                {i < clientNames.length - 1 && (
+                  <span className={`ml-6 select-none ${isDark ? 'text-white/20' : 'text-[#064E3B]/20'}`}>
+                    •
+                  </span>
+                )}
               </span>
             ))}
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
+

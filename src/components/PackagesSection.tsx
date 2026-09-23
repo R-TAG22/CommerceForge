@@ -1,5 +1,6 @@
 import React from 'react';
 import { Check, ArrowRight, Sparkles, Clock, ShieldCheck, HelpCircle } from 'lucide-react';
+import { motion } from 'motion/react';
 import { useCMS } from '../context/CMSContext';
 
 interface PackagesSectionProps {
@@ -99,7 +100,14 @@ export const PackagesSection: React.FC<PackagesSectionProps> = ({ onSelectPackag
   const subheading = packagesData?.subheading || 'No surprise invoices, hidden hourly rates, or endless agency delays. You know exactly what you get, what it costs, and when it launches.';
 
   return (
-    <section id="packages" className="w-full py-16 sm:py-24 bg-[#F8FAF8] border-t border-[#1E3A2B]/10">
+    <motion.section 
+      id="packages" 
+      initial={{ opacity: 0, y: 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
+      className="w-full py-16 sm:py-24 bg-[#F8FAF8] border-t border-[#1E3A2B]/10"
+    >
       <div className="max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
@@ -207,6 +215,6 @@ export const PackagesSection: React.FC<PackagesSectionProps> = ({ onSelectPackag
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };

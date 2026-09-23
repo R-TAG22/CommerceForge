@@ -25,6 +25,8 @@ import {
   Compass,
   Sun,
   Moon,
+  Palette,
+  Plus,
 } from 'lucide-react';
 import { useCMS } from '../context/CMSContext';
 import { useAdminTheme } from './context/AdminThemeContext';
@@ -99,6 +101,13 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       ],
     },
     {
+      group: 'Brand & Styling',
+      items: [
+        { label: 'Theme & Styles', path: '/admin/theme', icon: Palette },
+        { label: 'Brand & Mission', path: '/admin/brand', icon: Building2 },
+      ],
+    },
+    {
       group: 'Website Sections',
       items: [
         { label: 'Header & Navigation', path: '/admin/header', icon: Compass },
@@ -109,7 +118,6 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         { label: 'Packages & Rates', path: '/admin/packages', icon: Layers },
         { label: 'Why Rebuild / Comparison', path: '/admin/comparison', icon: ArrowLeftRight },
         { label: '4-Step Process', path: '/admin/process', icon: GitCommit },
-        { label: 'Brand & Mission', path: '/admin/brand', icon: Building2 },
         { label: 'Frequently Asked Questions', path: '/admin/faq', icon: HelpCircle },
         { label: 'Bottom CTA Banner', path: '/admin/cta', icon: Megaphone },
         { label: 'Footer & Links', path: '/admin/footer', icon: PanelBottom },
@@ -133,6 +141,14 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     <div className={`min-h-screen flex flex-col antialiased transition-colors duration-200 ${
       isDark ? 'bg-[#0E1B13] text-white' : 'bg-[#F8FAF9] text-slate-900'
     }`}>
+      {/* WCAG 2.1 AA Skip to Main Content Link */}
+      <a
+        href="#admin-main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2.5 focus:bg-[#B7E84B] focus:text-[#0F241A] focus:font-black focus:text-xs focus:uppercase focus:tracking-wider focus:rounded-xl focus:shadow-2xl focus:ring-4 focus:ring-emerald-400 focus:outline-none"
+      >
+        Skip to main content
+      </a>
+
       {/* Top Banner if in Preview Mode */}
       {isPreviewMode && (
         <div className="bg-[#B7E84B] text-[#0F241A] px-4 py-2 text-xs font-bold flex items-center justify-between z-50">
@@ -302,6 +318,22 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           }`}
         >
           <div className="flex-1 overflow-y-auto p-4 space-y-6">
+            {/* Quick Action: Prominent Add Section Button */}
+            <div className="pb-2 border-b border-black/10 dark:border-white/10">
+              <button
+                type="button"
+                onClick={() => {
+                  navigate('/admin/sections');
+                  setIsSidebarOpen(false);
+                }}
+                className="w-full py-2.5 px-3.5 rounded-xl bg-[#B7E84B] text-[#0F241A] font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-[#a5d83a] transition-all shadow-md active:scale-95 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none"
+                aria-label="Add new dynamic section to page"
+              >
+                <Plus className="w-4 h-4 stroke-[3]" />
+                <span>+ Add Section</span>
+              </button>
+            </div>
+
             {navGroups.map((grp) => (
               <div key={grp.group}>
                 <h4 className={`px-3 text-[10px] font-extrabold uppercase tracking-[0.2em] mb-2 ${
@@ -370,9 +402,15 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         )}
 
         {/* Main Content Area */}
-        <main className={`flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 transition-colors ${
-          isDark ? 'bg-[#0A160F]' : 'bg-[#F8FAF9]'
-        }`}>
+        <main
+          id="admin-main-content"
+          tabIndex={-1}
+          role="region"
+          aria-label="Main Admin Content"
+          className={`flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 transition-colors outline-none ${
+            isDark ? 'bg-[#0A160F]' : 'bg-[#F8FAF9]'
+          }`}
+        >
           <div className="max-w-6xl mx-auto">{children}</div>
         </main>
       </div>

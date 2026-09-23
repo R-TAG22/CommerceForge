@@ -88,7 +88,7 @@ export const ComparisonEditor: React.FC = () => {
           </div>
           <h1 className="text-2xl font-black uppercase tracking-tight text-white">Why Rebuild / Comparison</h1>
           <p className="text-xs text-white/60">
-            Compare outdated DIY page builders with high-octane handcrafted studio code
+            Compare outdated DIY page builders with high-octane handcrafted dev team code
           </p>
         </div>
 
@@ -221,7 +221,7 @@ export const ComparisonEditor: React.FC = () => {
         {/* Rebuilt Column */}
         <div className="p-6 rounded-2xl bg-[#12241A] border border-[#B7E84B]/40 space-y-4">
           <span className="text-xs font-black uppercase text-[#B7E84B] tracking-wider block">
-            Right Column: The Rebuilt Studio Way
+            Right Column: The Rebuilt Dev Team Way
           </span>
           <div>
             <label className="block text-[11px] font-bold text-white/70 mb-1">Heading</label>

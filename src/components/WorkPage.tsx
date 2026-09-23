@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import { 
   ExternalLink, 
   ArrowUpRight, 
@@ -486,7 +487,12 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
   return (
     <div className="w-full">
       {/* Clean & Neat Page Hero Header */}
-      <section className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 pt-8 sm:pt-14 pb-8">
+      <motion.section 
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
+        className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 pt-8 sm:pt-14 pb-8"
+      >
         <div className="text-center max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EAF3E8] border border-[#B7E84B]/40 mb-4 shadow-xs">
             <span className="w-2 h-2 rounded-full bg-[#B7E84B] animate-pulse" />
@@ -523,10 +529,16 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
             })}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Carousel Control Bar */}
-      <section className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 pb-4">
+      <motion.section 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
+        className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 pb-4"
+      >
         <div className="flex flex-wrap items-center justify-between gap-4 py-3 px-5 rounded-2xl bg-white/80 backdrop-blur-xs border border-[#1E3A2B]/10 shadow-xs">
           {/* Left: Project Count & Active Category Badge */}
           <div className="flex items-center gap-3">
@@ -621,11 +633,17 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
             )}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Auto-Moving Carousel Section */}
       {viewMode === 'carousel' ? (
-        <section className="w-full relative py-6 overflow-hidden">
+        <motion.section 
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
+          className="w-full relative py-6 overflow-hidden"
+        >
           {/* Subtle Side Vignettes for smooth edge fade */}
           <div className="absolute top-0 bottom-0 left-0 w-8 sm:w-20 bg-gradient-to-r from-[#F8FAF8] via-[#F8FAF8]/80 to-transparent z-20 pointer-events-none" />
           <div className="absolute top-0 bottom-0 right-0 w-8 sm:w-20 bg-gradient-to-l from-[#F8FAF8] via-[#F8FAF8]/80 to-transparent z-20 pointer-events-none" />
@@ -748,10 +766,16 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
               </div>
             ))}
           </div>
-        </section>
+        </motion.section>
       ) : (
         /* Clean & Neat Card Grid Option */
-        <section className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 py-6">
+        <motion.section 
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
+          className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 py-6"
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredSites.map((site) => (
               <div
@@ -860,7 +884,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
               </div>
             ))}
           </div>
-        </section>
+        </motion.section>
       )}
 
       {/* Dynamic Sections configured for Work Page in CMS */}

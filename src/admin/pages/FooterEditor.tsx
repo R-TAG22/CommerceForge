@@ -144,7 +144,7 @@ export const FooterEditor: React.FC = () => {
 
         <div>
           <label className="block text-xs font-bold uppercase tracking-wider text-white/70 mb-1">
-            Studio Description
+            Dev Team Description
           </label>
           <textarea
             rows={2}
@@ -186,7 +186,7 @@ export const FooterEditor: React.FC = () => {
         <div className="flex items-center justify-between border-b border-white/10 pb-3">
           <div>
             <h2 className="text-sm font-bold uppercase tracking-wider text-white">Social Media Profiles</h2>
-            <p className="text-xs text-white/50">External links for studio channels</p>
+            <p className="text-xs text-white/50">External links for dev team channels</p>
           </div>
           <button
             type="button"

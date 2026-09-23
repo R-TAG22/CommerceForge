@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronDown, HelpCircle, ArrowRight, Search, MessageSquare, ShieldCheck, Zap } from 'lucide-react';
+import { motion } from 'motion/react';
 import { useCMS } from '../context/CMSContext';
 import { DynamicSectionRenderer } from './DynamicSectionRenderer';
 
@@ -51,7 +52,7 @@ export const FaqsPage: React.FC<FaqsPageProps> = ({ onCtaClick }) => {
     },
     {
       q: 'Do you work with clients outside the Philippines?',
-      a: 'Yes! While our studio is proudly headquartered in the Philippines, we work with direct-to-consumer brands, local clinics, restaurants, and ecommerce entrepreneurs across the United States, Australia, UK, and Southeast Asia.',
+      a: 'Yes! While our dev team is proudly headquartered in the Philippines, we work with direct-to-consumer brands, local clinics, restaurants, and ecommerce entrepreneurs across the United States, Australia, UK, and Southeast Asia.',
       category: 'process',
     },
   ];
@@ -74,7 +75,12 @@ export const FaqsPage: React.FC<FaqsPageProps> = ({ onCtaClick }) => {
   return (
     <div className="w-full">
       {/* Top Hero Banner */}
-      <section className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 pt-8 sm:pt-14 pb-10">
+      <motion.section 
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
+        className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 pt-8 sm:pt-14 pb-10"
+      >
         <div className="text-center max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EAF3E8] border border-[#B7E84B]/40 mb-4 shadow-xs">
             <span className="w-2 h-2 rounded-full bg-[#B7E84B] animate-pulse" />
@@ -104,10 +110,16 @@ export const FaqsPage: React.FC<FaqsPageProps> = ({ onCtaClick }) => {
             />
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Accordion Section */}
-      <section className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <motion.section 
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
+        className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6"
+      >
         {filteredFaqs.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-3xl border border-[#1E3A2B]/10 p-8">
             <HelpCircle className="w-10 h-10 mx-auto text-[#B7E84B] mb-2" />
@@ -175,13 +187,19 @@ export const FaqsPage: React.FC<FaqsPageProps> = ({ onCtaClick }) => {
             })}
           </div>
         )}
-      </section>
+      </motion.section>
 
       {/* Dynamic Sections configured in CMS for FAQs Page */}
       <DynamicSectionRenderer page="faqs" onHireClick={onCtaClick} />
 
       {/* Still Have Questions Contact Box */}
-      <section className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 py-12">
+      <motion.section 
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
+        className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 py-12"
+      >
         <div className="bg-[#EAF3E8] rounded-3xl p-8 sm:p-12 border border-[#B7E84B]/40 text-center max-w-2xl mx-auto">
           <div className="w-12 h-12 rounded-2xl bg-[#1E3A2B] text-[#B7E84B] flex items-center justify-center mx-auto mb-4 shadow-sm">
             <MessageSquare className="w-6 h-6" />
@@ -202,7 +220,7 @@ export const FaqsPage: React.FC<FaqsPageProps> = ({ onCtaClick }) => {
             </button>
           </div>
         </div>
-      </section>
+      </motion.section>
     </div>
   );
 };

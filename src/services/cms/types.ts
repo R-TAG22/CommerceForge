@@ -66,5 +66,6 @@ export interface IFAQService {
 export interface IMediaService {
   getMedia(): Promise<MediaAsset[]>;
   uploadMedia(file: File, metadata?: { altText?: string }): Promise<MediaAsset>;
+  updateMediaAltText?(id: string, altText: string): Promise<MediaAsset>;
   deleteMedia(id: string): Promise<void>;
 }

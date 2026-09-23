@@ -19,7 +19,7 @@ export const AdminThemeProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       const saved = localStorage.getItem(THEME_STORAGE_KEY) as AdminTheme;
       if (saved === 'light' || saved === 'dark') return saved;
     }
-    return 'dark'; // Default to studio dark emerald theme
+    return 'dark'; // Default to dark emerald theme
   });
 
   useEffect(() => {
