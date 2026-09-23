@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { ArrowRight, CheckCircle2, Zap, Star, Users, X, ExternalLink } from 'lucide-react';
+import { Star, Users, X, ExternalLink, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useCMS } from '../context/CMSContext';
 import { usePublicTheme } from '../context/PublicThemeContext';
 
 interface HeroContentProps {
-  onCtaClick: () => void;
-  onExplorePackages: () => void;
+  onCtaClick?: () => void;
+  onExplorePackages?: () => void;
 }
 
-export const HeroContent: React.FC<HeroContentProps> = ({ onCtaClick, onExplorePackages }) => {
+export const HeroContent: React.FC<HeroContentProps> = ({ onCtaClick }) => {
   const { activeContent } = useCMS();
   const { isDark } = usePublicTheme();
   const [showReviewsModal, setShowReviewsModal] = useState<boolean>(false);
@@ -20,14 +20,6 @@ export const HeroContent: React.FC<HeroContentProps> = ({ onCtaClick, onExploreP
   const headlineHighlight = heroData?.headlineHighlight || 'LOCAL';
   const headlineLine3 = heroData?.headlineLine3 || 'BUSINESSES.';
   const description = heroData?.description || 'We rebuild sluggish, outdated websites into lightning-fast, mobile-responsive powerhouses. Professional quality, thumb-friendly design, and transparent pricing starting at $159.';
-  const primaryCtaText = heroData?.primaryCtaText || 'GET A FREE QUOTE';
-  const secondaryCtaText = heroData?.secondaryCtaText || 'VIEW PACKAGES';
-  const guarantees = heroData?.guarantees || [
-    { id: 'g-1', text: 'Starting at $159', icon: 'CheckCircle2' },
-    { id: 'g-2', text: '7–10 Business Days', icon: 'Zap' },
-    { id: 'g-3', text: '100% Responsive', icon: 'CheckCircle2' },
-    { id: 'g-4', text: 'Made in Philippines', icon: 'Dot' },
-  ];
 
   // Customer avatars for miniature stack
   const clientAvatars = [
@@ -224,7 +216,7 @@ export const HeroContent: React.FC<HeroContentProps> = ({ onCtaClick, onExploreP
                     type="button"
                     onClick={() => {
                       setShowReviewsModal(false);
-                      onCtaClick();
+                      onCtaClick?.();
                     }}
                     className={`text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full transition-all cursor-pointer ${
                       isDark
@@ -263,53 +255,12 @@ export const HeroContent: React.FC<HeroContentProps> = ({ onCtaClick, onExploreP
       {/* Clean Concise Descriptive Copy */}
       <p 
         id="hero-subheadline" 
-        className={`mt-2 sm:mt-2.5 font-medium text-xs sm:text-sm md:text-base leading-relaxed max-w-xl mx-auto transition-colors ${
+        className={`mt-2.5 sm:mt-3 font-medium text-xs sm:text-sm md:text-base leading-relaxed max-w-2xl mx-auto transition-colors ${
           isDark ? 'text-white/70' : 'text-[#064E3B]/80'
         }`}
       >
         {description}
       </p>
-
-      {/* Action Buttons: Primary Quote + Explore Packages */}
-      <div className="mt-3 sm:mt-4 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 w-full">
-        <button
-          id="hero-primary-cta-btn"
-          onClick={onCtaClick}
-          className={`group relative inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-2.5 rounded-full text-xs font-bold tracking-[0.08em] uppercase border transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-[#B7E84B]/30 cursor-pointer ${
-            isDark
-              ? 'bg-[#B7E84B] text-[#0B0F17] border-[#B7E84B] hover:bg-[#a3d438] hover:shadow-[0_0_20px_rgba(183,232,75,0.35)]'
-              : 'bg-gradient-to-r from-[#064E3B] to-[#047857] text-white border-[#B7E84B]/40 hover:from-[#059669] hover:to-[#064E3B] hover:shadow-[0_8px_20px_-4px_rgba(6,78,59,0.25)]'
-          }`}
-        >
-          <span>{primaryCtaText}</span>
-          <ArrowRight className={`w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1 ${
-            isDark ? 'text-[#0B0F17]' : 'text-[#B7E84B]'
-          }`} />
-        </button>
-
-        <button
-          id="hero-packages-cta-btn"
-          onClick={onExplorePackages}
-          className={`inline-flex items-center justify-center gap-1.5 px-4 sm:px-5 py-2.5 sm:py-2.5 rounded-full text-xs font-bold tracking-[0.08em] uppercase border transition-all duration-200 shadow-xs cursor-pointer ${
-            isDark
-              ? 'bg-white/5 hover:bg-white/10 text-white border-white/20 hover:border-[#B7E84B]'
-              : 'bg-white text-[#064E3B] border-[#064E3B]/15 hover:border-[#059669] hover:text-[#064E3B] hover:bg-[#FAFAF9]'
-          }`}
-        >
-          <span>{secondaryCtaText}</span>
-        </button>
-      </div>
-
-      {/* Subtle Micro-Trust Line */}
-      <div className={`mt-2.5 flex items-center justify-center gap-2 sm:gap-3 text-[11px] font-semibold transition-colors ${
-        isDark ? 'text-white/60' : 'text-[#064E3B]/70'
-      }`}>
-        <span>⚡ 7–10 Day Delivery</span>
-        <span>•</span>
-        <span>Starting at $159</span>
-        <span>•</span>
-        <span>100% Handcrafted Code</span>
-      </div>
     </div>
   );
 };

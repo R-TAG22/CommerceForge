@@ -233,58 +233,14 @@ export const HeroMedia: React.FC = () => {
       className="w-full flex flex-col justify-center items-center select-none py-0 sm:py-1"
     >
       {/* ========================================================================= */}
-      {/* 1. Niche Selector / Tab Bar Above Showcase (Requirement 2)                */}
-      {/* ========================================================================= */}
-      <div className="w-full max-w-xl mx-auto mb-3 sm:mb-4">
-        <div 
-          className={`flex items-center justify-between p-1 sm:p-1.5 rounded-2xl border backdrop-blur-md overflow-x-auto no-scrollbar ${
-            isDark 
-              ? 'bg-[#0B0F17]/80 border-[#B7E84B]/30 shadow-[0_0_20px_rgba(183,232,75,0.1)]' 
-              : 'bg-white border-[#064E3B]/15 shadow-sm'
-          }`}
-          role="tablist"
-          aria-label="Client niche showcase selector"
-        >
-          {NICHES.map((niche) => {
-            const Icon = niche.icon;
-            const isSelected = niche.id === selectedNiche;
-            return (
-              <button
-                key={niche.id}
-                role="tab"
-                aria-selected={isSelected}
-                aria-controls={`niche-panel-${niche.id}`}
-                onClick={() => {
-                  setSelectedNiche(niche.id);
-                  playTickTone();
-                }}
-                className={`relative flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all duration-200 shrink-0 cursor-pointer ${
-                  isSelected
-                    ? isDark
-                      ? 'bg-[#B7E84B] text-[#0B0F17] shadow-md'
-                      : 'bg-[#064E3B] text-white shadow-md'
-                    : isDark
-                      ? 'text-white/70 hover:text-white hover:bg-white/5'
-                      : 'text-[#064E3B]/70 hover:text-[#064E3B] hover:bg-[#FAFAF9]'
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                <span className="whitespace-nowrap">{niche.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* ========================================================================= */}
-      {/* 2. Outer Showcase Container Card with Modern Theme Styling                */}
+      {/* Outer Showcase Container Card with Modern Theme Styling (Enlarged +10%)   */}
       {/* ========================================================================= */}
       <div 
         id="hero-media-card"
-        className={`relative w-full max-w-[1300px] mx-auto rounded-[20px] sm:rounded-[32px] p-3 sm:p-5 md:p-6 lg:p-7 xl:p-8 pb-4 sm:pb-7 lg:pb-8 xl:pb-9 transition-all duration-300 border overflow-hidden ${
+        className={`relative w-full max-w-[1460px] mx-auto rounded-[24px] sm:rounded-[36px] p-3.5 sm:p-6 md:p-7 lg:p-8 xl:p-10 pb-5 sm:pb-8 lg:pb-9 xl:pb-10 transition-all duration-300 border overflow-hidden ${
           isDark
-            ? 'bg-[#0B0F17] border-[#B7E84B]/30 shadow-[0_0_50px_rgba(183,232,75,0.12)]'
-            : 'bg-[#EEF5EC] border-[#064E3B]/15 shadow-[0_20px_60px_-15px_rgba(6,78,59,0.12)]'
+            ? 'bg-[#0B0F17] border-[#B7E84B]/30 shadow-[0_0_55px_rgba(183,232,75,0.14)]'
+            : 'bg-[#EEF5EC] border-[#064E3B]/15 shadow-[0_22px_65px_-15px_rgba(6,78,59,0.14)]'
         }`}
       >
         {/* Subtle Decorative Ambient Radial Glow */}
@@ -360,17 +316,17 @@ export const HeroMedia: React.FC = () => {
         <div className="relative z-10 flex flex-col xl:flex-row items-center justify-center gap-4 sm:gap-6 xl:gap-6 w-full">
           
           {/* ========================================================================= */}
-          {/* LEFT DEVICE: Before on mobile                                             */}
+          {/* LEFT DEVICE: Before on mobile (Enlarged +10%)                             */}
           {/* ========================================================================= */}
           <figure 
             id="before-mobile-preview"
-            className="hidden xl:flex flex-col items-center shrink-0 w-[145px] 2xl:w-[170px] transition-all duration-300"
+            className="hidden xl:flex flex-col items-center shrink-0 w-[160px] 2xl:w-[188px] transition-all duration-300"
           >
             <div 
-              className={`w-full overflow-hidden rounded-[18px] border transition-transform duration-300 hover:-translate-y-1 ${
+              className={`w-full overflow-hidden rounded-[20px] border transition-transform duration-300 hover:-translate-y-1 ${
                 isDark 
-                  ? 'bg-[#0B0F17] border-white/10 shadow-[0_12px_32px_rgba(0,0,0,0.5)]' 
-                  : 'bg-white border-[#064E3B]/10 shadow-[0_12px_32px_rgba(6,78,59,0.08)]'
+                  ? 'bg-[#0B0F17] border-white/10 shadow-[0_14px_36px_rgba(0,0,0,0.55)]' 
+                  : 'bg-white border-[#064E3B]/10 shadow-[0_14px_36px_rgba(6,78,59,0.1)]'
               }`}
             >
               <img 
@@ -393,10 +349,10 @@ export const HeroMedia: React.FC = () => {
           </figure>
 
           {/* ========================================================================= */}
-          {/* CENTER STAGE: Interactive Split-Screen Comparison Slider                   */}
+          {/* CENTER STAGE: Interactive Split-Screen Comparison Slider (Enlarged +10%)  */}
           {/* ========================================================================= */}
           <div 
-            className="relative w-full max-w-[880px] xl:max-w-[850px] 2xl:max-w-[950px] shrink-1"
+            className="relative w-full max-w-[980px] xl:max-w-[960px] 2xl:max-w-[1060px] shrink-1"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
@@ -541,17 +497,17 @@ export const HeroMedia: React.FC = () => {
           </div>
 
           {/* ========================================================================= */}
-          {/* RIGHT DEVICE: After on mobile                                            */}
+          {/* RIGHT DEVICE: After on mobile (Enlarged +10%)                              */}
           {/* ========================================================================= */}
           <figure 
             id="after-mobile-preview"
-            className="hidden xl:flex flex-col items-center shrink-0 w-[140px] 2xl:w-[165px] transition-all duration-300"
+            className="hidden xl:flex flex-col items-center shrink-0 w-[155px] 2xl:w-[182px] transition-all duration-300"
           >
             <div 
-              className={`w-full overflow-hidden rounded-[16px] border transition-transform duration-300 hover:-translate-y-1 ${
+              className={`w-full overflow-hidden rounded-[18px] border transition-transform duration-300 hover:-translate-y-1 ${
                 isDark
-                  ? 'bg-[#0B0F17] border-white/10 shadow-[0_12px_32px_rgba(0,0,0,0.5)]'
-                  : 'bg-white border-[#064E3B]/10 shadow-[0_12px_32px_rgba(6,78,59,0.1)]'
+                  ? 'bg-[#0B0F17] border-white/10 shadow-[0_14px_36px_rgba(0,0,0,0.55)]'
+                  : 'bg-white border-[#064E3B]/10 shadow-[0_14px_36px_rgba(6,78,59,0.12)]'
               }`}
             >
               <img 
@@ -576,7 +532,7 @@ export const HeroMedia: React.FC = () => {
           {/* ========================================================================= */}
           {/* RESPONSIVE MOBILE PREVIEWS (Visible below xl screens so all devices show)  */}
           {/* ========================================================================= */}
-          <div className="flex xl:hidden items-center justify-center gap-4 sm:gap-6 mt-4 sm:mt-6 w-full max-w-[420px]">
+          <div className="flex xl:hidden items-center justify-center gap-4 sm:gap-6 mt-4 sm:mt-6 w-full max-w-[460px]">
             <figure className="flex-1 flex flex-col items-center">
               <div className={`w-full overflow-hidden rounded-[14px] border shadow-md ${
                 isDark ? 'bg-[#0B0F17] border-white/10' : 'bg-white border-[#064E3B]/10'

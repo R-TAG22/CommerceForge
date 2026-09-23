@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
+import { ArrowRight } from 'lucide-react';
 import { RouterProvider, useRouter } from './admin/router';
 import { CMSProvider, useCMS } from './context/CMSContext';
 import { ToastProvider } from './admin/components/Toast';
@@ -128,17 +129,57 @@ function PublicWebsite() {
               className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 pt-3 sm:pt-6 pb-12 lg:pb-16"
               aria-label="Hero Showcase"
             >
-              {/* TOP: Concise Headline, Subheadline & Primary Actions */}
-              <div className="w-full max-w-3xl mx-auto mb-3 sm:mb-5">
-                <HeroContent 
-                  onCtaClick={() => setIsInquiryOpen(true)} 
-                  onExplorePackages={() => navigate('/packages')}
-                />
+              {/* TOP: Concise Headline & Subheadline */}
+              <div className="w-full max-w-3xl mx-auto mb-4 sm:mb-6">
+                <HeroContent onCtaClick={() => setIsInquiryOpen(true)} />
               </div>
 
-              {/* CENTERPIECE: Interactive Before & After Feature Frame */}
-              <div className="w-full max-w-[1340px] mx-auto">
+              {/* CENTERPIECE: Interactive Before & After Feature Frame (Enlarged +10%) */}
+              <div className="w-full max-w-[1480px] mx-auto">
                 <HeroMedia />
+              </div>
+
+              {/* BOTTOM OF HERO: Action Buttons & Micro-Trust Line (Moved below Before & After Feature) */}
+              <div className="mt-7 sm:mt-9 flex flex-col items-center justify-center w-full max-w-xl mx-auto text-center px-4">
+                <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 w-full">
+                  <button
+                    id="hero-primary-cta-btn"
+                    onClick={() => setIsInquiryOpen(true)}
+                    className={`group relative inline-flex items-center justify-center gap-2.5 px-7 sm:px-8 py-3 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold tracking-[0.08em] uppercase border transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-[#B7E84B]/30 cursor-pointer shadow-lg ${
+                      isDark
+                        ? 'bg-[#B7E84B] text-[#0B0F17] border-[#B7E84B] hover:bg-[#a3d438] hover:shadow-[0_0_25px_rgba(183,232,75,0.4)]'
+                        : 'bg-gradient-to-r from-[#064E3B] to-[#047857] text-white border-[#B7E84B]/40 hover:from-[#059669] hover:to-[#064E3B] hover:shadow-[0_12px_28px_-6px_rgba(6,78,59,0.3)]'
+                    }`}
+                  >
+                    <span>GET A FREE QUOTE</span>
+                    <ArrowRight className={`w-4 h-4 transition-transform duration-300 group-hover:translate-x-1.5 ${
+                      isDark ? 'text-[#0B0F17]' : 'text-[#B7E84B]'
+                    }`} />
+                  </button>
+
+                  <button
+                    id="hero-packages-cta-btn"
+                    onClick={() => navigate('/packages')}
+                    className={`inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold tracking-[0.08em] uppercase border transition-all duration-200 shadow-xs cursor-pointer ${
+                      isDark
+                        ? 'bg-white/5 hover:bg-white/10 text-white border-white/20 hover:border-[#B7E84B]'
+                        : 'bg-white text-[#064E3B] border-[#064E3B]/15 hover:border-[#059669] hover:text-[#064E3B] hover:bg-[#FAFAF9]'
+                    }`}
+                  >
+                    <span>VIEW PACKAGES</span>
+                  </button>
+                </div>
+
+                {/* Subtle Micro-Trust Line */}
+                <div className={`mt-3 sm:mt-3.5 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-[11px] sm:text-xs font-semibold tracking-wide transition-colors ${
+                  isDark ? 'text-white/70' : 'text-[#064E3B]/80'
+                }`}>
+                  <span className="flex items-center gap-1.5">⚡ 7–10 Day Delivery</span>
+                  <span className="opacity-40">•</span>
+                  <span>Starting at $159</span>
+                  <span className="opacity-40">•</span>
+                  <span>100% Handcrafted Code</span>
+                </div>
               </div>
             </motion.section>
 
