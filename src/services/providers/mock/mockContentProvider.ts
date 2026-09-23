@@ -14,8 +14,8 @@ import {
 } from '../../cms/types';
 import { INITIAL_WEBSITE_CONTENT } from './initialData';
 
-const DRAFT_STORAGE_KEY = 'commerceforge_cms_draft_v1';
-const PUBLISHED_STORAGE_KEY = 'commerceforge_cms_published_v1';
+const DRAFT_STORAGE_KEY = 'commerceforge_cms_draft_v4';
+const PUBLISHED_STORAGE_KEY = 'commerceforge_cms_published_v4';
 
 export class MockContentProvider implements IContentService, IPortfolioService, IPackageService, IProcessService, IFAQService {
   private draftContent: WebsiteContent;

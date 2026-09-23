@@ -180,6 +180,19 @@ export const ComparisonEditor: React.FC = () => {
             className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white"
           />
         </div>
+
+        <div>
+          <label className="block text-xs font-bold uppercase tracking-wider text-[#B7E84B] mb-1">
+            Bottom CTA Button Text
+          </label>
+          <input
+            type="text"
+            value={comparison.ctaText || 'REQUEST A TECH AUDIT'}
+            onChange={(e) => setComparison({ ...comparison, ctaText: e.target.value })}
+            className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white"
+            placeholder="REQUEST A TECH AUDIT"
+          />
+        </div>
       </div>
 
       {/* Column Headers */}

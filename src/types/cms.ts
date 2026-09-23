@@ -140,6 +140,7 @@ export interface ComparisonSectionContent extends BaseEntity {
   newColumnHeading: string;
   newColumnSubtitle: string;
   newColumnResult: string;
+  ctaText?: string;
   items: ComparisonItem[];
 }
 
@@ -149,6 +150,7 @@ export interface ProcessStepItem extends BaseEntity {
   description: string;
   deliverable: string;
   icon: string;
+  image?: string;
   duration?: string;
   sortOrder: number;
   active: boolean;

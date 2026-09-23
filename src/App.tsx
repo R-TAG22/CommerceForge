@@ -11,7 +11,6 @@ import { HeroMedia } from './components/HeroMedia';
 import { MetricsBar } from './components/MetricsBar';
 import { ComparisonSection } from './components/ComparisonSection';
 import { ProcessSection } from './components/ProcessSection';
-import { AboutSection } from './components/AboutSection';
 import { FaqSection } from './components/FaqSection';
 import { CtaBanner } from './components/CtaBanner';
 import { Footer } from './components/Footer';
@@ -194,9 +193,6 @@ function PublicWebsite() {
 
             {/* 8. Dynamic Sections configured for Home Page in CMS */}
             <DynamicSectionRenderer page="home" onHireClick={() => setIsInquiryOpen(true)} />
-
-            {/* 9. About the Dev Team Teaser */}
-            <AboutSection onCtaClick={() => setIsInquiryOpen(true)} />
 
             {/* 10. Frequently Asked Questions */}
             <FaqSection onCtaClick={() => setIsInquiryOpen(true)} />

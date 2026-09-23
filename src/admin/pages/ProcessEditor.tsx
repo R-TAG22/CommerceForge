@@ -47,6 +47,7 @@ export const ProcessEditor: React.FC = () => {
       title: 'New Milestone Step',
       description: 'Milestone description detailing client deliverables and timelines.',
       deliverable: 'Delivered asset',
+      image: `process-${num}.jpeg`,
       icon: 'Rocket',
       sortOrder: processData.steps.length,
       active: true,
@@ -239,7 +240,7 @@ export const ProcessEditor: React.FC = () => {
                 />
               </div>
 
-              <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
+              <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 w-full">
                 <div>
                   <label className="block text-[10px] font-bold uppercase text-white/50 mb-1">Title</label>
                   <input
@@ -257,6 +258,17 @@ export const ProcessEditor: React.FC = () => {
                     value={step.deliverable}
                     onChange={(e) => handleStepChange(step.id, 'deliverable', e.target.value)}
                     className="w-full px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-[#B7E84B]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold uppercase text-white/50 mb-1">Image Filename</label>
+                  <input
+                    type="text"
+                    value={step.image || ''}
+                    placeholder="e.g. process-01-audit.jpeg"
+                    onChange={(e) => handleStepChange(step.id, 'image', e.target.value)}
+                    className="w-full px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-white/80"
                   />
                 </div>
 

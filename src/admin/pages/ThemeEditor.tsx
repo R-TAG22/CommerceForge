@@ -534,7 +534,7 @@ export const ThemeEditor: React.FC = () => {
                 lineHeight: settings.lineHeight,
               }}
             >
-              We rebuild sluggish stores into sub-second mobile powerhouses. Experience higher conversion rates, zero bloated agency overhead, and bulletproof infrastructure.
+              We rebuild slow, outdated site into high-speed sales engines. Handcrafted, mobile-first and delivered in 7 days.
             </p>
 
             {/* Mini Card Preview */}

@@ -162,7 +162,7 @@ export const SectionsEditor: React.FC = () => {
       badge: template.badge,
       content:
         template.type === 'rich-text-media'
-          ? 'We rebuild sluggish, outdated websites into lightning-fast, mobile-responsive powerhouses with high conversion velocity.'
+          ? 'We rebuild slow, outdated site into high-speed sales engines. Handcrafted, mobile-first and delivered in 7 days.'
           : template.type === 'logo-cloud'
           ? 'Trusted by high-growth DTC brands, regional fitness centers, and modern retailers.'
           : template.type === 'testimonials'

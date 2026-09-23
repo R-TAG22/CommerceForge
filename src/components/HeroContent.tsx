@@ -15,11 +15,16 @@ export const HeroContent: React.FC<HeroContentProps> = ({ onCtaClick }) => {
   const [showReviewsModal, setShowReviewsModal] = useState<boolean>(false);
   const heroData = activeContent?.hero;
 
-  const headlineLine1 = heroData?.headlineLine1 || 'THE DIGITAL';
-  const headlineLine2 = heroData?.headlineLine2 || 'HOME FOR';
-  const headlineHighlight = heroData?.headlineHighlight || 'LOCAL';
-  const headlineLine3 = heroData?.headlineLine3 || 'BUSINESSES.';
-  const description = heroData?.description || 'We rebuild sluggish, outdated websites into lightning-fast, mobile-responsive powerhouses. Professional quality, thumb-friendly design, and transparent pricing starting at $159.';
+  const isOldHeadline = heroData?.headlineLine1 === 'THE DIGITAL';
+  const headlineLine1 = !isOldHeadline && heroData?.headlineLine1 !== undefined ? heroData.headlineLine1 : 'TURN VISITORS';
+  const headlineLine2 = !isOldHeadline && heroData?.headlineLine2 !== undefined ? heroData.headlineLine2 : 'INTO';
+  const headlineHighlight = !isOldHeadline && heroData?.headlineHighlight !== undefined ? heroData.headlineHighlight : 'BUYERS';
+  const headlineLine3 = !isOldHeadline && heroData?.headlineLine3 !== undefined ? heroData.headlineLine3 : '';
+  
+  const isOldDescription = heroData?.description?.includes('sluggish, outdated websites');
+  const description = !isOldDescription && heroData?.description 
+    ? heroData.description 
+    : 'We rebuild slow, outdated site into high-speed sales engines. Handcrafted, mobile-first and delivered in 7 days.';
 
   // Customer avatars for miniature stack
   const clientAvatars = [
@@ -243,13 +248,13 @@ export const HeroContent: React.FC<HeroContentProps> = ({ onCtaClick }) => {
           fontSize: 'clamp(1.5rem, 3.2vw, 2.4rem)',
         }}
       >
-        <span>{headlineLine1} {headlineLine2} </span>
+        <span>{[headlineLine1, headlineLine2].filter(Boolean).join(' ')} </span>
         <span className={`inline-block underline decoration-[#B7E84B] decoration-3 underline-offset-4 ${
           isDark ? 'text-[#B7E84B]' : 'text-[#059669]'
         }`}>
           {headlineHighlight}
         </span>
-        <span> {headlineLine3}</span>
+        {headlineLine3 ? <span> {headlineLine3}</span> : null}
       </h1>
 
       {/* Clean Concise Descriptive Copy */}
