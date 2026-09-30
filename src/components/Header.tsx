@@ -130,7 +130,21 @@ export const Header: React.FC<HeaderProps> = ({
               <div className={`relative flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 max-w-full overflow-hidden transition-transform duration-300 group-hover:scale-105 rounded-xl p-1 border shadow-xs shrink-0 ${
                 isDark ? 'bg-white/10 border-white/20' : 'bg-white/90 border-[#064E3B]/15'
               }`}>
-                <CommerceForgeLogo className="w-full h-full max-w-full max-h-full object-contain filter drop-shadow-xs overflow-hidden" />
+                <img
+                  src={headerData?.logoUrl
+                    ? (headerData.logoUrl.startsWith('http') || headerData.logoUrl.startsWith(import.meta.env.BASE_URL)
+                        ? headerData.logoUrl
+                        : `${import.meta.env.BASE_URL}${headerData.logoUrl.replace(/^\//, '')}`)
+                    : `${import.meta.env.BASE_URL}LOGO.png`}
+                  alt={`${brandName}${brandHighlight} Logo`}
+                  className="w-full h-full max-w-full max-h-full object-contain filter drop-shadow-xs overflow-hidden"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    const fallbackSvg = e.currentTarget.parentElement?.querySelector('svg');
+                    if (fallbackSvg) fallbackSvg.classList.remove('hidden');
+                  }}
+                />
+                <CommerceForgeLogo className="hidden w-full h-full max-w-full max-h-full object-contain filter drop-shadow-xs overflow-hidden" />
               </div>
 
               <div className="flex flex-col">

@@ -40,13 +40,17 @@ function PublicWebsite() {
       ? window.location.origin
       : 'https://r-tag22.github.io/CommerceForge';
 
+    const normalizedBase = (import.meta.env.BASE_URL || '/').replace(/\/+$/, '') + '/';
+    const logoUrl = `${origin}${normalizedBase.startsWith('/') ? '' : '/'}${normalizedBase}LOGO.png`;
+    const siteUrl = `${origin}${normalizedBase.startsWith('/') ? '' : '/'}${normalizedBase}`;
+
     // Organization Schema
     const organizationSchema = {
       '@context': 'https://schema.org',
       '@type': 'Organization',
       name: 'CommerceForge',
-      url: `${origin}/`,
-      logo: `${origin}/logo.png`,
+      url: siteUrl,
+      logo: logoUrl,
       description: 'High-performance e-commerce design and optimization agency',
       contactPoint: {
         '@type': 'ContactPoint',
@@ -60,9 +64,9 @@ function PublicWebsite() {
       '@context': 'https://schema.org',
       '@type': 'LocalBusiness',
       name: 'CommerceForge',
-      image: `${origin}/logo.png`,
+      image: logoUrl,
       description: 'E-commerce optimization agency',
-      url: `${origin}/`,
+      url: siteUrl,
       telephone: '+1-800-555-0199',
       priceRange: '$$',
       address: {

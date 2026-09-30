@@ -54,7 +54,7 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ onCtaClick }) =>
       title: 'Discovery & UX Audit',
       desc: 'We analyze your existing website, review customer drop-offs on mobile, and establish clear conversion goals before writing a single line of code.',
       deliverable: 'Strategy & section blueprint',
-      image: 'process-01-audit.jpeg',
+      image: `${import.meta.env.BASE_URL}assets/process/process-01-audit.jpeg`,
     },
     {
       num: '02',
@@ -63,7 +63,7 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ onCtaClick }) =>
       title: 'Custom Mobile-First Design',
       desc: 'We design bespoke layouts specifically tailored to your brand identity, product lineup, and thumb-friendly touch interactions.',
       deliverable: 'Interactive high-fidelity wireframes',
-      image: 'process-02-mobile-design.jpeg',
+      image: `${import.meta.env.BASE_URL}assets/process/process-02-mobile-design.jpeg`,
     },
     {
       num: '03',
@@ -72,7 +72,7 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ onCtaClick }) =>
       title: 'Handcrafted Clean Code',
       desc: 'Built with modern React, TypeScript, and clean Tailwind CSS. Zero slow drag-and-drop page builder bloat, zero unnecessary plugins.',
       deliverable: 'Sub-600ms page load speeds',
-      image: 'process-03-clean-code.jpeg',
+      image: `${import.meta.env.BASE_URL}assets/process/process-03-clean-code.jpeg`,
     },
     {
       num: '04',
@@ -81,7 +81,7 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ onCtaClick }) =>
       title: 'Cross-Device QA & Launch',
       desc: 'Rigorous testing on iOS, Android, and desktop screens. We configure your custom domain, hook up forms, and hand over full ownership.',
       deliverable: '100% code ownership & zero lock-in',
-      image: 'process-04-qa-launch.jpeg',
+      image: `${import.meta.env.BASE_URL}assets/process/process-04-qa-launch.jpeg`,
     },
   ];
 
@@ -96,14 +96,15 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ onCtaClick }) =>
       if (step.image.startsWith('http://') || step.image.startsWith('https://') || step.image.startsWith('data:')) {
         return step.image;
       }
-      if (step.image.startsWith('/')) {
+      if (step.image.startsWith(import.meta.env.BASE_URL)) {
         return step.image;
       }
-      return `/assets/process/${step.image.replace(/^\/?(assets\/process\/)?/, '')}`;
+      const raw = step.image.replace(/^\/?(assets\/process\/)?/, '');
+      return `${import.meta.env.BASE_URL}assets/process/${raw}`;
     }
     const num = (step.stepNumber || step.num || '').toString().padStart(2, '0');
     const filename = STEP_IMAGE_MAP[num] || DEFAULT_IMAGES[idx % DEFAULT_IMAGES.length];
-    return `/assets/process/${filename}`;
+    return `${import.meta.env.BASE_URL}assets/process/${filename}`;
   };
 
   return (

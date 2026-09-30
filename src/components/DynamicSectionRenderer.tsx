@@ -4,7 +4,7 @@ import { useReducedMotion } from '../hooks/useReducedMotion';
 import { useCMS } from '../context/CMSContext';
 import { CustomPageSection } from '../types/cms';
 import { useRouter } from '../admin/router';
-import { FALLBACK_STORE_IMAGE, handleImageError } from '../utils/imageFallbacks';
+import { FALLBACK_STORE_IMAGE, handleImageError, assetUrl } from '../utils/imageFallbacks';
 import {
   Zap,
   Sparkles,
@@ -231,7 +231,7 @@ export const DynamicSectionRenderer: React.FC<DynamicSectionRendererProps> = ({
                     <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-black/20 aspect-video sm:aspect-4/3 flex items-center justify-center group">
                       {section.mediaUrl ? (
                         <img
-                          src={section.mediaUrl}
+                          src={assetUrl(section.mediaUrl)}
                           alt={section.mediaAlt || section.title}
                           onError={(e) => handleImageError(e, FALLBACK_STORE_IMAGE)}
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -298,7 +298,7 @@ export const DynamicSectionRenderer: React.FC<DynamicSectionRendererProps> = ({
                       >
                         {logo.logoUrl ? (
                           <img
-                            src={logo.logoUrl}
+                            src={assetUrl(logo.logoUrl)}
                             alt={logo.name}
                             onError={(e) => {
                               // If logo image fails, hide broken img element

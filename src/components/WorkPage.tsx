@@ -199,7 +199,7 @@ export const CLIENT_SITES: ClientSite[] = [
     speed: '680ms TTFB',
     vitals: '99/100 Vitals',
     stack: ['Shopify Plus', 'Hydrogen', 'Tailwind CSS', '3D Configurator', 'Sanity CMS'],
-    image: '/screenshots/willow-bath.png',
+    image: `${import.meta.env.BASE_URL}screenshots/willow-bath.png`,
     accentHex: '#B7E84B',
     summary: 'Engineered a bespoke high-AOV headless store with real-time marble and finish configurators, dynamic freight delivery calculation, and sub-700ms mobile checkout.',
     highlights: [
@@ -235,7 +235,7 @@ export const CLIENT_SITES: ClientSite[] = [
     speed: '540ms TTFB',
     vitals: '100/100 Vitals',
     stack: ['Next.js 15', 'Sanity CMS', 'Algolia Search', 'Stripe', 'Tailwind'],
-    image: '/screenshots/sultans-fabrics.png',
+    image: `${import.meta.env.BASE_URL}screenshots/sultans-fabrics.png`,
     accentHex: '#E2B176',
     summary: 'Digital shelf modernization for an elite textile house. Features tactile high-res micro-texture zoom, dynamic yardage calculations, and instant fabric sample kits.',
     highlights: [
@@ -271,7 +271,7 @@ export const CLIENT_SITES: ClientSite[] = [
     speed: '490ms TTFB',
     vitals: '98/100 Vitals',
     stack: ['Next.js 15', 'Edge Caching', 'Square API', 'Dynamic Menus', 'Tailwind'],
-    image: '/screenshots/canton-roast.png',
+    image: `${import.meta.env.BASE_URL}screenshots/canton-roast.png`,
     accentHex: '#FF7A45',
     summary: 'Instantaneous online ordering and catering portal with automated kitchen ticket dispatch, dynamic pickup timeslots, and frictionless Apple/Google Pay.',
     highlights: [
@@ -307,7 +307,7 @@ export const CLIENT_SITES: ClientSite[] = [
     speed: '460ms TTFB',
     vitals: '100/100 Vitals',
     stack: ['React 18', 'TypeScript', 'Tailwind CSS', 'HubSpot API', 'Vite'],
-    image: '/screenshots/the-lean-company.png',
+    image: `${import.meta.env.BASE_URL}screenshots/the-lean-company.png`,
     accentHex: '#B7E84B',
     summary: 'Architected an authoritative European enterprise portal featuring an interactive Lean maturity self-audit engine that qualifies and routes enterprise C-level prospects.',
     highlights: [
@@ -343,7 +343,7 @@ export const CLIENT_SITES: ClientSite[] = [
     speed: '590ms TTFB',
     vitals: '99/100 Vitals',
     stack: ['Shopify Liquid 2.0', 'Hydrogen', 'Klaviyo', '3D Model Viewer', 'Tailwind'],
-    image: '/screenshots/diyative.png',
+    image: `${import.meta.env.BASE_URL}screenshots/diyative.png`,
     accentHex: '#4CC9F0',
     summary: 'Engineered a high-conversion hardware showcase with interactive machine comparison matrices, accessory cross-sell bundles, and community project showcases.',
     highlights: [
@@ -379,7 +379,7 @@ export const CLIENT_SITES: ClientSite[] = [
     speed: '510ms TTFB',
     vitals: '99/100 Vitals',
     stack: ['Shopify Plus', 'Recharge Subscriptions', 'Tailwind', 'Quiz Engine'],
-    image: '/screenshots/skin-by-brownlee.png',
+    image: `${import.meta.env.BASE_URL}screenshots/skin-by-brownlee.png`,
     accentHex: '#F78DA7',
     summary: 'Clinical beauty digital flagship with an intuitive 60-second skin consultation quiz, automated regimen subscription refills, and verified dermatologist social proof.',
     highlights: [
@@ -415,7 +415,7 @@ export const CLIENT_SITES: ClientSite[] = [
     speed: '610ms TTFB',
     vitals: '99/100 Vitals',
     stack: ['Shopify Plus', 'Recharge Subscriptions', 'Tailwind CSS', 'Vite / Edge'],
-    image: '/screenshots/new/goldandgrove.png',
+    image: `${import.meta.env.BASE_URL}screenshots/new/goldandgrove.png`,
     accentHex: '#D4A359',
     summary: 'Re-engineered high-converting supplement subscription funnel with ingredient grounding, responsive nutritional drawers, and sub-600ms mobile PDPs.',
     highlights: [
@@ -451,7 +451,7 @@ export const CLIENT_SITES: ClientSite[] = [
     speed: '520ms TTFB',
     vitals: '98/100 Vitals',
     stack: ['Modern React', 'Instant Search', 'Stripe Payments', 'Edge CDN'],
-    image: '/screenshots/new/premiumtrendsshop.png',
+    image: `${import.meta.env.BASE_URL}screenshots/new/premiumtrendsshop.png`,
     accentHex: '#B7E84B',
     summary: 'Engineered an ultra-lean dynamic catalog with instant search, sticky mobile quick-buy, and real-time social proof tags.',
     highlights: [
@@ -487,7 +487,7 @@ export const CLIENT_SITES: ClientSite[] = [
     speed: '530ms TTFB',
     vitals: '100/100 Vitals',
     stack: ['Shopify Plus', 'Hydrogen', 'Tailwind', 'Klaviyo'],
-    image: '/screenshots/new/rosemira.png',
+    image: `${import.meta.env.BASE_URL}screenshots/new/rosemira.png`,
     accentHex: '#D48C70',
     summary: 'Handcrafted apothecary digital storefront with dynamic regimen routines, ingredient harvest certifications, and sensory texture photography.',
     highlights: [
@@ -523,7 +523,7 @@ export const CLIENT_SITES: ClientSite[] = [
     speed: '500ms TTFB',
     vitals: '98/100 Vitals',
     stack: ['Hydrogen Storefront', 'B2B Wholesale Portal', 'Tailwind', 'Motion'],
-    image: '/screenshots/new/coalitionla.png',
+    image: `${import.meta.env.BASE_URL}screenshots/new/coalitionla.png`,
     accentHex: '#9A8C98',
     summary: 'Designed a high-fashion runway lookbook with instant size recommendation, tactile texture zoom, and integrated boutique wholesale buyer portal.',
     highlights: [

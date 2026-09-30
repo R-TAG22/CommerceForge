@@ -17,7 +17,7 @@ import { mediaService } from '../../services/cms/mediaService';
 import { MediaAsset } from '../../types/cms';
 import { useToast } from '../components/Toast';
 import { ConfirmDialog } from '../components/ConfirmDialog';
-import { FALLBACK_STORE_IMAGE, handleImageError } from '../../utils/imageFallbacks';
+import { FALLBACK_STORE_IMAGE, handleImageError, assetUrl } from '../../utils/imageFallbacks';
 
 export const MediaLibrary: React.FC = () => {
   const { showToast } = useToast();
@@ -287,7 +287,7 @@ export const MediaLibrary: React.FC = () => {
                   className="aspect-video rounded-xl bg-black/40 overflow-hidden relative border border-white/10 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none"
                 >
                   <img
-                    src={item.url}
+                    src={assetUrl(item.url)}
                     alt={item.altText || displayName}
                     onError={(e) => handleImageError(e, FALLBACK_STORE_IMAGE)}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -395,7 +395,7 @@ export const MediaLibrary: React.FC = () => {
 
             <div className="flex items-center gap-3 p-2 rounded-xl bg-black/30 border border-white/10">
               <img
-                src={editingAltItem.url}
+                src={assetUrl(editingAltItem.url)}
                 alt=""
                 onError={(e) => handleImageError(e, FALLBACK_STORE_IMAGE)}
                 className="w-16 h-12 object-cover rounded-lg shrink-0 border border-white/10"
@@ -468,7 +468,7 @@ export const MediaLibrary: React.FC = () => {
             </div>
             <div className="max-h-[60vh] overflow-hidden rounded-2xl bg-black/40 flex items-center justify-center">
               <img
-                src={previewItem.url}
+                src={assetUrl(previewItem.url)}
                 alt={previewItem.altText || previewItem.fileName || (previewItem as any).name}
                 onError={(e) => handleImageError(e, FALLBACK_STORE_IMAGE)}
                 className="max-h-full max-w-full object-contain"

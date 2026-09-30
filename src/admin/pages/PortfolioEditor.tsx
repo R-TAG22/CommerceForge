@@ -20,7 +20,7 @@ import { PortfolioProject } from '../../types/cms';
 import { useToast } from '../components/Toast';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { MediaPickerModal } from '../components/MediaPickerModal';
-import { FALLBACK_STORE_IMAGE, handleImageError } from '../../utils/imageFallbacks';
+import { FALLBACK_STORE_IMAGE, handleImageError, assetUrl } from '../../utils/imageFallbacks';
 
 export const PortfolioEditor: React.FC = () => {
   const { draftContent, updateSection, publishSection } = useCMS();
@@ -105,7 +105,7 @@ export const PortfolioEditor: React.FC = () => {
       clientName: 'Client Name',
       url: 'https://example.com',
       displayUrl: 'example.com',
-      previewImage: '/screenshots/new/goldandgrove.png',
+      previewImage: `${import.meta.env.BASE_URL}screenshots/new/goldandgrove.png`,
       buttonText: 'Visit Live',
       category: 'ecommerce',
       categoryLabel: 'E-COMMERCE & DTC',
@@ -276,7 +276,7 @@ export const PortfolioEditor: React.FC = () => {
             {/* Thumbnail Preview */}
             <div className="w-24 h-16 rounded-xl bg-black/40 overflow-hidden shrink-0 border border-white/10 relative">
               <img
-                src={project.previewImage}
+                src={assetUrl(project.previewImage)}
                 alt={project.title}
                 onError={(e) => handleImageError(e, FALLBACK_STORE_IMAGE)}
                 className="w-full h-full object-cover"
@@ -477,7 +477,7 @@ export const PortfolioEditor: React.FC = () => {
               <div className="flex items-center gap-4 p-3 rounded-2xl bg-[#162C20] border border-white/10">
                 <div className="w-28 h-18 rounded-xl bg-black/40 overflow-hidden shrink-0 border border-white/10">
                   <img
-                    src={editingProject.previewImage}
+                    src={assetUrl(editingProject.previewImage)}
                     alt="Preview"
                     onError={(e) => handleImageError(e, FALLBACK_STORE_IMAGE)}
                     className="w-full h-full object-cover"

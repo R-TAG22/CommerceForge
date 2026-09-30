@@ -58,7 +58,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     initials: 'RT',
     avatarSrc: russellPhoto,
     fallbackSvg: createAvatarSvg('RT', '#1E3A2B', '#0D1E16', '#B7E84B'),
-    image: 'RUSSELL T..jpg',
+    image: `${import.meta.env.BASE_URL}images/team/RUSSELL T..jpg`,
   },
   {
     id: 'ryan-b',
@@ -70,7 +70,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     initials: 'RB',
     avatarSrc: ryanPhoto,
     fallbackSvg: createAvatarSvg('RB', '#152E22', '#0A1811', '#8FA98F'),
-    image: 'RYAN B.jpg',
+    image: `${import.meta.env.BASE_URL}images/team/RYAN B.jpg`,
   },
   {
     id: 'nhina-p',
@@ -82,7 +82,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     initials: 'NP',
     avatarSrc: nhinaPhoto,
     fallbackSvg: createAvatarSvg('NP', '#1B2D3B', '#0E1720', '#B7E84B'),
-    image: 'NHINA P.jpg',
+    image: `${import.meta.env.BASE_URL}images/team/NHINA P.jpg`,
   },
   {
     id: 'jamez-m',
@@ -94,7 +94,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     initials: 'JM',
     avatarSrc: jamezPhoto,
     fallbackSvg: createAvatarSvg('JM', '#22232F', '#111218', '#A5C6A2'),
-    image: 'JAMEZ M.jpg',
+    image: `${import.meta.env.BASE_URL}images/team/JAMEZ M.jpg`,
   },
 ];
 
@@ -176,8 +176,8 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onHireClick, onRequestReve
                       referrerPolicy="no-referrer"
                       onError={(e) => {
                         const target = e.currentTarget;
-                        const publicPath = `/images/team/${member.id}.jpg`;
-                        if (!target.dataset.triedPublic && !target.src.endsWith(publicPath)) {
+                        const publicPath = `${import.meta.env.BASE_URL}images/team/${member.id}.jpg`;
+                        if (!target.dataset.triedPublic && target.src !== publicPath) {
                           target.dataset.triedPublic = 'true';
                           target.src = publicPath;
                         } else if (member.fallbackSvg && target.src !== member.fallbackSvg) {
