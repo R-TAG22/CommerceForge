@@ -1,16 +1,9 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Camera } from 'lucide-react';
 import { AboutSection } from './AboutSection';
 import { CommerceForgePromise } from './CommerceForgePromise';
 import { usePublicTheme } from '../context/PublicThemeContext';
 import { useReducedMotion } from '../hooks/useReducedMotion';
-
-// Relative imports for bundler resolution ensuring assets bundle directly into build
-import russellPhoto from '../assets/team/russell-t.jpg';
-import ryanPhoto from '../assets/team/ryan-b.jpg';
-import nhinaPhoto from '../assets/team/nhina-p.jpg';
-import jamezPhoto from '../assets/team/jamez-m.jpg';
 
 interface AboutPageProps {
   onHireClick?: () => void;
@@ -24,28 +17,8 @@ export interface TeamMember {
   isFounder: boolean;
   specializations: string[];
   bio: string;
-  image?: string;
-  avatarSrc: string;
-  fallbackSvg: string;
-  initials: string;
+  image: string;
 }
-
-// Generate self-contained inline SVG avatars with distinct gradients
-const createAvatarSvg = (initials: string, bgFrom: string, bgTo: string, accent: string) => {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="200" height="240">
-    <defs>
-      <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="${bgFrom}"/>
-        <stop offset="100%" stop-color="${bgTo}"/>
-      </linearGradient>
-    </defs>
-    <rect width="200" height="240" fill="url(#bg)"/>
-    <circle cx="100" cy="85" r="42" fill="${accent}" fill-opacity="0.18" stroke="${accent}" stroke-width="2"/>
-    <path d="M 45 195 C 45 145, 155 145, 155 195 Z" fill="${accent}" fill-opacity="0.14" stroke="${accent}" stroke-width="2"/>
-    <text x="100" y="96" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="900" fill="${accent}" text-anchor="middle" letter-spacing="1.5">${initials}</text>
-  </svg>`;
-  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
-};
 
 export const TEAM_MEMBERS: TeamMember[] = [
   {
@@ -55,10 +28,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     isFounder: true,
     specializations: ['Web Developer', 'E-commerce Operations', 'Photo Video Editor'],
     bio: 'Leads engineering architecture, custom storefront builds, high-converting digital shelves, and photo/video media production.',
-    initials: 'RT',
-    avatarSrc: russellPhoto,
-    fallbackSvg: createAvatarSvg('RT', '#1E3A2B', '#0D1E16', '#B7E84B'),
-    image: `${import.meta.env.BASE_URL}images/team/RUSSELL T..jpg`,
+    image: `${import.meta.env.BASE_URL}images/team/RUSSELL T.jpg`,
   },
   {
     id: 'ryan-b',
@@ -67,9 +37,6 @@ export const TEAM_MEMBERS: TeamMember[] = [
     isFounder: false,
     specializations: ['Web Developer', 'E-commerce Operation'],
     bio: 'Co-leads responsive frontend development, merchant inventory synchronization, and sub-second checkout ergonomics.',
-    initials: 'RB',
-    avatarSrc: ryanPhoto,
-    fallbackSvg: createAvatarSvg('RB', '#152E22', '#0A1811', '#8FA98F'),
     image: `${import.meta.env.BASE_URL}images/team/RYAN B.jpg`,
   },
   {
@@ -79,9 +46,6 @@ export const TEAM_MEMBERS: TeamMember[] = [
     isFounder: false,
     specializations: ['Web Developer', 'E-commerce Operation'],
     bio: 'Co-leads client component architectures, conversion rate optimization, and automated catalog operations.',
-    initials: 'NP',
-    avatarSrc: nhinaPhoto,
-    fallbackSvg: createAvatarSvg('NP', '#1B2D3B', '#0E1720', '#B7E84B'),
     image: `${import.meta.env.BASE_URL}images/team/NHINA P.jpg`,
   },
   {
@@ -91,9 +55,6 @@ export const TEAM_MEMBERS: TeamMember[] = [
     isFounder: false,
     specializations: ['Web Developer', 'E-commerce Operation'],
     bio: 'Co-leads backend integrations, API pipelines, scalable storefront hosting, and merchant technical support.',
-    initials: 'JM',
-    avatarSrc: jamezPhoto,
-    fallbackSvg: createAvatarSvg('JM', '#22232F', '#111218', '#A5C6A2'),
     image: `${import.meta.env.BASE_URL}images/team/JAMEZ M.jpg`,
   },
 ];
@@ -101,7 +62,6 @@ export const TEAM_MEMBERS: TeamMember[] = [
 export const AboutPage: React.FC<AboutPageProps> = ({ onHireClick, onRequestRevenueClick }) => {
   const { isDark } = usePublicTheme();
   const prefersReducedMotion = useReducedMotion();
-  const [failedImages, setFailedImages] = React.useState<Record<string, boolean>>({});
 
   return (
     <div className={`w-full transition-colors duration-300 ${isDark ? 'text-white' : 'text-[#1E3A2B]'}`}>
@@ -169,51 +129,18 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onHireClick, onRequestReve
                     ? 'bg-gradient-to-br from-white/5 via-white/[0.02] to-white/5 border-white/10 group-hover:border-[#B7E84B]/60'
                     : 'bg-gradient-to-br from-[#EAF3E8] via-[#F4F8F3] to-[#DFEADF] border-[#1E3A2B]/10 group-hover:border-[#B7E84B]/60'
                 }`}>
-                  {member.avatarSrc && !failedImages[member.id] ? (
-                    <img 
-                      src={member.avatarSrc} 
-                      alt={member.name} 
-                      referrerPolicy="no-referrer"
-                      onError={(e) => {
-                        const target = e.currentTarget;
-                        const publicPath = `${import.meta.env.BASE_URL}images/team/${member.id}.jpg`;
-                        if (!target.dataset.triedPublic && target.src !== publicPath) {
-                          target.dataset.triedPublic = 'true';
-                          target.src = publicPath;
-                        } else if (member.fallbackSvg && target.src !== member.fallbackSvg) {
-                          target.src = member.fallbackSvg;
-                        } else {
-                          setFailedImages((prev) => ({ ...prev, [member.id]: true }));
-                        }
-                      }}
-                      className="w-full h-full object-cover object-center scale-105 group-hover:scale-110 transition-transform duration-500 origin-center" 
-                    />
-                  ) : member.fallbackSvg ? (
-                    <img
-                      src={member.fallbackSvg}
-                      alt={member.name}
-                      className="w-full h-full object-cover object-center"
-                    />
-                  ) : (
-                    <div className="flex flex-col items-center justify-center p-4 text-center">
-                      {/* Stylized Monogram Initials Avatar Badge */}
-                      <div className={`w-20 h-20 sm:w-22 sm:h-22 rounded-full text-[#B7E84B] border border-[#B7E84B]/30 flex items-center justify-center text-2xl sm:text-3xl font-black font-mono shadow-md group-hover:scale-105 group-hover:shadow-[0_0_20px_rgba(183,232,75,0.3)] transition-all ${
-                        isDark ? 'bg-[#0B0F17]' : 'bg-[#1E3A2B]'
-                      }`}>
-                        {member.initials}
-                      </div>
-
-                      {/* Photo Slot Notice */}
-                      <div className={`mt-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-bold border shadow-xs ${
-                        isDark
-                          ? 'bg-white/10 backdrop-blur-xs text-white/80 border-white/10'
-                          : 'bg-white/90 backdrop-blur-xs text-[#4A584E] border-[#1E3A2B]/10'
-                      }`}>
-                        <Camera className={`w-3 h-3 ${isDark ? 'text-[#B7E84B]' : 'text-[#2D5A40]'}`} />
-                        <span>Photo Slot</span>
-                      </div>
-                    </div>
-                  )}
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      const fallback = `${import.meta.env.BASE_URL}images/team/${member.id}.jpg`;
+                      if (target.src !== fallback) {
+                        target.src = fallback;
+                      }
+                    }}
+                    className="w-full h-full object-cover object-center"
+                  />
 
                   {/* Founder / Co-Founder Badge on Photo Frame */}
                   <div className="absolute top-3 right-3 z-10">
