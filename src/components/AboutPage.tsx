@@ -176,10 +176,10 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onHireClick, onRequestReve
                       referrerPolicy="no-referrer"
                       onError={(e) => {
                         const target = e.currentTarget;
-                        // Tiered fallback: relative import -> base-prefixed path -> inline fallback SVG
-                        const basePrefixed = `${import.meta.env.BASE_URL}images/team/${member.id}.jpg`;
-                        if (target.src !== basePrefixed && !target.src.includes(basePrefixed)) {
-                          target.src = basePrefixed;
+                        const publicPath = `/images/team/${member.id}.jpg`;
+                        if (!target.dataset.triedPublic && !target.src.endsWith(publicPath)) {
+                          target.dataset.triedPublic = 'true';
+                          target.src = publicPath;
                         } else if (member.fallbackSvg && target.src !== member.fallbackSvg) {
                           target.src = member.fallbackSvg;
                         } else {

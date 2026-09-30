@@ -3,6 +3,7 @@ import { X, Upload, Search, Check, Image as ImageIcon } from 'lucide-react';
 import { MediaAsset } from '../../types/cms';
 import { mediaService } from '../../services/cms/mediaService';
 import { useToast } from './Toast';
+import { FALLBACK_STORE_IMAGE, handleImageError } from '../../utils/imageFallbacks';
 
 interface MediaPickerModalProps {
   isOpen: boolean;
@@ -140,6 +141,7 @@ export const MediaPickerModal: React.FC<MediaPickerModalProps> = ({
                   <img
                     src={asset.url}
                     alt={asset.altText}
+                    onError={(e) => handleImageError(e, FALLBACK_STORE_IMAGE)}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"
                   />

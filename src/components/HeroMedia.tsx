@@ -1,6 +1,14 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { ShoppingBag, Dumbbell, Utensils, Briefcase, Zap, TrendingUp, Clock, ArrowRight } from 'lucide-react';
 import { usePublicTheme } from '../context/PublicThemeContext';
+import { FALLBACK_STORE_IMAGE, FALLBACK_MOBILE_IMAGE, handleImageError } from '../utils/imageFallbacks';
+
+const getWebpUrl = (url: string): string | null => {
+  if (url.endsWith('.jpg')) {
+    return url.replace('.jpg', '.webp');
+  }
+  return null;
+};
 
 // Web Audio API tactile audio click for subtle slider feedback
 const playTickTone = () => {
@@ -329,11 +337,13 @@ export const HeroMedia: React.FC = () => {
               }`}
             >
               <picture>
-                <source type="image/webp" srcSet={activeNicheData.mobileBefore.replace('.jpg', '.webp')} />
+                {getWebpUrl(activeNicheData.mobileBefore) && (
+                  <source type="image/webp" srcSet={getWebpUrl(activeNicheData.mobileBefore)!} />
+                )}
                 <img 
                   src={activeNicheData.mobileBefore} 
-                  srcSet={`${activeNicheData.mobileBefore.replace('.jpg', '.webp')} 1x, ${activeNicheData.mobileBefore} 1x`}
                   alt={`${activeNicheData.clientName} old site on mobile`} 
+                  onError={(e) => handleImageError(e, FALLBACK_MOBILE_IMAGE)}
                   width="411" 
                   height="896" 
                   className="block w-full object-cover object-top select-none pointer-events-none"
@@ -384,11 +394,13 @@ export const HeroMedia: React.FC = () => {
               >
                 {/* 1. Base Layer: Redesigned "After" Desktop Screenshot with WebP */}
                 <picture>
-                  <source type="image/webp" srcSet={activeNicheData.desktopAfter.replace('.jpg', '.webp')} />
+                  {getWebpUrl(activeNicheData.desktopAfter) && (
+                    <source type="image/webp" srcSet={getWebpUrl(activeNicheData.desktopAfter)!} />
+                  )}
                   <img 
                     src={activeNicheData.desktopAfter} 
-                    srcSet={`${activeNicheData.desktopAfter.replace('.jpg', '.webp')} 1x, ${activeNicheData.desktopAfter} 1x`}
                     alt={`${activeNicheData.clientName} after rebuild`} 
+                    onError={(e) => handleImageError(e, FALLBACK_STORE_IMAGE)}
                     className="block w-full object-cover object-top select-none pointer-events-none"
                     style={{ aspectRatio: '16 / 9' }}
                     draggable={false}
@@ -405,11 +417,13 @@ export const HeroMedia: React.FC = () => {
                   style={{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}
                 >
                   <picture>
-                    <source type="image/webp" srcSet={activeNicheData.desktopBefore.replace('.jpg', '.webp')} />
+                    {getWebpUrl(activeNicheData.desktopBefore) && (
+                      <source type="image/webp" srcSet={getWebpUrl(activeNicheData.desktopBefore)!} />
+                    )}
                     <img 
                       src={activeNicheData.desktopBefore} 
-                      srcSet={`${activeNicheData.desktopBefore.replace('.jpg', '.webp')} 1x, ${activeNicheData.desktopBefore} 1x`}
                       alt={`${activeNicheData.clientName} before rebuild`} 
+                      onError={(e) => handleImageError(e, FALLBACK_STORE_IMAGE)}
                       className="block w-full object-cover object-top select-none pointer-events-none"
                       style={{ aspectRatio: '16 / 9' }}
                       draggable={false}
@@ -526,11 +540,13 @@ export const HeroMedia: React.FC = () => {
               }`}
             >
               <picture>
-                <source type="image/webp" srcSet={activeNicheData.mobileAfter.replace('.jpg', '.webp')} />
+                {getWebpUrl(activeNicheData.mobileAfter) && (
+                  <source type="image/webp" srcSet={getWebpUrl(activeNicheData.mobileAfter)!} />
+                )}
                 <img 
                   src={activeNicheData.mobileAfter} 
-                  srcSet={`${activeNicheData.mobileAfter.replace('.jpg', '.webp')} 1x, ${activeNicheData.mobileAfter} 1x`}
                   alt={`${activeNicheData.clientName} rebuilt on mobile`} 
+                  onError={(e) => handleImageError(e, FALLBACK_MOBILE_IMAGE)}
                   width="391" 
                   height="857" 
                   className="block w-full object-cover object-top select-none pointer-events-none"
@@ -557,11 +573,13 @@ export const HeroMedia: React.FC = () => {
                 isDark ? 'bg-[#0B0F17] border-white/10' : 'bg-white border-[#064E3B]/10'
               }`}>
                 <picture>
-                  <source type="image/webp" srcSet={activeNicheData.mobileBefore.replace('.jpg', '.webp')} />
+                  {getWebpUrl(activeNicheData.mobileBefore) && (
+                    <source type="image/webp" srcSet={getWebpUrl(activeNicheData.mobileBefore)!} />
+                  )}
                   <img 
                     src={activeNicheData.mobileBefore} 
-                    srcSet={`${activeNicheData.mobileBefore.replace('.jpg', '.webp')} 1x, ${activeNicheData.mobileBefore} 1x`}
                     alt={`${activeNicheData.clientName} old site on mobile`} 
+                    onError={(e) => handleImageError(e, FALLBACK_MOBILE_IMAGE)}
                     className="block w-full object-cover object-top"
                     style={{ aspectRatio: '411 / 896' }}
                     loading="lazy"
@@ -580,11 +598,13 @@ export const HeroMedia: React.FC = () => {
                 isDark ? 'bg-[#0B0F17] border-white/10' : 'bg-white border-[#064E3B]/10'
               }`}>
                 <picture>
-                  <source type="image/webp" srcSet={activeNicheData.mobileAfter.replace('.jpg', '.webp')} />
+                  {getWebpUrl(activeNicheData.mobileAfter) && (
+                    <source type="image/webp" srcSet={getWebpUrl(activeNicheData.mobileAfter)!} />
+                  )}
                   <img 
                     src={activeNicheData.mobileAfter} 
-                    srcSet={`${activeNicheData.mobileAfter.replace('.jpg', '.webp')} 1x, ${activeNicheData.mobileAfter} 1x`}
                     alt={`${activeNicheData.clientName} rebuilt on mobile`} 
+                    onError={(e) => handleImageError(e, FALLBACK_MOBILE_IMAGE)}
                     className="block w-full object-cover object-top"
                     style={{ aspectRatio: '391 / 857' }}
                     loading="lazy"

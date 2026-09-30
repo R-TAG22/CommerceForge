@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { useCMS } from '../context/CMSContext';
 import { usePublicTheme } from '../context/PublicThemeContext';
 import { useReducedMotion } from '../hooks/useReducedMotion';
+import { FALLBACK_PROCESS_IMAGES, handleImageError } from '../utils/imageFallbacks';
 
 interface ProcessSectionProps {
   onCtaClick?: () => void;
@@ -92,12 +93,17 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ onCtaClick }) =>
 
   const getStepImage = (step: any, idx: number): string => {
     if (step.image) {
-      // Strip any accidental leading paths so it stays consistent
-      return step.image.replace(/^\/?(assets\/process\/)?/, '');
+      if (step.image.startsWith('http://') || step.image.startsWith('https://') || step.image.startsWith('data:')) {
+        return step.image;
+      }
+      if (step.image.startsWith('/')) {
+        return step.image;
+      }
+      return `/assets/process/${step.image.replace(/^\/?(assets\/process\/)?/, '')}`;
     }
     const num = (step.stepNumber || step.num || '').toString().padStart(2, '0');
-    if (STEP_IMAGE_MAP[num]) return STEP_IMAGE_MAP[num];
-    return DEFAULT_IMAGES[idx % DEFAULT_IMAGES.length];
+    const filename = STEP_IMAGE_MAP[num] || DEFAULT_IMAGES[idx % DEFAULT_IMAGES.length];
+    return `/assets/process/${filename}`;
   };
 
   return (
@@ -160,8 +166,9 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ onCtaClick }) =>
                   isDark ? 'bg-[#0B111A] border-white/10' : 'bg-[#F4F6F4] border-[#1E3A2B]/8'
                 }`}>
                   <img
-                    src={`/assets/process/${imageFilename}`}
+                    src={imageFilename}
                     alt={step.title}
+                    onError={(e) => handleImageError(e, FALLBACK_PROCESS_IMAGES[String(stepNum).padStart(2, '0')] || FALLBACK_PROCESS_IMAGES['01'])}
                     className="w-full h-full object-cover object-center rounded-t-3xl group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                   />

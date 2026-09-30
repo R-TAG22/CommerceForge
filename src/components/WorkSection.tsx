@@ -5,6 +5,7 @@ import { useReducedMotion } from '../hooks/useReducedMotion';
 import { useCMS } from '../context/CMSContext';
 import { usePublicTheme } from '../context/PublicThemeContext';
 import { PortfolioProject } from '../types/cms';
+import { FALLBACK_STORE_IMAGE, handleImageError } from '../utils/imageFallbacks';
 
 export interface ClientShowcaseItem {
   id: string;
@@ -471,6 +472,7 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onHireClick }) => {
                     src={item.previewImage}
                     alt={`${item.name} website preview`}
                     loading="lazy"
+                    onError={(e) => handleImageError(e, FALLBACK_STORE_IMAGE)}
                     className="w-full h-full object-cover object-top pt-7 transition-transform duration-500 group-hover/card:scale-105"
                   />
 
@@ -617,6 +619,7 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onHireClick }) => {
               <img
                 src={selectedCase.previewImage}
                 alt={`${selectedCase.name} store interface preview`}
+                onError={(e) => handleImageError(e, FALLBACK_STORE_IMAGE)}
                 className="w-full h-full object-cover object-top"
               />
             </div>

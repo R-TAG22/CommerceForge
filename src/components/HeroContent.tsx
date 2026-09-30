@@ -95,6 +95,13 @@ export const HeroContent: React.FC<HeroContentProps> = ({ onCtaClick }) => {
                 <img
                   src={client.img}
                   alt={client.name}
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (!target.dataset.triedFallback) {
+                      target.dataset.triedFallback = 'true';
+                      target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80';
+                    }
+                  }}
                   className="w-full h-full object-cover"
                   loading="eager"
                 />
@@ -189,6 +196,13 @@ export const HeroContent: React.FC<HeroContentProps> = ({ onCtaClick }) => {
                           <img
                             src={client.img}
                             alt={client.name}
+                            onError={(e) => {
+                              const target = e.currentTarget;
+                              if (!target.dataset.triedFallback) {
+                                target.dataset.triedFallback = 'true';
+                                target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80';
+                              }
+                            }}
                             className="w-7 h-7 rounded-full object-cover"
                           />
                           <div>

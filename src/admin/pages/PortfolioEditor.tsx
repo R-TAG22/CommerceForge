@@ -20,6 +20,7 @@ import { PortfolioProject } from '../../types/cms';
 import { useToast } from '../components/Toast';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { MediaPickerModal } from '../components/MediaPickerModal';
+import { FALLBACK_STORE_IMAGE, handleImageError } from '../../utils/imageFallbacks';
 
 export const PortfolioEditor: React.FC = () => {
   const { draftContent, updateSection, publishSection } = useCMS();
@@ -277,6 +278,7 @@ export const PortfolioEditor: React.FC = () => {
               <img
                 src={project.previewImage}
                 alt={project.title}
+                onError={(e) => handleImageError(e, FALLBACK_STORE_IMAGE)}
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
@@ -477,6 +479,7 @@ export const PortfolioEditor: React.FC = () => {
                   <img
                     src={editingProject.previewImage}
                     alt="Preview"
+                    onError={(e) => handleImageError(e, FALLBACK_STORE_IMAGE)}
                     className="w-full h-full object-cover"
                   />
                 </div>

@@ -17,6 +17,7 @@ import { mediaService } from '../../services/cms/mediaService';
 import { MediaAsset } from '../../types/cms';
 import { useToast } from '../components/Toast';
 import { ConfirmDialog } from '../components/ConfirmDialog';
+import { FALLBACK_STORE_IMAGE, handleImageError } from '../../utils/imageFallbacks';
 
 export const MediaLibrary: React.FC = () => {
   const { showToast } = useToast();
@@ -288,6 +289,7 @@ export const MediaLibrary: React.FC = () => {
                   <img
                     src={item.url}
                     alt={item.altText || displayName}
+                    onError={(e) => handleImageError(e, FALLBACK_STORE_IMAGE)}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"
                   />
@@ -395,6 +397,7 @@ export const MediaLibrary: React.FC = () => {
               <img
                 src={editingAltItem.url}
                 alt=""
+                onError={(e) => handleImageError(e, FALLBACK_STORE_IMAGE)}
                 className="w-16 h-12 object-cover rounded-lg shrink-0 border border-white/10"
               />
               <div className="truncate text-xs">
@@ -467,6 +470,7 @@ export const MediaLibrary: React.FC = () => {
               <img
                 src={previewItem.url}
                 alt={previewItem.altText || previewItem.fileName || (previewItem as any).name}
+                onError={(e) => handleImageError(e, FALLBACK_STORE_IMAGE)}
                 className="max-h-full max-w-full object-contain"
               />
             </div>

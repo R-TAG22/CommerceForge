@@ -19,6 +19,7 @@ import {
 import { useCMS } from '../context/CMSContext';
 import { usePublicTheme } from '../context/PublicThemeContext';
 import { DynamicSectionRenderer } from './DynamicSectionRenderer';
+import { FALLBACK_STORE_IMAGE, handleImageError } from '../utils/imageFallbacks';
 
 export const FILTER_INDUSTRIES = [
   'Beauty & Health',
@@ -789,6 +790,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
                     <img
                       src={site.image}
                       alt={site.name}
+                      onError={(e) => handleImageError(e, FALLBACK_STORE_IMAGE)}
                       className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
                     />
@@ -907,6 +909,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
                     <img
                       src={site.image}
                       alt={site.name}
+                      onError={(e) => handleImageError(e, FALLBACK_STORE_IMAGE)}
                       className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
                     />
@@ -1034,6 +1037,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
               <img
                 src={selectedSite.image}
                 alt={selectedSite.name}
+                onError={(e) => handleImageError(e, FALLBACK_STORE_IMAGE)}
                 className="w-full h-full object-cover object-top"
               />
             </div>
