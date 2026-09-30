@@ -4,6 +4,7 @@ import { AboutSection } from './AboutSection';
 import { CommerceForgePromise } from './CommerceForgePromise';
 import { usePublicTheme } from '../context/PublicThemeContext';
 import { useReducedMotion } from '../hooks/useReducedMotion';
+import { assetUrl } from '../utils/imageFallbacks';
 
 interface AboutPageProps {
   onHireClick?: () => void;
@@ -28,7 +29,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     isFounder: true,
     specializations: ['Web Developer', 'E-commerce Operations', 'Photo Video Editor'],
     bio: 'Leads engineering architecture, custom storefront builds, high-converting digital shelves, and photo/video media production.',
-    image: `${import.meta.env.BASE_URL}images/team/RUSSELL T.jpg`,
+    image: assetUrl('images/team/RUSSELL T..jpg'),
   },
   {
     id: 'ryan-b',
@@ -37,7 +38,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     isFounder: false,
     specializations: ['Web Developer', 'E-commerce Operation'],
     bio: 'Co-leads responsive frontend development, merchant inventory synchronization, and sub-second checkout ergonomics.',
-    image: `${import.meta.env.BASE_URL}images/team/RYAN B.jpg`,
+    image: assetUrl('images/team/RYAN B.jpg'),
   },
   {
     id: 'nhina-p',
@@ -46,7 +47,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     isFounder: false,
     specializations: ['Web Developer', 'E-commerce Operation'],
     bio: 'Co-leads client component architectures, conversion rate optimization, and automated catalog operations.',
-    image: `${import.meta.env.BASE_URL}images/team/NHINA P.jpg`,
+    image: assetUrl('images/team/NHINA P.jpg'),
   },
   {
     id: 'jamez-m',
@@ -55,7 +56,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     isFounder: false,
     specializations: ['Web Developer', 'E-commerce Operation'],
     bio: 'Co-leads backend integrations, API pipelines, scalable storefront hosting, and merchant technical support.',
-    image: `${import.meta.env.BASE_URL}images/team/JAMEZ M.jpg`,
+    image: assetUrl('images/team/JAMEZ M.jpg'),
   },
 ];
 
@@ -134,7 +135,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onHireClick, onRequestReve
                     alt={member.name}
                     onError={(e) => {
                       const target = e.currentTarget;
-                      const fallback = `${import.meta.env.BASE_URL}images/team/${member.id}.jpg`;
+                      const fallback = assetUrl(`images/team/${member.id}.jpg`);
                       if (target.src !== fallback) {
                         target.src = fallback;
                       }
