@@ -5,7 +5,7 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
-    base: process.env.GITHUB_PAGES === 'true' ? '/CommerceForge/' : './',
+    base: process.env.GITHUB_PAGES === 'true' ? '/CommerceForge/' : '/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
