@@ -1,0 +1,209 @@
+<svg viewBox="0 0 800 650" width="800" height="650" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Brushed Emerald / Deep Forge Green Gradient -->
+    <linearGradient id="cfMetalDark" x1="180" y1="140" x2="450" y2="410" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#193325" />
+      <stop offset="25%" stop-color="#234B36" />
+      <stop offset="50%" stop-color="#2F6347" />
+      <stop offset="75%" stop-color="#224733" />
+      <stop offset="100%" stop-color="#162E21" />
+    </linearGradient>
+
+    <!-- Translucent Frosted Sage Glass Gradient for "F" -->
+    <linearGradient id="cfSageGlass" x1="340" y1="390" x2="620" y2="150" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#91AC8F" />
+      <stop offset="35%" stop-color="#A9CAA6" />
+      <stop offset="70%" stop-color="#C5DFC2" />
+      <stop offset="100%" stop-color="#D9EBD7" />
+    </linearGradient>
+
+    <!-- Glass Rim Highlight for F -->
+    <linearGradient id="cfGlassRim" x1="350" y1="140" x2="620" y2="350" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="50%" stop-color="#E8F4E6" />
+      <stop offset="100%" stop-color="#8FA98F" />
+    </linearGradient>
+
+    <!-- Joint disc gradient -->
+    <radialGradient id="cfJointGrad" cx="42%" cy="40%" r="58%">
+      <stop offset="0%" stop-color="#3D634C" />
+      <stop offset="55%" stop-color="#264734" />
+      <stop offset="100%" stop-color="#183123" />
+    </radialGradient>
+
+    <!-- Left Wheel (Brushed Dark Metal) -->
+    <radialGradient id="cfDarkWheel" cx="44%" cy="42%" r="56%">
+      <stop offset="0%" stop-color="#36664A" />
+      <stop offset="45%" stop-color="#224833" />
+      <stop offset="85%" stop-color="#183324" />
+      <stop offset="100%" stop-color="#0F2016" />
+    </radialGradient>
+
+    <!-- Right Wheel (Frosted Sage Glass) -->
+    <radialGradient id="cfSageWheel" cx="36%" cy="34%" r="66%">
+      <stop offset="0%" stop-color="#EDF7EB" />
+      <stop offset="38%" stop-color="#C8E2C4" />
+      <stop offset="80%" stop-color="#93B090" />
+      <stop offset="100%" stop-color="#718E6F" />
+    </radialGradient>
+  </defs>
+
+  <!-- Clean Off-White Brand Background #F8FAF8 -->
+  <rect width="800" height="650" fill="#F8FAF8" />
+
+  <g id="logo-artwork">
+    <!-- Subtle Ground Shadow under Wheels and Cart -->
+    <ellipse cx="380" cy="545" rx="200" ry="18" fill="#1E3A2B" fill-opacity="0.07" />
+
+    <!-- ======================================================== -->
+    <!-- 1. LEFT "C" SHAPE (Brushed Deep Green Metallic Cart)    -->
+    <!-- ======================================================== -->
+    <path
+      d="M 230 150
+         C 195 150, 180 175, 186 215
+         L 235 348
+         C 246 385, 278 410, 360 410
+         L 445 410
+         C 445 375, 420 330, 380 330
+         L 345 330
+         C 305 330, 296 312, 296 280
+         C 296 248, 310 232, 345 232
+         L 426 232
+         C 450 232, 455 205, 455 190
+         C 455 168, 442 150, 405 150
+         Z"
+      fill="url(#cfMetalDark)"
+    />
+
+    <!-- Brushed Metallic Line Highlights -->
+    <g opacity="0.16" stroke="#FFFFFF" stroke-width="1.6">
+      <line x1="190" y1="170" x2="445" y2="170" />
+      <line x1="194" y1="190" x2="450" y2="190" />
+      <line x1="200" y1="210" x2="435" y2="210" />
+      <line x1="206" y1="230" x2="310" y2="230" />
+      <line x1="212" y1="260" x2="305" y2="260" />
+      <line x1="218" y1="290" x2="315" y2="290" />
+      <line x1="225" y1="325" x2="400" y2="325" />
+      <line x1="235" y1="360" x2="425" y2="360" />
+      <line x1="248" y1="390" x2="440" y2="390" />
+    </g>
+
+    <!-- Top & Back Rim Highlights on C -->
+    <path
+      d="M 230 152
+         C 198 152, 183 175, 189 215
+         L 236 348"
+      stroke="#FFFFFF"
+      stroke-width="2.5"
+      stroke-opacity="0.35"
+      fill="none"
+      stroke-linecap="round"
+    />
+
+    <!-- ======================================================== -->
+    <!-- 2. OVERLAPPING DISC JOINT (Connecting C and F)           -->
+    <!-- ======================================================== -->
+    <circle cx="380" cy="360" r="36" fill="url(#cfJointGrad)" />
+    <circle cx="380" cy="360" r="35" stroke="#1E3A2B" stroke-width="2" stroke-opacity="0.4" fill="none" />
+
+    <!-- ======================================================== -->
+    <!-- 3. RIGHT "F" SHAPE (Frosted Translucent Sage Glass)      -->
+    <!-- ======================================================== -->
+    <!-- Lower Joint into Mid-Stem and Middle Horizontal Bar -->
+    <path
+      d="M 380 324
+         C 428 324, 460 342, 484 312
+         L 532 232
+         L 580 232
+         C 598 232, 606 245, 606 258
+         C 606 271, 598 284, 580 284
+         L 546 284
+         L 520 336
+         C 494 388, 450 402, 380 396
+         Z"
+      fill="url(#cfSageGlass)"
+    />
+
+    <!-- Upper Stem and Top Curved Horizontal Bar -->
+    <path
+      d="M 484 312
+         L 545 198
+         C 558 172, 584 150, 624 150
+         L 638 150
+         C 655 150, 664 163, 664 182
+         C 664 201, 655 214, 638 214
+         L 592 214
+         L 532 320
+         Z"
+      fill="url(#cfSageGlass)"
+    />
+
+    <!-- Glass Rim Highlight Strokes on F -->
+    <path
+      d="M 545 198
+         C 558 172, 584 150, 624 150
+         L 638 150
+         C 655 150, 664 163, 664 182
+         C 664 201, 655 214, 638 214
+         L 592 214
+         L 546 284
+         L 580 284
+         C 598 284, 606 271, 606 258"
+      stroke="url(#cfGlassRim)"
+      stroke-width="2.5"
+      fill="none"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Translucent Frosted Glass Specular Glow on Top Arm -->
+    <path
+      d="M 618 162
+         L 644 162
+         C 654 162, 658 170, 658 178"
+      stroke="#FFFFFF"
+      stroke-width="3"
+      stroke-opacity="0.8"
+      fill="none"
+      stroke-linecap="round"
+    />
+
+    <!-- ======================================================== -->
+    <!-- 4. DUAL WHEELS AT BOTTOM                                -->
+    <!-- ======================================================== -->
+    <!-- Left Wheel (Brushed Dark Metal) -->
+    <g>
+      <circle cx="310" cy="485" r="46" fill="url(#cfDarkWheel)" />
+      <circle cx="310" cy="485" r="45" stroke="#2D5A40" stroke-width="2" fill="none" stroke-opacity="0.65" />
+      <circle cx="310" cy="485" r="30" stroke="#FFFFFF" stroke-width="1.2" fill="none" stroke-opacity="0.22" />
+      <circle cx="310" cy="485" r="14" stroke="#FFFFFF" stroke-width="1.2" fill="none" stroke-opacity="0.30" />
+      <path
+        d="M 310 440 A 45 45 0 0 1 354 485 L 310 485 Z"
+        fill="#FFFFFF"
+        fill-opacity="0.08"
+      />
+      <path
+        d="M 310 530 A 45 45 0 0 1 266 485 L 310 485 Z"
+        fill="#FFFFFF"
+        fill-opacity="0.08"
+      />
+    </g>
+
+    <!-- Right Wheel (Frosted Sage Glass with glass crescent) -->
+    <g>
+      <circle cx="435" cy="485" r="46" fill="url(#cfSageWheel)" />
+      <circle cx="435" cy="485" r="45" stroke="#8FA98F" stroke-width="2" fill="none" stroke-opacity="0.75" />
+      <path
+        d="M 412 458
+           C 420 445, 442 442, 458 450
+           C 472 458, 477 474, 474 490
+           C 469 474, 458 462, 442 456
+           C 429 452, 417 453, 412 458
+           Z"
+        fill="#FFFFFF"
+        fill-opacity="0.70"
+      />
+      <circle cx="435" cy="485" r="28" stroke="#FFFFFF" stroke-width="1.2" fill="none" stroke-opacity="0.30" />
+    </g>
+  </g>
+</svg>

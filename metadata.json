@@ -1,0 +1,6 @@
+{
+  "name": "CommerceForge",
+  "description": "We rebuild slow, outdated sites into high-speed sales engines. Handcrafted, mobile-first and delivered in 7 days.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
