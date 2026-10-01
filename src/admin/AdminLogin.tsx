@@ -102,8 +102,15 @@ export const AdminLogin: React.FC = () => {
       <div className="w-full max-w-md relative z-10 my-12">
         {/* Brand Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white p-2 shadow-xl shadow-black/20 border border-white/20 mb-4">
-            <CommerceForgeLogo className="w-full h-full object-contain" />
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white p-2 shadow-xl shadow-black/20 border border-white/20 mb-4 overflow-hidden">
+            <img
+              src="/LOGO.png"
+              alt="CommerceForge Logo"
+              className="w-full h-full object-contain"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
           </div>
           <h1 className={`text-2xl font-black tracking-tight uppercase ${isDark ? 'text-white' : 'text-[#1E3A2B]'}`}>
             Commerce<span className="text-[#B7E84B]">Forge</span> CMS

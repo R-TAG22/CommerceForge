@@ -315,6 +315,7 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onHireClick }) => {
           id: p.id || String(Math.random()),
           name: p.title || p.name || p.clientName || 'Project Showcase',
           url: p.url || '#',
+          displayUrl: p.displayUrl || (p.url ? p.url.replace(/^https?:\/\//, '').replace(/\/$/, '') : 'preview.dev'),
           previewImage: p.previewImage 
             ? (p.previewImage.startsWith('http://') || p.previewImage.startsWith('https://') || p.previewImage.startsWith(import.meta.env.BASE_URL)
                 ? p.previewImage

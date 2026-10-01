@@ -32,12 +32,12 @@ export const PublicThemeProvider: React.FC<{ children: React.ReactNode }> = ({ c
       const root = document.documentElement;
       if (theme === 'dark') {
         root.classList.add('dark');
-        document.body.style.backgroundColor = '#0B0F17';
-        document.body.style.color = '#F3F4F6';
+        document.body.style.backgroundColor = 'var(--bg-canvas, #0B0F17)';
+        document.body.style.color = 'var(--text-primary, #F8FAF8)';
       } else {
         root.classList.remove('dark');
-        document.body.style.backgroundColor = '#FAFAF9';
-        document.body.style.color = '#064E3B';
+        document.body.style.backgroundColor = 'var(--bg-canvas, #FAFAF9)';
+        document.body.style.color = 'var(--text-primary, #0F241A)';
       }
     }
   }, [theme]);

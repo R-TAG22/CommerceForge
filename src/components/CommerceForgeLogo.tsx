@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 interface LogoProps {
   className?: string;
@@ -6,6 +6,20 @@ interface LogoProps {
 }
 
 export const CommerceForgeLogo: React.FC<LogoProps> = ({ className = "w-full h-full max-w-full max-h-full overflow-hidden", size }) => {
+  const [imgError, setImgError] = useState(false);
+
+  if (!imgError) {
+    return (
+      <img
+        src="/LOGO.png"
+        alt="CommerceForge Logo"
+        className={`${className} object-contain block`}
+        style={size ? { width: size, height: size } : undefined}
+        onError={() => setImgError(true)}
+      />
+    );
+  }
+
   return (
     <svg
       viewBox="0 0 600 500"

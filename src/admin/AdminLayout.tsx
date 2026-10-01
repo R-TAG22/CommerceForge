@@ -194,8 +194,15 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             onClick={() => navigate('/admin')}
             className="flex items-center gap-2.5 cursor-pointer"
           >
-            <div className="w-8 h-8 rounded-xl bg-white p-1 flex items-center justify-center shadow-xs border border-black/10">
-              <CommerceForgeLogo className="w-full h-full object-contain" />
+            <div className="w-8 h-8 rounded-xl bg-white p-1 flex items-center justify-center shadow-xs border border-black/10 overflow-hidden">
+              <img
+                src="/LOGO.png"
+                alt="CommerceForge Logo"
+                className="w-full h-full object-contain"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
             </div>
             <div>
               <span className={`font-black text-sm tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>

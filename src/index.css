@@ -1,6 +1,14 @@
 @import "tailwindcss";
 
 @theme {
+  --color-canvas: var(--bg-canvas);
+  --color-surface: var(--bg-surface);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-accent-contrast: var(--brand-accent-contrast);
+  --color-brand-accent-accessible: var(--brand-accent-accessible);
+
   --color-primary: #064E3B;
   --color-primary-dark: #0B0F17;
   --color-primary-light: #FAFAF9;
@@ -8,7 +16,6 @@
   --color-accent-hover: #a3d438;
   --color-secondary: #8FA98F;
   --color-tertiary: #C3D5BE;
-  --color-text-primary: #1E3A2B;
   --color-text-muted: #4A584E;
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
@@ -16,13 +23,52 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --color-bg: #F8FAF8;
+  /* ========================================================================= */
+  /* 1. WCAG AAA Theme Tokens (Light Mode Default)                             */
+  /* ========================================================================= */
+  --bg-canvas: #FAFAF9;
+  --bg-surface: #FFFFFF;
+  --text-primary: #0F241A;
+  --text-secondary: #2C4A3A;
+  --brand-accent: #B7E84B;
+
+  /* Contrast-certified pairings strictly satisfying WCAG AA (>=4.5:1) & AAA (>=7:1) */
+  --brand-accent-contrast: #0F241A;        /* 11.38:1 on #B7E84B (Strict WCAG AAA >= 7:1) */
+  --brand-accent-accessible: #15803D;      /* 4.80:1 on #FAFAF9 (Strict WCAG AA >= 4.5:1) */
+  --brand-accent-accessible-deep: #0F241A; /* 15.62:1 on #FAFAF9 (Strict WCAG AAA >= 7:1) */
+  --focus-ring: #0F241A;
+
+  /* Legacy aliases for backward compatibility */
+  --color-bg: var(--bg-canvas);
   --color-primary: #1E3A2B;
   --color-secondary: #8FA98F;
   --color-tint: #C3D5BE;
-  --color-text-primary: #1E3A2B;
-  --color-text-muted: #4A584E;
-  --color-surface: #FFFFFF;
+  --color-surface: var(--bg-surface);
+}
+
+:root.dark,
+.dark {
+  /* ========================================================================= */
+  /* 1. WCAG AAA Theme Tokens (Dark Mode)                                      */
+  /* ========================================================================= */
+  --bg-canvas: #0B0F17;
+  --bg-surface: #121B29;
+  --text-primary: #F8FAF8;
+  --text-secondary: #94A3B8;
+  --brand-accent: #B7E84B;
+
+  /* Contrast-certified pairings in dark mode */
+  --brand-accent-contrast: #0F241A;        /* 11.38:1 on #B7E84B (Strict WCAG AAA >= 7:1) */
+  --brand-accent-accessible: #B7E84B;      /* 13.39:1 on #0B0F17 (Strict WCAG AAA >= 7:1) */
+  --brand-accent-accessible-deep: #B7E84B;
+  --focus-ring: #B7E84B;
+
+  /* Legacy aliases for backward compatibility */
+  --color-bg: var(--bg-canvas);
+  --color-primary: #064E3B;
+  --color-secondary: #8FA98F;
+  --color-tint: #2D5A40;
+  --color-surface: var(--bg-surface);
 }
 
 @layer base {
@@ -33,8 +79,8 @@
     min-height: 100%;
     margin: 0;
     padding: 0;
-    background-color: #F8FAF8;
-    color: #1E3A2B;
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     overflow-x: hidden;
   }
@@ -241,6 +287,56 @@
   .animate-marquee {
     animation: none !important;
   }
+}
+
+/* ========================================================================= */
+/* 2. GPU Layer & Compositor Optimization (Motion Dev Audit)                 */
+/* ========================================================================= */
+/*
+ * Confines will-change strictly to active hover/gesture states.
+ * Eliminates persistent layer promotion and avoids static translateZ(0)
+ * to keep GPU VRAM consumption low and mobile frame rates at steady 60fps.
+ */
+.compositor-idle {
+  will-change: auto;
+  transform: none;
+}
+
+.hover-gpu {
+  will-change: auto;
+}
+
+.hover-gpu:hover,
+.hover-gpu:active {
+  will-change: transform;
+}
+
+/* Ensure float animations do not create permanent static compositor layers when idle */
+.animate-float-phone,
+.animate-float-cap,
+.animate-float-ball,
+.animate-float-sneaker,
+.animate-float-headphones,
+.animate-float-card-1,
+.animate-float-card-2,
+.animate-float-card-3,
+.animate-float-sphere,
+.animate-shadow-pulse,
+.animate-marquee {
+  will-change: auto;
+}
+
+/* ========================================================================= */
+/* 3. WCAG AAA High-Contrast Lime & Accent Utilities                         */
+/* ========================================================================= */
+.badge-lime-aaa,
+.btn-lime-aaa {
+  background-color: var(--brand-accent);
+  color: var(--brand-accent-contrast); /* #0F241A -> 11.38:1 ratio strictly meeting WCAG AAA >= 7:1 */
+}
+
+.text-accent-accessible {
+  color: var(--brand-accent-accessible);
 }
 
 

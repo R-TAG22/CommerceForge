@@ -89,7 +89,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
               <button
                 type="button"
                 onClick={handleCta}
-                className="inline-flex items-center gap-2 px-6 sm:px-7 py-3.5 rounded-full text-xs sm:text-[13px] font-bold uppercase tracking-wider text-white bg-[#6DAE10] hover:bg-[#609C0E] shadow-[0_10px_25px_-5px_rgba(109,174,16,0.45)] hover:shadow-[0_16px_32px_-5px_rgba(109,174,16,0.55)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
+                className="inline-flex items-center gap-2 px-6 sm:px-7 py-3.5 rounded-full text-xs sm:text-[13px] font-black uppercase tracking-wider text-[#0F241A] bg-[#B7E84B] hover:bg-[#a6d93b] shadow-[0_10px_25px_-5px_rgba(183,232,75,0.45)] hover:shadow-[0_16px_32px_-5px_rgba(183,232,75,0.55)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
               >
                 <span>TALK TO A COMMERCE STRATEGIST</span>
                 <span className="text-base font-black leading-none">➔</span>
