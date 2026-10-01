@@ -103,7 +103,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     {
       group: 'Brand & Styling',
       items: [
-        { label: 'Theme & Styles', path: '/admin/theme', icon: Palette },
+        { label: 'Theme Customizer', path: '/admin/theme', icon: Palette },
         { label: 'Brand & Mission', path: '/admin/brand', icon: Building2 },
       ],
     },
@@ -245,6 +245,18 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               <span className="hidden md:inline">Discard</span>
             </button>
           )}
+
+          {/* Theme Customizer Quick Launch */}
+          <button
+            onClick={() => navigate('/admin/theme')}
+            className={`p-2 sm:px-3 sm:py-1.5 rounded-xl border text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors cursor-pointer ${
+              isDark ? 'bg-white/10 hover:bg-white/15 text-white border-white/15' : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'
+            }`}
+            title="Open Shopify-style Theme Customizer"
+          >
+            <Palette className="w-3.5 h-3.5 text-[#B7E84B]" />
+            <span className="hidden md:inline">Customizer</span>
+          </button>
 
           {/* Live Preview Toggle */}
           <button

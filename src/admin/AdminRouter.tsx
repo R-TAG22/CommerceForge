@@ -22,7 +22,7 @@ import { ThemeEditor } from './pages/ThemeEditor';
 import { AdminThemeProvider } from './context/AdminThemeContext';
 
 export const AdminRouter: React.FC = () => {
-  const { currentPath } = useRouter();
+  const { currentPath, navigate } = useRouter();
   const { currentUser, isLoading } = useCMS();
 
   if (isLoading) {
@@ -41,6 +41,15 @@ export const AdminRouter: React.FC = () => {
     return (
       <AdminThemeProvider>
         <AdminLogin />
+      </AdminThemeProvider>
+    );
+  }
+
+  // Dedicated Shopify Polaris 3-column Theme Customizer full-viewport view
+  if (currentPath === '/admin/theme') {
+    return (
+      <AdminThemeProvider>
+        <ThemeEditor onBack={() => navigate('/admin')} />
       </AdminThemeProvider>
     );
   }

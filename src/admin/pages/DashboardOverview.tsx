@@ -63,7 +63,7 @@ export const DashboardOverview: React.FC = () => {
   ];
 
   const quickSections = [
-    { title: 'Theme & Brand Styler', desc: 'Design tokens: colors, typography, border-radius & button variants', path: '/admin/theme' },
+    { title: 'Theme Customizer', desc: 'Shopify Polaris 3-column studio: live WCAG AAA contrast, device frames & script injection', path: '/admin/theme' },
     { title: 'Dynamic Page Sections', desc: 'Add, reorder, hide & customize custom page sections', path: '/admin/sections' },
     { title: 'Hero Section', desc: 'Main headline, value proposition & primary CTA', path: '/admin/hero' },
     { title: 'Portfolio Projects', desc: '8 client showcase studies, before/after metrics & screenshots', path: '/admin/portfolio' },

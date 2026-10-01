@@ -16,6 +16,7 @@ import { CtaBanner } from './components/CtaBanner';
 import { Footer } from './components/Footer';
 import { InquiryModal } from './components/InquiryModal';
 import { PublicThemeProvider, usePublicTheme } from './context/PublicThemeContext';
+import { ThemeSyncProvider } from './context/ThemeSyncContext';
 import { ThemeToggle } from './components/ThemeToggle';
 
 // Dedicated Separate Pages
@@ -368,11 +369,13 @@ export default function App() {
   return (
     <RouterProvider>
       <CMSProvider>
-        <PublicThemeProvider>
-          <ToastProvider>
-            <MainAppShell />
-          </ToastProvider>
-        </PublicThemeProvider>
+        <ThemeSyncProvider>
+          <PublicThemeProvider>
+            <ToastProvider>
+              <MainAppShell />
+            </ToastProvider>
+          </PublicThemeProvider>
+        </ThemeSyncProvider>
       </CMSProvider>
     </RouterProvider>
   );
