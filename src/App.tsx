@@ -12,6 +12,7 @@ import { HeroMedia } from './components/HeroMedia';
 import { MetricsBar } from './components/MetricsBar';
 import { ComparisonSection } from './components/ComparisonSection';
 import { ProcessSection } from './components/ProcessSection';
+import { BlogFaqSection } from './components/BlogFaqSection';
 import { CtaBanner } from './components/CtaBanner';
 import { Footer } from './components/Footer';
 import { InquiryModal } from './components/InquiryModal';
@@ -102,7 +103,13 @@ function PublicWebsite() {
   // Scroll to targeted section
   const scrollToSection = (sectionId: string) => {
     if (currentPath !== '/') {
-      navigate(`/#${sectionId}`);
+      navigate('/');
+      setTimeout(() => {
+        const el = document.getElementById(sectionId);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 120);
       return;
     }
     const el = document.getElementById(sectionId);
@@ -111,6 +118,31 @@ function PublicWebsite() {
     }
   };
 
+  // Handle direct /blog route: redirect to homepage and smoothly scroll to blog section
+  useEffect(() => {
+    if (currentPath === '/blog') {
+      navigate('/');
+      setTimeout(() => {
+        const el = document.getElementById('blog');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 150);
+    }
+  }, [currentPath, navigate]);
+
+  // Handle hash scrolling on page navigation or reload
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const hashId = window.location.hash.replace(/^#\/?/, '').replace(/^#/, '');
+      if (hashId) {
+        const timer = setTimeout(() => {
+          const el = document.getElementById(hashId);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 200);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [currentPath]);
+
   // SEO Page Title updates
   useEffect(() => {
     const titles: Record<string, string> = {
@@ -118,6 +150,7 @@ function PublicWebsite() {
       '/about': 'About Our Dev Team & Craft — CommerceForge',
       '/work': 'Selected Work & Rebuild Case Studies — CommerceForge',
       '/packages': 'Productized Packages & Rates — CommerceForge',
+      '/blog': 'CommerceForge — Insights, Articles & FAQs',
       '/faqs': 'Frequently Asked Questions — CommerceForge',
       '/faq': 'Frequently Asked Questions — CommerceForge',
       '/hire-us': 'Hire Us & Start a Project — CommerceForge',
@@ -181,6 +214,10 @@ function PublicWebsite() {
           </>
         );
 
+      case '/blog':
+        // When someone navigates to /blog directly, redirect to homepage and show blog section
+        return null;
+
       case '/':
       default: {
         const defaultHomeSections = [
@@ -188,12 +225,24 @@ function PublicWebsite() {
           { id: 'logos', name: 'Client Brand Logos Marquee', type: 'logos', visible: true, sortOrder: 1 },
           { id: 'comparison', name: 'Performance Comparison Table', type: 'comparison', visible: true, sortOrder: 2 },
           { id: 'process', name: '4-Step Rebuild Process', type: 'process', visible: true, sortOrder: 3 },
-          { id: 'cta', name: 'Bottom Call To Action Banner', type: 'cta', visible: true, sortOrder: 4 },
+          { id: 'blog-faq', name: 'Blog Insights & FAQs', type: 'blog-faq', visible: true, sortOrder: 4 },
+          { id: 'cta', name: 'Bottom Call To Action Banner', type: 'cta', visible: true, sortOrder: 5 },
         ];
 
-        const homeSections = (activeContent?.pageSections?.home && activeContent.pageSections.home.length > 0)
-          ? activeContent.pageSections.home
+        let homeSections = (activeContent?.pageSections?.home && activeContent.pageSections.home.length > 0)
+          ? [...activeContent.pageSections.home]
           : defaultHomeSections;
+
+        // Ensure Blog & FAQs section is always present directly below the Process section
+        if (!homeSections.some((s) => s.id === 'blog-faq' || s.type === 'blog-faq' || s.id === 'blog')) {
+          const processIdx = homeSections.findIndex((s) => s.id === 'process' || s.type === 'process');
+          const blogFaqSection = { id: 'blog-faq', name: 'Blog Insights & FAQs', type: 'blog-faq', visible: true, sortOrder: 3.5 };
+          if (processIdx !== -1) {
+            homeSections.splice(processIdx + 1, 0, blogFaqSection);
+          } else {
+            homeSections.push(blogFaqSection);
+          }
+        }
 
         const visibleSections = [...homeSections]
           .filter((s) => s.visible !== false)
@@ -298,6 +347,11 @@ function PublicWebsite() {
 
                 case 'process':
                   return <ProcessSection key={section.id} onCtaClick={() => setIsInquiryOpen(true)} />;
+
+                case 'blog-faq':
+                case 'blog':
+                case 'faq':
+                  return <BlogFaqSection key={section.id} onCtaClick={() => setIsInquiryOpen(true)} />;
 
                 case 'cta':
                   return <CtaBanner key={section.id} onCtaClick={() => setIsInquiryOpen(true)} />;

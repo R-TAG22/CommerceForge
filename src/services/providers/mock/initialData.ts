@@ -19,7 +19,8 @@ export const INITIAL_WEBSITE_CONTENT: WebsiteContent = {
       { id: 'nav-2', label: 'ABOUT', url: '/about', sectionId: 'about', sortOrder: 1, visible: true },
       { id: 'nav-3', label: 'WORK', url: '/work', sectionId: 'work', sortOrder: 2, visible: true },
       { id: 'nav-4', label: 'PACKAGES', url: '/packages', sectionId: 'packages', sortOrder: 3, visible: true },
-      { id: 'nav-5', label: 'FAQ', url: '/faqs', sectionId: 'faq', sortOrder: 4, visible: true },
+      { id: 'nav-5', label: 'BLOG', url: '/#blog', sectionId: 'blog', sortOrder: 4, visible: true },
+      { id: 'nav-6', label: 'FAQ', url: '/faqs', sectionId: 'faq', sortOrder: 5, visible: true },
     ],
   },
   hero: {
@@ -860,7 +861,8 @@ export const INITIAL_WEBSITE_CONTENT: WebsiteContent = {
       { id: 'logos', name: 'Client Brand Logos Marquee', type: 'logos', visible: true, sortOrder: 1 },
       { id: 'comparison', name: 'Performance Comparison Table', type: 'comparison', visible: true, sortOrder: 2 },
       { id: 'process', name: '4-Step Rebuild Process', type: 'process', visible: true, sortOrder: 3 },
-      { id: 'cta', name: 'Bottom Call To Action Banner', type: 'cta', visible: true, sortOrder: 4 },
+      { id: 'blog-faq', name: 'Blog Insights & FAQs', type: 'blog-faq', visible: true, sortOrder: 4 },
+      { id: 'cta', name: 'Bottom Call To Action Banner', type: 'cta', visible: true, sortOrder: 5 },
     ],
     about: [
       { id: 'mission', name: 'Mission & Production Standards', type: 'mission', visible: true, sortOrder: 0 },
