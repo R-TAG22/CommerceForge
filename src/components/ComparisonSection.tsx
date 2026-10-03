@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { useCMS } from '../context/CMSContext';
 import { usePublicTheme } from '../context/PublicThemeContext';
 import { useReducedMotion } from '../hooks/useReducedMotion';
+import { useRouter } from '../admin/router';
 
 interface ComparisonSectionProps {
   onCtaClick: () => void;
@@ -13,6 +14,7 @@ export const ComparisonSection: React.FC<ComparisonSectionProps> = ({ onCtaClick
   const { activeContent } = useCMS();
   const { isDark } = usePublicTheme();
   const prefersReducedMotion = useReducedMotion();
+  const { navigate } = useRouter();
   const comparisonData = activeContent?.comparison;
 
   const defaultItems = [
@@ -110,6 +112,18 @@ export const ComparisonSection: React.FC<ComparisonSectionProps> = ({ onCtaClick
         
         {/* Section Header */}
         <div className="text-center max-w-4xl mx-auto mb-10 sm:mb-14">
+          {eyebrow && (
+            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full mb-3 border ${
+              isDark ? 'bg-white/5 border-[#B7E84B]/30' : 'bg-emerald-50 border-[#B7E84B]/40'
+            }`}>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#B7E84B]" />
+              <span className={`text-[11px] font-bold uppercase tracking-[0.16em] ${
+                isDark ? 'text-[#B7E84B]' : 'text-[#064E3B]'
+              }`}>
+                {eyebrow}
+              </span>
+            </div>
+          )}
           <h2 className={`text-2xl sm:text-3xl md:text-4xl lg:text-[44px] font-black uppercase tracking-tight leading-tight ${
             isDark ? 'text-white' : 'text-[#12241A]'
           }`}>
@@ -236,7 +250,16 @@ export const ComparisonSection: React.FC<ComparisonSectionProps> = ({ onCtaClick
         <div className="mt-8 sm:mt-11 flex justify-center">
           <button
             type="button"
-            onClick={onCtaClick}
+            onClick={() => {
+              const url = (comparisonData as any)?.ctaUrl || '#contact';
+              if (url === '#contact' || url.toLowerCase().includes('inquiry')) {
+                onCtaClick();
+              } else if (url.startsWith('/')) {
+                navigate(url);
+              } else {
+                window.location.href = url;
+              }
+            }}
             className={`group inline-flex items-center justify-center gap-2.5 px-8 sm:px-10 py-3.5 sm:py-4 rounded-xl text-xs sm:text-sm font-black uppercase tracking-[0.14em] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg cursor-pointer ${
               isDark
                 ? 'bg-[#0B0F17] text-white border-2 border-[#B7E84B]/70 hover:border-[#B7E84B] hover:shadow-[0_0_25px_rgba(183,232,75,0.35)]'

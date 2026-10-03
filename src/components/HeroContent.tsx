@@ -112,11 +112,11 @@ export const HeroContent: React.FC<HeroContentProps> = ({ onCtaClick }) => {
 
             <div className="flex items-center gap-1 text-[11px] sm:text-xs tracking-tight">
               <span className={`font-black ${isDark ? 'text-[#B7E84B]' : 'text-[#064E3B]'}`}>
-                4.9/5
+                {heroData?.socialProofRating || '4.9/5'}
               </span>
               <span className={isDark ? 'text-white/40' : 'text-[#064E3B]/40'}>•</span>
               <span className={`font-bold ${isDark ? 'text-white/90' : 'text-[#064E3B]'}`}>
-                40+ Rebuilds
+                {heroData?.socialProofCount || '40+ Rebuilds'}
               </span>
             </div>
           </div>

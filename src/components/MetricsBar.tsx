@@ -198,6 +198,8 @@ export const MetricsBar: React.FC = () => {
   const prefersReducedMotion = useReducedMotion();
   const { activeContent } = useCMS();
 
+  const marqueeSubheading = activeContent?.clientLogosConfig?.subheading || activeContent?.statistics?.trustedBrandsLabel || '';
+
   const defaultMap = new Map(CLIENT_LOGOS.map((l) => [l.id, l]));
 
   const activeLogos = (activeContent?.clientLogos && activeContent.clientLogos.length > 0)
@@ -208,19 +210,179 @@ export const MetricsBar: React.FC = () => {
           const matched = defaultMap.get(l.id);
           return {
             ...l,
-            renderLogo: l.logoUrl
-              ? () => (
+            renderLogo: (isDarkTheme: boolean) => {
+              if (l.logoUrl) {
+                return (
                   <div className="flex items-center gap-2.5">
                     <img src={l.logoUrl} alt={l.name} className="h-7 w-auto object-contain max-w-[120px]" />
-                    <span className="font-bold text-xs uppercase tracking-wider">{l.name}</span>
+                    <div className="flex flex-col text-left">
+                      <span className="font-bold text-xs uppercase tracking-wider">{l.name}</span>
+                      {l.category && <span className="text-[9px] uppercase opacity-60 tracking-widest">{l.category}</span>}
+                    </div>
                   </div>
-                )
-              : matched?.renderLogo || (() => (
-                  <div className="flex flex-col text-left">
-                    <span className="font-black text-sm uppercase tracking-wider">{l.name}</span>
-                    <span className="text-[9px] uppercase opacity-60 tracking-widest">{l.category}</span>
+                );
+              }
+              // If built-in brand with untouched text, render signature logo
+              if (matched && matched.name === l.name && matched.category === l.category && matched.renderLogo) {
+                return matched.renderLogo(isDarkTheme);
+              }
+              // Dynamic brand rendering keeping built-in icon if matching known ID
+              if (l.id === 'goldandgrove') {
+                return (
+                  <div className="flex items-center gap-3">
+                    <svg className="w-8 h-8 shrink-0" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                      <circle cx="16" cy="16" r="14" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.4" />
+                      <path d="M12 21C12 21 13 14 18 11C23 8 26 8 26 8C26 8 24 14 20 17C16 20 12 21 12 21Z" fill="currentColor" fillOpacity="0.9" />
+                      <path d="M13 19C15 15 19 13 22 12" stroke={isDarkTheme ? '#0B0F17' : '#FFFFFF'} strokeWidth="1.2" strokeLinecap="round" />
+                    </svg>
+                    <div className="flex flex-col text-left">
+                      <span className="font-serif font-black tracking-[0.2em] text-sm sm:text-base leading-none">
+                        {l.name.toUpperCase()}
+                      </span>
+                      {l.category && (
+                        <span className="text-[9px] tracking-[0.25em] font-semibold opacity-60 uppercase mt-0.5">
+                          {l.category}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                )),
+                );
+              }
+              if (l.id === 'premiumtrendsshop') {
+                return (
+                  <div className="flex items-center gap-2.5">
+                    <svg className="w-7 h-7 shrink-0" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                      <polygon points="14,4 24,11 14,24 4,11" stroke="currentColor" strokeWidth="1.8" />
+                      <line x1="4" y1="11" x2="24" y2="11" stroke="currentColor" strokeWidth="1.5" />
+                      <line x1="14" y1="4" x2="14" y2="24" stroke="currentColor" strokeWidth="1" strokeOpacity="0.6" />
+                    </svg>
+                    <div className="flex flex-col text-left">
+                      <span className="font-sans font-black tracking-[0.14em] text-xs sm:text-sm uppercase leading-none">
+                        {l.name.toUpperCase()}
+                      </span>
+                      {l.category && (
+                        <span className="text-[8.5px] tracking-[0.28em] font-bold opacity-60 uppercase mt-0.5">
+                          {l.category}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              }
+              if (l.id === 'rosemira') {
+                return (
+                  <div className="flex items-center gap-2.5">
+                    <svg className="w-8 h-8 shrink-0" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                      <circle cx="16" cy="16" r="13" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 2" />
+                      <path d="M16 9C13 13 13 17 16 21C19 17 19 13 16 9Z" fill="currentColor" fillOpacity="0.85" />
+                      <path d="M9 16C13 13 17 13 21 16C17 19 13 19 9 16Z" fill="currentColor" fillOpacity="0.85" />
+                    </svg>
+                    <div className="flex flex-col text-left">
+                      <span className="font-serif font-bold tracking-[0.16em] text-xs sm:text-sm leading-none">
+                        {l.name.toUpperCase()}
+                      </span>
+                      {l.category && (
+                        <span className="text-[8px] tracking-[0.3em] font-black opacity-60 uppercase mt-0.5">
+                          {l.category}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              }
+              if (l.id === 'haomaearth') {
+                return (
+                  <div className="flex items-center gap-3">
+                    <svg className="w-7 h-7 shrink-0" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                      <circle cx="14" cy="14" r="11" stroke="currentColor" strokeWidth="1.8" />
+                      <circle cx="14" cy="14" r="4.5" fill="currentColor" />
+                      <line x1="14" y1="1" x2="14" y2="4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                      <line x1="14" y1="24" x2="14" y2="27" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    </svg>
+                    <div className="flex items-center gap-1.5 text-left">
+                      <span className="font-sans font-black tracking-[0.24em] text-xs sm:text-sm leading-none">
+                        {l.name.toUpperCase()}
+                      </span>
+                    </div>
+                  </div>
+                );
+              }
+              if (l.id === 'juicebeauty') {
+                return (
+                  <div className="flex items-center gap-2.5">
+                    <svg className="w-7 h-7 shrink-0" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                      <path d="M14 4C14 4 21 13 21 17.5C21 21.6 17.9 25 14 25C10.1 25 7 21.6 7 17.5C7 13 14 4 14 4Z" stroke="currentColor" strokeWidth="1.8" />
+                      <path d="M14 11V21M10.5 15L14 18" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                    </svg>
+                    <div className="flex items-baseline gap-1 text-left">
+                      <span className="font-sans font-bold tracking-[0.06em] text-sm sm:text-base leading-none">
+                        {l.name}
+                      </span>
+                    </div>
+                  </div>
+                );
+              }
+              if (l.id === 'doctorsselect') {
+                return (
+                  <div className="flex items-center gap-2.5">
+                    <svg className="w-7 h-7 shrink-0" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                      <path d="M14 4L23 8V15C23 20.5 14 25 14 25C14 25 5 20.5 5 15V8L14 4Z" stroke="currentColor" strokeWidth="1.8" />
+                      <path d="M14 9V19M9 14H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                    <div className="flex flex-col text-left">
+                      <span className="font-sans font-black tracking-[0.1em] text-xs sm:text-sm uppercase leading-none">
+                        {l.name}
+                      </span>
+                      {l.category && (
+                        <span className="text-[8.5px] tracking-[0.26em] font-extrabold opacity-60 uppercase mt-0.5">
+                          {l.category}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              }
+              if (l.id === 'naturezway') {
+                return (
+                  <div className="flex items-center gap-2.5">
+                    <svg className="w-8 h-8 shrink-0" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                      <path d="M6 24C10 14 19 9 27 7C25 17 19 23 9 25" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                      <path d="M11 20C16 18 21 14 23 11" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                    </svg>
+                    <div className="flex items-baseline gap-1 text-left">
+                      <span className="font-serif italic font-black tracking-[0.04em] text-sm sm:text-base leading-none">
+                        {l.name}
+                      </span>
+                    </div>
+                  </div>
+                );
+              }
+              if (l.id === 'coalitionla') {
+                return (
+                  <div className="flex items-center gap-2.5">
+                    <svg className="w-7 h-7 shrink-0" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                      <rect x="4" y="5" width="20" height="18" rx="4" stroke="currentColor" strokeWidth="1.8" />
+                      <text x="7" y="18" fontFamily="system-ui, sans-serif" fontSize="11" fontWeight="900" fill="currentColor">
+                        C
+                      </text>
+                      <circle cx="19" cy="14" r="2" fill="currentColor" />
+                    </svg>
+                    <div className="flex items-baseline gap-1 text-left">
+                      <span className="font-sans font-black tracking-[0.14em] text-xs sm:text-sm uppercase leading-none">
+                        {l.name.toUpperCase()}
+                      </span>
+                    </div>
+                  </div>
+                );
+              }
+              // Standard customized or newly added brand
+              return (
+                <div className="flex flex-col text-left">
+                  <span className="font-black text-sm uppercase tracking-wider">{l.name}</span>
+                  {l.category && <span className="text-[9px] uppercase opacity-60 tracking-widest">{l.category}</span>}
+                </div>
+              );
+            },
           };
         })
     : CLIENT_LOGOS;
@@ -242,6 +404,15 @@ export const MetricsBar: React.FC = () => {
       }`}
       aria-label="Client Brand Logos"
     >
+      {/* Optional Sub-Heading (Configurable in CMS) */}
+      {marqueeSubheading && (
+        <div className="max-w-[1720px] mx-auto px-4 sm:px-6 mb-3 sm:mb-4 text-center">
+          <p className="text-xs sm:text-sm font-semibold tracking-wide uppercase opacity-80">
+            {marqueeSubheading}
+          </p>
+        </div>
+      )}
+
       {/* Left Gradient Fade Mask */}
       <div 
         className={`absolute left-0 top-0 bottom-0 w-16 sm:w-32 z-10 pointer-events-none transition-colors ${

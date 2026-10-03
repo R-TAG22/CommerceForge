@@ -45,6 +45,8 @@ export interface HeroContentData extends BaseEntity {
     text: string;
     icon: string;
   }[];
+  socialProofRating?: string;
+  socialProofCount?: string;
 }
 
 export interface StatisticItem extends BaseEntity {
@@ -141,6 +143,7 @@ export interface ComparisonSectionContent extends BaseEntity {
   newColumnSubtitle: string;
   newColumnResult: string;
   ctaText?: string;
+  ctaUrl?: string;
   items: ComparisonItem[];
 }
 
@@ -161,6 +164,7 @@ export interface ProcessSectionContent extends BaseEntity {
   eyebrow: string;
   headingPrefix: string;
   headingHighlight: string;
+  heading?: string;
   subheading: string;
   ctaText: string;
   steps: ProcessStepItem[];
@@ -445,6 +449,9 @@ export interface WebsiteContent {
   teamMembers?: TeamMemberItem[];
   promiseSection?: PromiseSectionData;
   clientLogos?: ClientLogoItem[];
+  clientLogosConfig?: {
+    subheading?: string;
+  };
   packagesTerms?: PackagesPageTerms;
   faqsPageConfig?: FaqsPageConfig;
   customSections?: CustomPageSection[];

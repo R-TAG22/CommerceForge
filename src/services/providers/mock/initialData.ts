@@ -38,6 +38,8 @@ export const INITIAL_WEBSITE_CONTENT: WebsiteContent = {
     primaryCtaUrl: '#contact',
     secondaryCtaText: 'VIEW PACKAGES',
     secondaryCtaUrl: '#packages',
+    socialProofRating: '4.9/5',
+    socialProofCount: '40+ Rebuilds',
     guarantees: [
       { id: 'g-1', text: 'Starting at $159', icon: 'CheckCircle2' },
       { id: 'g-2', text: '7–10 Business Days', icon: 'Zap' },
@@ -539,6 +541,7 @@ export const INITIAL_WEBSITE_CONTENT: WebsiteContent = {
     newColumnSubtitle: 'Sub-second speeds, rock-solid stability & maximum conversions',
     newColumnResult: 'Result: Top-tier Lighthouse scores, instant interactions & boosted revenue.',
     ctaText: 'REQUEST A TECH AUDIT',
+    ctaUrl: '#contact',
     items: [
       {
         id: 'comp-item-1',
@@ -975,6 +978,9 @@ export const INITIAL_WEBSITE_CONTENT: WebsiteContent = {
     { id: 'naturezway', name: "Nature's Way", category: 'Herbal Wellness & Vitamins', sortOrder: 6, visible: true },
     { id: 'coalitionla', name: 'Coalition LA', category: 'Los Angeles Fashion & Streetwear', sortOrder: 7, visible: true },
   ],
+  clientLogosConfig: {
+    subheading: '',
+  },
   packagesTerms: {
     id: 'terms-1',
     milestoneTitle: 'Transparent 50/50 Milestone Terms',
