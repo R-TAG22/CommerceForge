@@ -2,8 +2,6 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Monitor, 
   Smartphone, 
-  Sun, 
-  Moon, 
   ArrowLeft, 
   GripVertical, 
   Layers, 
@@ -49,7 +47,6 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
 
   const [device, setDevice] = useState<'desktop' | 'mobile'>('desktop');
   const [activeTab, setActiveTab] = useState<'palette' | 'scripts' | 'a11y'>('palette');
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
   // Live Theme State synced with ThemeSyncContext
@@ -143,7 +140,7 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
       // Save theme tokens to CMS draft & publish
       await updateSection('theme', {
         primaryBrandColor: primaryColor,
-        backgroundTone: isDarkMode ? 'dark' : 'light',
+        backgroundTone: 'light',
         accentHoverColor: '#B7E84B',
         headingFont: 'Plus Jakarta Sans',
         bodyFont: 'Inter',
@@ -210,10 +207,10 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
   };
 
   return (
-    <div className={`h-screen flex flex-col font-sans select-none ${isDarkMode ? 'bg-slate-950 text-slate-100' : 'bg-[#F6F6F7] text-slate-900'}`}>
+    <div className="h-screen flex flex-col font-sans select-none bg-[#F6F6F7] text-slate-900">
       
       {/* Top Polaris Utility Bar */}
-      <header className={`h-14 px-4 border-b flex items-center justify-between shrink-0 z-20 ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200 shadow-xs'}`}>
+      <header className="h-14 px-4 border-b flex items-center justify-between shrink-0 z-20 bg-white border-slate-200 shadow-xs">
         <div className="flex items-center gap-3">
           <button 
             type="button" 
@@ -253,16 +250,6 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
         {/* Status & Actions */}
         <div className="flex items-center gap-3">
           <button 
-            type="button" 
-            onClick={() => setIsDarkMode(!isDarkMode)}
-            className="p-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-            title="Toggle Light/Dark Workspace"
-            aria-label="Toggle Light or Dark Workspace"
-          >
-            {isDarkMode ? <Sun className="w-4 h-4 text-yellow-400"/> : <Moon className="w-4 h-4 text-slate-600"/>}
-          </button>
-
-          <button 
             type="button"
             onClick={handleSaveAndPublish}
             disabled={isSaving}
@@ -277,7 +264,7 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
       <div className="flex-1 flex overflow-hidden">
         
         {/* Left Sidebar: Section Tree */}
-        <aside className={`w-72 border-r flex flex-col ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
+        <aside className="w-72 border-r flex flex-col bg-white border-slate-200">
           <div className="p-3 border-b text-xs font-bold uppercase tracking-wider flex items-center justify-between text-slate-400 dark:border-slate-800 border-slate-100">
             <div className="flex items-center gap-2">
               <Layers className="w-3.5 h-3.5"/>
@@ -424,7 +411,7 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
         </section>
 
         {/* Right Drawer: Settings & Injections */}
-        <aside className={`w-80 border-l flex flex-col ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
+        <aside className="w-80 border-l flex flex-col bg-white border-slate-200">
           <div className="flex border-b text-xs font-bold dark:border-slate-800 border-slate-200">
             <button 
               type="button" 

@@ -18,7 +18,6 @@ import { Footer } from './components/Footer';
 import { InquiryModal } from './components/InquiryModal';
 import { PublicThemeProvider, usePublicTheme } from './context/PublicThemeContext';
 import { ThemeSyncProvider } from './context/ThemeSyncContext';
-import { ThemeToggle } from './components/ThemeToggle';
 
 // Dedicated Separate Pages
 import { AboutPage } from './components/AboutPage';
@@ -441,9 +440,6 @@ function PublicWebsite() {
         onNavigate={scrollToSection} 
         onOpenInquiry={() => setIsInquiryOpen(true)} 
       />
-
-      {/* Floating Theme Toggle Shortcut (Accessible fixed at bottom right) */}
-      <ThemeToggle variant="floating" />
 
       {/* Project Inquiry & Quote Modal */}
       <InquiryModal

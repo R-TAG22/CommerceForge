@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 
-export type PublicTheme = 'light' | 'dark';
+export type PublicTheme = 'light';
 
 interface PublicThemeContextType {
   theme: PublicTheme;
@@ -14,44 +14,23 @@ const THEME_STORAGE_KEY = 'commerceforge_public_theme';
 const PublicThemeContext = createContext<PublicThemeContextType | undefined>(undefined);
 
 export const PublicThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setThemeState] = useState<PublicTheme>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(THEME_STORAGE_KEY) as PublicTheme;
-      if (saved === 'light' || saved === 'dark') return saved;
-      // Also check system preference if no previous selection
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return 'dark';
-      }
-    }
-    return 'light'; // Default to light mode (#FAFAF9) as specified
-  });
-
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem(THEME_STORAGE_KEY, theme);
+      localStorage.removeItem(THEME_STORAGE_KEY);
+      localStorage.removeItem('commerceforge_theme_config');
       const root = document.documentElement;
-      if (theme === 'dark') {
-        root.classList.add('dark');
-        document.body.style.backgroundColor = 'var(--bg-canvas, #0B0F17)';
-        document.body.style.color = 'var(--text-primary, #F8FAF8)';
-      } else {
-        root.classList.remove('dark');
-        document.body.style.backgroundColor = 'var(--bg-canvas, #FAFAF9)';
-        document.body.style.color = 'var(--text-primary, #0F241A)';
-      }
+      root.classList.remove('dark');
+      root.removeAttribute('data-theme');
+      document.body.style.backgroundColor = 'var(--bg-canvas, #FAFAF9)';
+      document.body.style.color = 'var(--text-primary, #0F241A)';
     }
-  }, [theme]);
+  }, []);
 
-  const setTheme = (newTheme: PublicTheme) => {
-    setThemeState(newTheme);
-  };
-
-  const toggleTheme = () => {
-    setThemeState((prev) => (prev === 'dark' ? 'light' : 'dark'));
-  };
+  const setTheme = () => {};
+  const toggleTheme = () => {};
 
   return (
-    <PublicThemeContext.Provider value={{ theme, isDark: theme === 'dark', toggleTheme, setTheme }}>
+    <PublicThemeContext.Provider value={{ theme: 'light', isDark: false, toggleTheme, setTheme }}>
       {children}
     </PublicThemeContext.Provider>
   );

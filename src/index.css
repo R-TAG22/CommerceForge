@@ -22,8 +22,6 @@
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-@custom-variant dark (&:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *));
-
 :root {
   --bg-canvas: #f6f6f7;
   --bg-surface: #ffffff;
@@ -42,28 +40,6 @@
   --color-primary: #1E3A2B;
   --color-secondary: #8FA98F;
   --color-tint: #C3D5BE;
-}
-
-:root.dark,
-.dark,
-[data-theme='dark'] {
-  --bg-canvas: #0a160f;
-  --bg-surface: #102016;
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --border-subtle: #1e3a2b;
-  --brand-primary: #b7e84b;
-  --brand-accent: #b7e84b;
-
-  /* WCAG & Legacy Aliases */
-  --brand-accent-contrast: #0F241A;
-  --brand-accent-accessible: #B7E84B;
-  --focus-ring: #B7E84B;
-  --color-bg: var(--bg-canvas);
-  --color-surface: var(--bg-surface);
-  --color-primary: #064E3B;
-  --color-secondary: #8FA98F;
-  --color-tint: #2D5A40;
 }
 
 /* Eliminate excessive layer promotion flagged in Motion Dev audit */

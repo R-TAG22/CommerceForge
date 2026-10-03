@@ -4,7 +4,6 @@ import { CommerceForgeLogo } from './CommerceForgeLogo';
 import { useCMS } from '../context/CMSContext';
 import { useRouter } from '../admin/router';
 import { usePublicTheme } from '../context/PublicThemeContext';
-import { ThemeToggle } from './ThemeToggle';
 
 interface HeaderProps {
   activeNav?: NavItem;
@@ -222,11 +221,8 @@ export const Header: React.FC<HeaderProps> = ({
               })}
             </nav>
 
-            {/* Right Controls: Theme Toggle + "Hire Us" Sticky Button */}
+            {/* Right Controls: "Hire Us" Sticky Button */}
             <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-              {/* Modern Theme Switch Toggle */}
-              <ThemeToggle variant="navbar" />
-
               {/* Requirement 3: Eye-catching Hire Us Callout Button */}
               {ctaVisible && (
                 <button
