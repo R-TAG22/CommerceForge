@@ -27,21 +27,12 @@ export const CtaBanner: React.FC<CtaBannerProps> = ({ onCtaClick }) => {
     setSubmitted(true);
   };
 
-  const isCustomText =
-    ctaData?.headingPrefix &&
-    !ctaData.headingPrefix.toLowerCase().includes('ready to build') &&
-    !ctaData.headingPrefix.toLowerCase().includes('ready to give');
+  if (ctaData?.published === false) {
+    return null;
+  }
 
-  const barText = isCustomText
-    ? ctaData.headingPrefix
-    : 'LOOKING FOR A DESIGN AND DEVELOPMENT PARTNER?';
-
-  const buttonText =
-    ctaData?.primaryCtaText &&
-    ctaData.primaryCtaText !== 'GET YOUR FREE QUOTE' &&
-    ctaData.primaryCtaText !== 'Talk to us'
-      ? ctaData.primaryCtaText
-      : "LET'S WORK TOGETHER";
+  const barText = ctaData?.headingPrefix || 'LOOKING FOR A DESIGN AND DEVELOPMENT PARTNER?';
+  const buttonText = ctaData?.primaryCtaText || "LET'S WORK TOGETHER";
 
   return (
     <motion.section

@@ -182,6 +182,15 @@ export interface BrandSectionContent extends BaseEntity {
   descriptionParagraphs: string[];
   values: BrandValueItem[];
   ctaText: string;
+  ctaUrl?: string;
+  revenueCtaText?: string;
+  revenueCtaUrl?: string;
+  pricingMilestoneText?: string;
+  servicesEyebrow?: string;
+  servicesHeading?: string;
+  teamEyebrow?: string;
+  teamHeading?: string;
+  teamDescription?: string;
   standardsBadge: string;
   standardsTitle: string;
   vitalsScoreLabel: string;
@@ -341,6 +350,85 @@ export interface ThemeSettings {
   cardElevation: 'solid' | 'frosted';
 }
 
+export interface SectionMeta {
+  id: string;
+  name: string;
+  type: string;
+  visible: boolean;
+  sortOrder: number;
+}
+
+export interface PageSectionsConfig {
+  home: SectionMeta[];
+  about?: SectionMeta[];
+  work?: SectionMeta[];
+  packages?: SectionMeta[];
+  faqs?: SectionMeta[];
+}
+
+export interface TeamMemberItem extends BaseEntity {
+  name: string;
+  role: string;
+  isFounder: boolean;
+  specializations: string[];
+  bio: string;
+  image: string;
+  sortOrder: number;
+  visible: boolean;
+}
+
+export interface PromiseCardItem {
+  id: string;
+  icon: string;
+  title: string;
+  description: string;
+}
+
+export interface PromiseSectionData extends BaseEntity {
+  badge: string;
+  heading: string;
+  description: string;
+  cards: PromiseCardItem[];
+  ctaText: string;
+  ctaUrl: string;
+  visible: boolean;
+}
+
+export interface ClientLogoItem {
+  id: string;
+  name: string;
+  category: string;
+  logoUrl?: string;
+  sortOrder: number;
+  visible: boolean;
+}
+
+export interface PackagesPageTerms extends BaseEntity {
+  milestoneTitle: string;
+  milestoneText: string;
+  hostingTitle: string;
+  hostingPrice: string;
+  hostingDetails: string;
+  craftBespoke: {
+    title1: string;
+    desc1: string;
+    bullets1: string[];
+    title2: string;
+    desc2: string;
+    bullets2: string[];
+  };
+}
+
+export interface FaqsPageConfig extends BaseEntity {
+  searchPlaceholder: string;
+  heroBadge?: string;
+  heroHeading?: string;
+  heroSubheading?: string;
+  notFoundTitle: string;
+  notFoundText: string;
+  notFoundButtonText: string;
+}
+
 export interface WebsiteContent {
   header: HeaderContent;
   hero: HeroContentData;
@@ -353,6 +441,12 @@ export interface WebsiteContent {
   faq: FAQSectionContent;
   cta: CTASectionContent;
   footer: FooterContentData;
+  pageSections?: PageSectionsConfig;
+  teamMembers?: TeamMemberItem[];
+  promiseSection?: PromiseSectionData;
+  clientLogos?: ClientLogoItem[];
+  packagesTerms?: PackagesPageTerms;
+  faqsPageConfig?: FaqsPageConfig;
   customSections?: CustomPageSection[];
   themeSettings?: ThemeSettings;
   lastUpdated: string;

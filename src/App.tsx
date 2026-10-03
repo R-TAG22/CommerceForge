@@ -30,10 +30,11 @@ import { DynamicSectionRenderer } from './components/DynamicSectionRenderer';
 function PublicWebsite() {
   const [isInquiryOpen, setIsInquiryOpen] = useState<boolean>(false);
   const [selectedPackage, setSelectedPackage] = useState<string>('STANDARD ($260)');
-  const { isPreviewMode, setIsPreviewMode } = useCMS();
+  const { activeContent, isPreviewMode, setIsPreviewMode } = useCMS();
   const { currentPath, navigate } = useRouter();
   const { isDark } = usePublicTheme();
   const prefersReducedMotion = useReducedMotion();
+  const heroData = activeContent?.hero;
 
   // Structured Data (JSON-LD) for SEO and Rich Snippets
   useEffect(() => {
@@ -181,91 +182,136 @@ function PublicWebsite() {
         );
 
       case '/':
-      default:
+      default: {
+        const defaultHomeSections = [
+          { id: 'hero', name: 'Hero Showcase & Before/After Frame', type: 'hero', visible: true, sortOrder: 0 },
+          { id: 'logos', name: 'Client Brand Logos Marquee', type: 'logos', visible: true, sortOrder: 1 },
+          { id: 'comparison', name: 'Performance Comparison Table', type: 'comparison', visible: true, sortOrder: 2 },
+          { id: 'process', name: '4-Step Rebuild Process', type: 'process', visible: true, sortOrder: 3 },
+          { id: 'cta', name: 'Bottom Call To Action Banner', type: 'cta', visible: true, sortOrder: 4 },
+        ];
+
+        const homeSections = (activeContent?.pageSections?.home && activeContent.pageSections.home.length > 0)
+          ? activeContent.pageSections.home
+          : defaultHomeSections;
+
+        const visibleSections = [...homeSections]
+          .filter((s) => s.visible !== false)
+          .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+
         return (
           <>
-            {/* 2. Home Page Hero Section: Streamlined Headline + Centerpiece Before & After Frame */}
-            <motion.section 
-              id="hero"
-              initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: prefersReducedMotion ? 0 : 0.65,
-                ease: [0.21, 0.47, 0.32, 0.98],
-              }}
-              className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 pt-3 sm:pt-6 pb-12 lg:pb-16"
-              aria-label="Hero Showcase"
-            >
-              {/* TOP: Concise Headline & Subheadline */}
-              <div className="w-full max-w-3xl mx-auto mb-4 sm:mb-6">
-                <HeroContent onCtaClick={() => setIsInquiryOpen(true)} />
-              </div>
+            {visibleSections.map((section) => {
+              switch (section.type || section.id) {
+                case 'hero':
+                  return (
+                    <motion.section 
+                      key={section.id}
+                      id="hero"
+                      initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        duration: prefersReducedMotion ? 0 : 0.65,
+                        ease: [0.21, 0.47, 0.32, 0.98],
+                      }}
+                      className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 pt-3 sm:pt-6 pb-12 lg:pb-16"
+                      aria-label="Hero Showcase"
+                    >
+                      {/* TOP: Concise Headline & Subheadline */}
+                      <div className="w-full max-w-3xl mx-auto mb-4 sm:mb-6">
+                        <HeroContent onCtaClick={() => setIsInquiryOpen(true)} />
+                      </div>
 
-              {/* CENTERPIECE: Interactive Before & After Feature Frame (Enlarged +10%) */}
-              <div className="w-full max-w-[1480px] mx-auto">
-                <HeroMedia />
-              </div>
+                      {/* CENTERPIECE: Interactive Before & After Feature Frame */}
+                      <div className="w-full max-w-[1480px] mx-auto">
+                        <HeroMedia />
+                      </div>
 
-              {/* BOTTOM OF HERO: Action Buttons & Micro-Trust Line (Moved below Before & After Feature) */}
-              <div className="mt-7 sm:mt-9 flex flex-col items-center justify-center w-full max-w-xl mx-auto text-center px-4">
-                <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 w-full">
-                  <button
-                    id="hero-primary-cta-btn"
-                    onClick={() => setIsInquiryOpen(true)}
-                    className={`group relative inline-flex items-center justify-center gap-2.5 px-7 sm:px-8 py-3 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold tracking-[0.08em] uppercase border transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-[#B7E84B]/30 cursor-pointer shadow-lg ${
-                      isDark
-                        ? 'bg-[#B7E84B] text-[#0B0F17] border-[#B7E84B] hover:bg-[#a3d438] hover:shadow-[0_0_25px_rgba(183,232,75,0.4)]'
-                        : 'bg-gradient-to-r from-[#064E3B] to-[#047857] text-white border-[#B7E84B]/40 hover:from-[#059669] hover:to-[#064E3B] hover:shadow-[0_12px_28px_-6px_rgba(6,78,59,0.3)]'
-                    }`}
-                  >
-                    <span>GET A FREE QUOTE</span>
-                    <ArrowRight className={`w-4 h-4 transition-transform duration-300 group-hover:translate-x-1.5 ${
-                      isDark ? 'text-[#0B0F17]' : 'text-[#B7E84B]'
-                    }`} />
-                  </button>
+                      {/* BOTTOM OF HERO: Action Buttons & Micro-Trust Line */}
+                      <div className="mt-7 sm:mt-9 flex flex-col items-center justify-center w-full max-w-xl mx-auto text-center px-4">
+                        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 w-full">
+                          <button
+                            id="hero-primary-cta-btn"
+                            onClick={() => {
+                              const targetUrl = heroData?.primaryCtaUrl || '#contact';
+                              if (targetUrl === '#contact' || targetUrl.toLowerCase().includes('inquiry')) {
+                                setIsInquiryOpen(true);
+                              } else {
+                                navigate(targetUrl);
+                              }
+                            }}
+                            className={`group relative inline-flex items-center justify-center gap-2.5 px-7 sm:px-8 py-3 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold tracking-[0.08em] uppercase border transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-[#B7E84B]/30 cursor-pointer shadow-lg ${
+                              isDark
+                                ? 'bg-[#B7E84B] text-[#0B0F17] border-[#B7E84B] hover:bg-[#a3d438] hover:shadow-[0_0_25px_rgba(183,232,75,0.4)]'
+                                : 'bg-gradient-to-r from-[#064E3B] to-[#047857] text-white border-[#B7E84B]/40 hover:from-[#059669] hover:to-[#064E3B] hover:shadow-[0_12px_28px_-6px_rgba(6,78,59,0.3)]'
+                            }`}
+                          >
+                            <span>{heroData?.primaryCtaText || 'GET A FREE QUOTE'}</span>
+                            <ArrowRight className={`w-4 h-4 transition-transform duration-300 group-hover:translate-x-1.5 ${
+                              isDark ? 'text-[#0B0F17]' : 'text-[#B7E84B]'
+                            }`} />
+                          </button>
 
-                  <button
-                    id="hero-packages-cta-btn"
-                    onClick={() => navigate('/packages')}
-                    className={`inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold tracking-[0.08em] uppercase border transition-all duration-200 shadow-xs cursor-pointer ${
-                      isDark
-                        ? 'bg-white/5 hover:bg-white/10 text-white border-white/20 hover:border-[#B7E84B]'
-                        : 'bg-white text-[#064E3B] border-[#064E3B]/15 hover:border-[#059669] hover:text-[#064E3B] hover:bg-[#FAFAF9]'
-                    }`}
-                  >
-                    <span>VIEW PACKAGES</span>
-                  </button>
-                </div>
+                          <button
+                            id="hero-packages-cta-btn"
+                            onClick={() => navigate(heroData?.secondaryCtaUrl || '/packages')}
+                            className={`inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold tracking-[0.08em] uppercase border transition-all duration-200 shadow-xs cursor-pointer ${
+                              isDark
+                                ? 'bg-white/5 hover:bg-white/10 text-white border-white/20 hover:border-[#B7E84B]'
+                                : 'bg-white text-[#064E3B] border-[#064E3B]/15 hover:border-[#059669] hover:text-[#064E3B] hover:bg-[#FAFAF9]'
+                            }`}
+                          >
+                            <span>{heroData?.secondaryCtaText || 'VIEW PACKAGES'}</span>
+                          </button>
+                        </div>
 
-                {/* Subtle Micro-Trust Line */}
-                <div className={`mt-3 sm:mt-3.5 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-[11px] sm:text-xs font-semibold tracking-wide transition-colors ${
-                  isDark ? 'text-white/70' : 'text-[#064E3B]/80'
-                }`}>
-                  <span className="flex items-center gap-1.5">⚡ 7–10 Day Delivery</span>
-                  <span className="opacity-40">•</span>
-                  <span>Starting at $159</span>
-                  <span className="opacity-40">•</span>
-                  <span>100% Handcrafted Code</span>
-                </div>
-              </div>
-            </motion.section>
+                        {/* Subtle Micro-Trust Line */}
+                        <div className={`mt-3 sm:mt-3.5 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-[11px] sm:text-xs font-semibold tracking-wide transition-colors ${
+                          isDark ? 'text-white/70' : 'text-[#064E3B]/80'
+                        }`}>
+                          {heroData?.guarantees && heroData.guarantees.length > 0 ? (
+                            heroData.guarantees.map((g, idx) => (
+                              <React.Fragment key={g.id || idx}>
+                                {idx > 0 && <span className="opacity-40">•</span>}
+                                <span>{g.text}</span>
+                              </React.Fragment>
+                            ))
+                          ) : (
+                            <>
+                              <span className="flex items-center gap-1.5">⚡ 7–10 Day Delivery</span>
+                              <span className="opacity-40">•</span>
+                              <span>Starting at $159</span>
+                              <span className="opacity-40">•</span>
+                              <span>100% Handcrafted Code</span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </motion.section>
+                  );
 
-            {/* 3. Performance & Trust Metrics Bar */}
-            <MetricsBar />
+                case 'logos':
+                  return <MetricsBar key={section.id} />;
 
-            {/* 4. Why Rebuild? Old Way vs New Way Comparison */}
-            <ComparisonSection onCtaClick={() => setIsInquiryOpen(true)} />
+                case 'comparison':
+                  return <ComparisonSection key={section.id} onCtaClick={() => setIsInquiryOpen(true)} />;
 
-            {/* 7. The 4-Step Rebuild Process */}
-            <ProcessSection onCtaClick={() => setIsInquiryOpen(true)} />
+                case 'process':
+                  return <ProcessSection key={section.id} onCtaClick={() => setIsInquiryOpen(true)} />;
 
-            {/* 8. Dynamic Sections configured for Home Page in CMS */}
+                case 'cta':
+                  return <CtaBanner key={section.id} onCtaClick={() => setIsInquiryOpen(true)} />;
+
+                default:
+                  return null;
+              }
+            })}
+
+            {/* Dynamic Sections configured for Home Page in CMS */}
             <DynamicSectionRenderer page="home" onHireClick={() => setIsInquiryOpen(true)} />
-
-            {/* 11. Bottom High-Impact Call to Action Banner */}
-            <CtaBanner onCtaClick={() => setIsInquiryOpen(true)} />
           </>
         );
+      }
     }
   };
 

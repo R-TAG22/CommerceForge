@@ -15,23 +15,19 @@ const AdminThemeContext = createContext<AdminThemeContextType | undefined>(undef
 
 export const AdminThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setThemeState] = useState<AdminTheme>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(THEME_STORAGE_KEY) as AdminTheme;
-      if (saved === 'light' || saved === 'dark') return saved;
-    }
-    return 'dark'; // Default to dark emerald theme
+    // Default to clean, high-contrast white card theme
+    return 'light';
   });
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem(THEME_STORAGE_KEY, theme);
-      if (theme === 'dark') {
-        document.documentElement.classList.add('admin-dark');
-        document.documentElement.classList.remove('admin-light');
-      } else {
-        document.documentElement.classList.add('admin-light');
-        document.documentElement.classList.remove('admin-dark');
-      }
+      localStorage.setItem(THEME_STORAGE_KEY, 'light');
+      // Ensure dark mode from public website does not bleed into the admin panel
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.remove('admin-dark');
+      document.documentElement.classList.add('admin-light');
+      document.body.style.backgroundColor = '#F8FAFC';
+      document.body.style.color = '#0F172A';
     }
   }, [theme]);
 

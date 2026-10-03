@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Check } from 'lucide-react';
 import { useReducedMotion } from '../hooks/useReducedMotion';
+import { useCMS } from '../context/CMSContext';
 
 interface CraftBespokeFeatureCardProps {
   onLaunchProject?: () => void;
@@ -13,6 +14,30 @@ export const CraftBespokeFeatureCard: React.FC<CraftBespokeFeatureCardProps> = (
   onUnsnarlArchitecture,
 }) => {
   const prefersReducedMotion = useReducedMotion();
+  const { activeContent } = useCMS();
+  const bespokeData = activeContent?.packagesTerms?.craftBespoke;
+
+  const title1 = bespokeData?.title1 || 'UNCOMPROMISING CRAFT';
+  const desc1 = bespokeData?.desc1 || 'Fast, accessible, with clear communication.';
+  const bullets1 = bespokeData?.bullets1 && bespokeData.bullets1.length > 0
+    ? bespokeData.bullets1
+    : [
+        'Blazing <800ms Time-to-First-Byte',
+        'Thumb-First Mobile Magic',
+        'Full Code Ownership (We don’t hold it hostage)',
+        'SEO-Ready Indexing (Google will find you)',
+      ];
+
+  const title2 = bespokeData?.title2 || 'BESPOKE E-COMMERCE';
+  const desc2 = bespokeData?.desc2 || 'We build what monolithic platforms can’t.';
+  const bullets2 = bespokeData?.bullets2 && bespokeData.bullets2.length > 0
+    ? bespokeData.bullets2
+    : [
+        'Complex Multi-Vendor Architecture',
+        'Bespoke Headless Systems',
+        'Custom ERP and Logistics Sync',
+        'Tailored wholesale tiering',
+      ];
 
   return (
     <motion.section
@@ -36,7 +61,6 @@ export const CraftBespokeFeatureCard: React.FC<CraftBespokeFeatureCardProps> = (
             fill="none"
             stroke="currentColor"
           >
-            {/* Coordinate Graticule Grid */}
             <g strokeWidth="0.6" strokeDasharray="4 6" opacity="0.7">
               <line x1="20" y1="250" x2="980" y2="250" />
               <line x1="20" y1="170" x2="980" y2="170" />
@@ -50,37 +74,6 @@ export const CraftBespokeFeatureCard: React.FC<CraftBespokeFeatureCardProps> = (
               <line x1="375" y1="20" x2="375" y2="480" />
               <line x1="625" y1="20" x2="625" y2="480" />
               <line x1="875" y1="20" x2="875" y2="480" />
-            </g>
-
-            {/* Continents & Landmass Vector Paths */}
-            <g strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" fill="currentColor" fillOpacity="0.04">
-              {/* North America */}
-              <path d="M80 65 L130 55 L180 60 L230 45 L280 50 L310 75 L300 110 L260 120 L235 145 L255 175 L235 205 L205 225 L190 255 L175 265 L155 235 L145 185 L115 155 L75 105 Z" />
-              {/* Greenland */}
-              <path d="M335 35 L385 40 L400 70 L385 100 L345 95 L325 65 Z" />
-              {/* South America */}
-              <path d="M215 265 L260 275 L290 305 L310 345 L300 395 L270 445 L250 455 L235 400 L225 350 L210 300 Z" />
-              {/* Europe */}
-              <path d="M465 95 L515 85 L555 90 L565 125 L525 145 L485 155 L455 135 L465 115 Z" />
-              {/* British Isles */}
-              <path d="M435 100 L450 95 L445 120 L430 115 Z" />
-              {/* Africa */}
-              <path d="M460 165 L530 165 L570 205 L590 255 L570 325 L530 375 L490 375 L465 305 L435 235 L445 185 Z" />
-              {/* Madagascar */}
-              <path d="M595 315 L610 325 L600 365 L585 345 Z" />
-              {/* Asia */}
-              <path d="M565 95 L645 75 L745 65 L835 80 L875 115 L845 165 L795 185 L755 235 L695 235 L665 195 L625 185 L575 145 Z" />
-              {/* India */}
-              <path d="M665 195 L710 205 L700 265 L670 245 Z" />
-              {/* Japan */}
-              <path d="M850 135 L870 145 L860 180 L845 170 Z" />
-              {/* Southeast Asia & Islands */}
-              <path d="M740 245 L770 255 L760 295 L730 275 Z" />
-              <path d="M770 285 L815 290 L805 310 L765 305 Z" />
-              {/* Australia */}
-              <path d="M765 335 L850 325 L880 375 L860 415 L800 425 L755 385 Z" />
-              {/* New Zealand */}
-              <path d="M890 405 L910 415 L900 445 L885 435 Z" />
             </g>
           </svg>
         </div>
@@ -98,47 +91,28 @@ export const CraftBespokeFeatureCard: React.FC<CraftBespokeFeatureCardProps> = (
 
               {/* Headline */}
               <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold uppercase tracking-tight text-white leading-[1.08] mt-2 mb-3">
-                UNCOMPROMISING<br />CRAFT
+                {title1}
               </h2>
 
               {/* Subhead */}
               <p className="text-[#A3C8AF] text-base sm:text-lg mb-6 leading-relaxed font-medium">
-                Fast, accessible, with clear communication.
+                {desc1}
               </p>
 
               {/* Feature List (Green Checkmarks) */}
               <ul className="space-y-3.5 my-6">
-                <li className="flex items-center gap-3 text-[#E5E7EB] text-sm sm:text-[15px] font-medium">
-                  <div className="w-5 h-5 rounded-full border border-[#D4F968] text-[#D4F968] flex items-center justify-center shrink-0">
-                    <Check className="w-3 h-3 stroke-[2.8]" />
-                  </div>
-                  <span>Blazing &lt;800ms Time-to-First-Byte</span>
-                </li>
-
-                <li className="flex items-center gap-3 text-[#E5E7EB] text-sm sm:text-[15px] font-medium">
-                  <div className="w-5 h-5 rounded-full border border-[#D4F968] text-[#D4F968] flex items-center justify-center shrink-0">
-                    <Check className="w-3 h-3 stroke-[2.8]" />
-                  </div>
-                  <span>Thumb-First Mobile Magic</span>
-                </li>
-
-                <li className="flex items-center gap-3 text-[#E5E7EB] text-sm sm:text-[15px] font-medium">
-                  <div className="w-5 h-5 rounded-full border border-[#D4F968] text-[#D4F968] flex items-center justify-center shrink-0">
-                    <Check className="w-3 h-3 stroke-[2.8]" />
-                  </div>
-                  <span>Full Code Ownership (We don’t hold it hostage)</span>
-                </li>
-
-                <li className="flex items-center gap-3 text-[#E5E7EB] text-sm sm:text-[15px] font-medium">
-                  <div className="w-5 h-5 rounded-full border border-[#D4F968] text-[#D4F968] flex items-center justify-center shrink-0">
-                    <Check className="w-3 h-3 stroke-[2.8]" />
-                  </div>
-                  <span>SEO-Ready Indexing (Google will find you)</span>
-                </li>
+                {bullets1.map((b, idx) => (
+                  <li key={idx} className="flex items-center gap-3 text-[#E5E7EB] text-sm sm:text-[15px] font-medium">
+                    <div className="w-5 h-5 rounded-full border border-[#D4F968] text-[#D4F968] flex items-center justify-center shrink-0">
+                      <Check className="w-3 h-3 stroke-[2.8]" />
+                    </div>
+                    <span>{b}</span>
+                  </li>
+                ))}
               </ul>
             </div>
 
-            {/* Bottom CTA Button (Aligned horizontally with right column button) */}
+            {/* Bottom CTA Button */}
             <div className="mt-auto pt-6">
               <button
                 type="button"
@@ -160,39 +134,26 @@ export const CraftBespokeFeatureCard: React.FC<CraftBespokeFeatureCardProps> = (
 
               {/* Headline */}
               <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold uppercase tracking-tight text-white leading-[1.08] mt-2 mb-3">
-                BESPOKE<br />E-COMMERCE
+                {title2}
               </h2>
 
               {/* Subhead */}
               <p className="text-[#A3C8AF] text-base sm:text-lg mb-6 leading-relaxed font-medium">
-                We build what monolithic platforms can’t.
+                {desc2}
               </p>
 
               {/* Feature List (Muted Bullet Points / Dots) */}
               <ul className="space-y-3.5 my-6">
-                <li className="flex items-center gap-3 text-[#E5E7EB] text-sm sm:text-[15px] font-medium">
-                  <span className="w-2 h-2 rounded-full bg-[#D4F968] shrink-0" />
-                  <span>Complex Multi-Vendor Architecture</span>
-                </li>
-
-                <li className="flex items-center gap-3 text-[#E5E7EB] text-sm sm:text-[15px] font-medium">
-                  <span className="w-2 h-2 rounded-full bg-[#D4F968] shrink-0" />
-                  <span>Bespoke Headless Systems</span>
-                </li>
-
-                <li className="flex items-center gap-3 text-[#E5E7EB] text-sm sm:text-[15px] font-medium">
-                  <span className="w-2 h-2 rounded-full bg-[#D4F968] shrink-0" />
-                  <span>Custom ERP and Logistics Sync</span>
-                </li>
-
-                <li className="flex items-center gap-3 text-[#E5E7EB] text-sm sm:text-[15px] font-medium">
-                  <span className="w-2 h-2 rounded-full bg-[#D4F968] shrink-0" />
-                  <span>Tailored wholesale tiering</span>
-                </li>
+                {bullets2.map((b, idx) => (
+                  <li key={idx} className="flex items-center gap-3 text-[#E5E7EB] text-sm sm:text-[15px] font-medium">
+                    <span className="w-2 h-2 rounded-full bg-[#D4F968] shrink-0" />
+                    <span>{b}</span>
+                  </li>
+                ))}
               </ul>
             </div>
 
-            {/* Bottom CTA Button (Aligned horizontally with left column button) */}
+            {/* Bottom CTA Button */}
             <div className="mt-auto pt-6">
               <button
                 type="button"

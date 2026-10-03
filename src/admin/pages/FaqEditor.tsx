@@ -1,283 +1,454 @@
 import React, { useState } from 'react';
-import { Save, HelpCircle, Plus, Trash2, ArrowUp, ArrowDown, UploadCloud } from 'lucide-react';
+import { 
+  HelpCircle, 
+  Plus, 
+  Trash2, 
+  Edit3, 
+  ArrowUp, 
+  ArrowDown, 
+  Check, 
+  ExternalLink,
+  Search,
+  MessageSquare
+} from 'lucide-react';
 import { useCMS } from '../../context/CMSContext';
-import { FaqSectionContent, FaqItem } from '../../types/cms';
 import { useToast } from '../components/Toast';
+import { FAQItem } from '../../types/cms';
 
 export const FaqEditor: React.FC = () => {
-  const { draftContent, updateSection, publishSection } = useCMS();
+  const { draftContent, updateSection, updateDraftContent, setPreviewMode } = useCMS();
   const { showToast } = useToast();
 
-  const [faqData, setFaqData] = useState<FaqSectionContent>(
-    JSON.parse(JSON.stringify(draftContent.faq))
-  );
-  const [isSaving, setIsSaving] = useState(false);
-  const [isPublishing, setIsPublishing] = useState(false);
+  const [activeTab, setActiveTab] = useState<'questions' | 'header' | 'cta'>('questions');
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSaving(true);
-    try {
-      await updateSection('faq', faqData);
-      showToast('success', 'FAQ Draft Saved', 'FAQ section updated in draft.');
-    } catch (err: unknown) {
-      showToast('error', 'Save Failed', err instanceof Error ? err.message : 'Save failed');
-    } finally {
-      setIsSaving(false);
+  const [faqData, setFaqData] = useState(draftContent.faq);
+  const [faqList, setFaqList] = useState<FAQItem[]>(draftContent.faq?.faqs || []);
+  const [pageConfig, setPageConfig] = useState(draftContent.faqsPageConfig || {
+    id: 'faqs-config',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    searchPlaceholder: 'Search answers (e.g. pricing, revisions, ownership)...',
+    heroBadge: 'TRANSPARENCY FIRST',
+    heroHeading: 'FREQUENTLY ASKED QUESTIONS.',
+    heroSubheading: 'Got questions before we collaborate? Here is everything you need to know about our productized rates, delivery timelines, codebase ownership, and guarantees.',
+    notFoundTitle: 'No matching questions found',
+    notFoundText: 'Have a specific question? Feel free to ask us directly.',
+    notFoundButtonText: 'Ask Us Directly',
+  });
+
+  const [editingFaq, setEditingFaq] = useState<{ index: number; data: FAQItem } | null>(null);
+
+  React.useEffect(() => {
+    if (draftContent.faq) {
+      setFaqData(draftContent.faq);
+      setFaqList(draftContent.faq.faqs || []);
     }
+    if (draftContent.faqsPageConfig) {
+      setPageConfig(draftContent.faqsPageConfig);
+    }
+  }, [draftContent]);
+
+  const handleSaveFaqs = async (updated: FAQItem[]) => {
+    setFaqList(updated);
+    await updateSection('faq', {
+      ...faqData,
+      faqs: updated,
+    });
+    showToast('success', 'FAQs Saved', 'Questions updated on public FAQ page.');
   };
 
-  const handlePublishNow = async () => {
-    setIsPublishing(true);
-    try {
-      await publishSection('faq', faqData);
-      showToast('success', 'Published Live!', 'FAQ changes are now live on the public website.');
-    } catch (err: unknown) {
-      showToast('error', 'Publish Failed', err instanceof Error ? err.message : 'Publish failed');
-    } finally {
-      setIsPublishing(false);
-    }
+  const handleSaveHeader = async () => {
+    await updateSection('faq', {
+      ...faqData,
+      eyebrow: pageConfig.heroBadge || faqData.eyebrow,
+      subheading: pageConfig.heroSubheading || faqData.subheading,
+      faqs: faqList,
+    });
+    await updateDraftContent({ faqsPageConfig: pageConfig });
+    showToast('success', 'FAQ Header Saved', 'Hero text and search placeholder updated.');
+  };
+
+  const handleSaveCta = async () => {
+    await updateSection('faq', {
+      ...faqData,
+      faqs: faqList,
+    });
+    showToast('success', 'FAQ CTA Saved', 'Bottom question card updated.');
   };
 
   const handleAddFaq = () => {
-    const newFaq: FaqItem = {
+    const newFaq: FAQItem = {
       id: `faq-${Date.now()}`,
-      question: 'New Frequently Asked Question?',
-      answer: 'Clear, direct answer explaining our process, technical details, or policies.',
-      sortOrder: faqData.faqs.length,
-      published: true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      question: 'New Question Title?',
+      answer: 'Detailed answer explaining your process, rates, or guarantees clearly.',
+      sortOrder: faqList.length,
+      published: true,
     };
-    setFaqData((prev) => ({ ...prev, faqs: [...prev.faqs, newFaq] }));
+    const updated = [...faqList, newFaq];
+    handleSaveFaqs(updated);
+    setEditingFaq({ index: faqList.length, data: newFaq });
   };
 
-  const handleFaqChange = (id: string, field: keyof FaqItem, val: unknown) => {
-    setFaqData((prev) => ({
-      ...prev,
-      faqs: prev.faqs.map((f) => (f.id === id ? { ...f, [field]: val } : f)),
-    }));
+  const handleMoveFaq = (index: number, direction: 'up' | 'down') => {
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= faqList.length) return;
+    const updated = [...faqList];
+    const temp = updated[index];
+    updated[index] = updated[targetIndex];
+    updated[targetIndex] = temp;
+    const sorted = updated.map((f, idx) => ({ ...f, sortOrder: idx }));
+    handleSaveFaqs(sorted);
   };
 
-  const handleMove = (index: number, direction: 'up' | 'down') => {
-    const target = direction === 'up' ? index - 1 : index + 1;
-    if (target < 0 || target >= faqData.faqs.length) return;
-
-    const list = [...faqData.faqs];
-    const temp = list[index];
-    list[index] = list[target];
-    list[target] = temp;
-    list.forEach((f, idx) => (f.sortOrder = idx));
-    setFaqData((prev) => ({ ...prev, faqs: list }));
-  };
-
-  const handleDelete = (id: string) => {
-    setFaqData((prev) => ({
-      ...prev,
-      faqs: prev.faqs.filter((f) => f.id !== id),
-    }));
+  const handleDeleteFaq = (index: number) => {
+    if (window.confirm(`Delete question "${faqList[index].question}"?`)) {
+      const updated = faqList.filter((_, i) => i !== index);
+      handleSaveFaqs(updated);
+      if (editingFaq?.index === index) {
+        setEditingFaq(null);
+      }
+    }
   };
 
   return (
-    <form onSubmit={handleSave} className="space-y-8 pb-12">
+    <div className="max-w-5xl mx-auto space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 pb-6">
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#B7E84B] mb-1">
-            <HelpCircle className="w-4 h-4" />
-            <span>Customer Clarification</span>
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md text-[11px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200 mb-2">
+            Page Editor
           </div>
-          <h1 className="text-2xl font-black uppercase tracking-tight text-white">Frequently Asked Questions</h1>
-          <p className="text-xs text-white/60">Manage questions and answers shown in the interactive accordion</p>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">
+            FAQ Page Editor
+          </h1>
+          <p className="mt-1 text-sm text-slate-600 font-medium">
+            Manage frequently asked questions, answers, and search placeholder ({faqList.length} items).
+          </p>
         </div>
 
         <div className="flex items-center gap-3">
           <button
-            type="submit"
-            disabled={isSaving || isPublishing}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold uppercase tracking-wider transition-colors border border-white/10 disabled:opacity-50 cursor-pointer"
-          >
-            <Save className="w-4 h-4 text-[#B7E84B]" />
-            <span>{isSaving ? 'Saving...' : 'Save Draft'}</span>
-          </button>
-          <button
-            type="button"
-            onClick={handlePublishNow}
-            disabled={isSaving || isPublishing}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#B7E84B] hover:bg-[#a6d83b] text-[#0F241A] text-xs font-black uppercase tracking-wider transition-colors shadow-md disabled:opacity-50 cursor-pointer"
-          >
-            <UploadCloud className="w-4 h-4" />
-            <span>{isPublishing ? 'Publishing...' : 'Save & Publish Live'}</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Headlines & Support Note */}
-      <div className="p-6 rounded-2xl bg-[#12241A] border border-white/10 space-y-4">
-        <h2 className="text-sm font-bold uppercase tracking-wider text-white border-b border-white/10 pb-3">
-          Section Headlines
-        </h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-white/70 mb-1">
-              Eyebrow Label
-            </label>
-            <input
-              type="text"
-              value={faqData.eyebrow}
-              onChange={(e) => setFaqData({ ...faqData, eyebrow: e.target.value })}
-              className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-white/70 mb-1">
-              Heading Prefix
-            </label>
-            <input
-              type="text"
-              value={faqData.heading}
-              onChange={(e) => setFaqData({ ...faqData, heading: e.target.value })}
-              className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-[#B7E84B] mb-1">
-              Heading Highlight
-            </label>
-            <input
-              type="text"
-              value={faqData.headingHighlight}
-              onChange={(e) => setFaqData({ ...faqData, headingHighlight: e.target.value })}
-              className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-[#B7E84B]/40 text-xs text-[#B7E84B] font-bold"
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-white/70 mb-1">
-              Subheading
-            </label>
-            <input
-              type="text"
-              value={faqData.subheading}
-              onChange={(e) => setFaqData({ ...faqData, subheading: e.target.value })}
-              className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-white/70 mb-1">
-              Support Note / Email Invitation
-            </label>
-            <input
-              type="text"
-              value={faqData.supportNote}
-              onChange={(e) => setFaqData({ ...faqData, supportNote: e.target.value })}
-              className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* FAQs List */}
-      <div className="p-6 rounded-2xl bg-[#12241A] border border-white/10 space-y-4">
-        <div className="flex items-center justify-between border-b border-white/10 pb-3">
-          <div>
-            <h2 className="text-sm font-bold uppercase tracking-wider text-white">Interactive Q&A Items</h2>
-            <p className="text-xs text-white/50">Questions expand and collapse for visitors</p>
-          </div>
-          <button
             type="button"
             onClick={handleAddFaq}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold uppercase tracking-wider"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm cursor-pointer"
           >
-            <Plus className="w-3.5 h-3.5 text-[#B7E84B]" />
+            <Plus className="w-4 h-4" />
             <span>Add Question</span>
           </button>
-        </div>
 
+          <button
+            type="button"
+            onClick={() => {
+              setPreviewMode(true);
+              window.open('#/faqs', '_blank');
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 shadow-xs transition-all cursor-pointer"
+          >
+            <ExternalLink className="w-3.5 h-3.5 text-emerald-600" />
+            <span>View FAQ Page</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex items-center gap-2 border-b border-slate-200">
+        <button
+          type="button"
+          onClick={() => setActiveTab('questions')}
+          className={`px-4 py-2.5 text-xs font-bold uppercase tracking-wider border-b-2 transition-colors cursor-pointer ${
+            activeTab === 'questions'
+              ? 'border-emerald-600 text-emerald-700 font-black'
+              : 'border-transparent text-slate-500 hover:text-slate-900'
+          }`}
+        >
+          1. Questions &amp; Answers ({faqList.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('header')}
+          className={`px-4 py-2.5 text-xs font-bold uppercase tracking-wider border-b-2 transition-colors cursor-pointer ${
+            activeTab === 'header'
+              ? 'border-emerald-600 text-emerald-700 font-black'
+              : 'border-transparent text-slate-500 hover:text-slate-900'
+          }`}
+        >
+          2. Hero &amp; Search Bar
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('cta')}
+          className={`px-4 py-2.5 text-xs font-bold uppercase tracking-wider border-b-2 transition-colors cursor-pointer ${
+            activeTab === 'cta'
+              ? 'border-emerald-600 text-emerald-700 font-black'
+              : 'border-transparent text-slate-500 hover:text-slate-900'
+          }`}
+        >
+          3. Still Have Questions Card
+        </button>
+      </div>
+
+      {/* TAB 1: QUESTIONS */}
+      {activeTab === 'questions' && (
         <div className="space-y-4">
-          {faqData.faqs.map((faq, index) => (
+          {faqList.map((faq, index) => (
             <div
-              key={faq.id}
-              className="p-4 rounded-xl bg-[#162C20] border border-white/10 space-y-3"
+              key={faq.id || index}
+              className="p-5 rounded-2xl border border-slate-200 bg-white shadow-sm transition-all hover:border-slate-300"
             >
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-[11px] font-mono text-[#B7E84B] font-bold">
-                    Q{index + 1}
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-slate-100 text-xs font-black text-slate-800 shrink-0 mt-0.5">
+                    {index + 1}
                   </span>
-                  <div className="flex items-center gap-1">
+
+                  <div>
+                    <h3 className="text-base font-black text-slate-900">
+                      {faq.question}
+                    </h3>
+                    <p className="text-xs text-slate-600 mt-1.5 leading-relaxed line-clamp-2 font-medium">
+                      {faq.answer}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+                  <div className="flex items-center border border-slate-300 rounded-lg overflow-hidden bg-slate-50 shadow-xs">
                     <button
                       type="button"
                       disabled={index === 0}
-                      onClick={() => handleMove(index, 'up')}
-                      className="p-1 text-white/40 hover:text-white disabled:opacity-20"
+                      onClick={() => handleMoveFaq(index, 'up')}
+                      className="p-1.5 hover:bg-slate-200 text-slate-700 disabled:opacity-30 cursor-pointer"
+                      title="Move up"
                     >
                       <ArrowUp className="w-3.5 h-3.5" />
                     </button>
                     <button
                       type="button"
-                      disabled={index === faqData.faqs.length - 1}
-                      onClick={() => handleMove(index, 'down')}
-                      className="p-1 text-white/40 hover:text-white disabled:opacity-20"
+                      disabled={index === faqList.length - 1}
+                      onClick={() => handleMoveFaq(index, 'down')}
+                      className="p-1.5 hover:bg-slate-200 text-slate-700 disabled:opacity-30 cursor-pointer"
+                      title="Move down"
                     >
                       <ArrowDown className="w-3.5 h-3.5" />
                     </button>
                   </div>
-                </div>
 
-                <div className="flex items-center gap-3">
-                  <label className="flex items-center gap-1.5 cursor-pointer text-xs text-white/70">
-                    <input
-                      type="checkbox"
-                      checked={faq.published}
-                      onChange={(e) => handleFaqChange(faq.id, 'published', e.target.checked)}
-                      className="rounded border-white/20 text-[#B7E84B] focus:ring-[#B7E84B]"
-                    />
-                    <span>Live</span>
-                  </label>
                   <button
                     type="button"
-                    onClick={() => handleDelete(faq.id)}
-                    className="p-1.5 text-white/40 hover:text-red-400"
+                    onClick={() => setEditingFaq({ index, data: { ...faq } })}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider bg-[#B7E84B] text-[#0E1B13] hover:bg-[#a6d93b] cursor-pointer shadow-xs"
+                  >
+                    <Edit3 className="w-3.5 h-3.5" />
+                    <span>Edit</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteFaq(index)}
+                    className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg cursor-pointer"
+                    title="Delete question"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               </div>
+            </div>
+          ))}
+        </div>
+      )}
 
+      {/* TAB 2: HERO & SEARCH */}
+      {activeTab === 'header' && (
+        <div className="p-6 sm:p-8 rounded-2xl border border-slate-200 bg-white shadow-sm space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-black uppercase tracking-wider text-slate-800 mb-1.5">
+                Eyebrow Badge
+              </label>
+              <input
+                type="text"
+                value={pageConfig.heroBadge || ''}
+                onChange={(e) => setPageConfig({ ...pageConfig, heroBadge: e.target.value })}
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-900 font-bold text-xs shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-black uppercase tracking-wider text-slate-800 mb-1.5">
+                Heading
+              </label>
+              <input
+                type="text"
+                value={pageConfig.heroHeading || ''}
+                onChange={(e) => setPageConfig({ ...pageConfig, heroHeading: e.target.value })}
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-900 font-bold text-xs shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-black uppercase tracking-wider text-slate-800 mb-1.5">
+              Subheading
+            </label>
+            <textarea
+              rows={3}
+              value={pageConfig.heroSubheading || ''}
+              onChange={(e) => setPageConfig({ ...pageConfig, heroSubheading: e.target.value })}
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-900 font-medium text-xs shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-black uppercase tracking-wider text-slate-800 mb-1.5">
+              Search Input Placeholder
+            </label>
+            <input
+              type="text"
+              value={pageConfig.searchPlaceholder}
+              onChange={(e) => setPageConfig({ ...pageConfig, searchPlaceholder: e.target.value })}
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+            />
+          </div>
+
+          <div className="pt-4 flex justify-end">
+            <button
+              type="button"
+              onClick={handleSaveHeader}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 text-white shadow-md cursor-pointer transition-colors"
+            >
+              <Check className="w-4 h-4" />
+              <span>Save FAQ Hero</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 3: STILL HAVE QUESTIONS CTA */}
+      {activeTab === 'cta' && (
+        <div className="p-6 sm:p-8 rounded-2xl border border-slate-200 bg-white shadow-sm space-y-6">
+          <div>
+            <label className="block text-xs font-black uppercase tracking-wider text-slate-800 mb-1.5">
+              Card Title
+            </label>
+            <input
+              type="text"
+              value={faqData.stillQuestionsTitle || ''}
+              onChange={(e) => setFaqData({ ...faqData, stillQuestionsTitle: e.target.value })}
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-900 font-bold text-xs shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-black uppercase tracking-wider text-slate-800 mb-1.5">
+              Card Explanation
+            </label>
+            <textarea
+              rows={2}
+              value={faqData.stillQuestionsText || ''}
+              onChange={(e) => setFaqData({ ...faqData, stillQuestionsText: e.target.value })}
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-900 font-medium text-xs shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-black uppercase tracking-wider text-slate-800 mb-1.5">
+              Button Text
+            </label>
+            <input
+              type="text"
+              value={faqData.ctaText || ''}
+              onChange={(e) => setFaqData({ ...faqData, ctaText: e.target.value })}
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-900 font-bold text-xs shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+            />
+          </div>
+
+          <div className="pt-4 flex justify-end">
+            <button
+              type="button"
+              onClick={handleSaveCta}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 text-white shadow-md cursor-pointer transition-colors"
+            >
+              <Check className="w-4 h-4" />
+              <span>Save Bottom Card</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Edit FAQ Drawer / Modal */}
+      {editingFaq && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+          <div className="w-full max-w-lg rounded-2xl bg-white border border-slate-200 p-6 sm:p-8 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-base font-black text-slate-900">
+                Edit FAQ #{editingFaq.index + 1}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setEditingFaq(null)}
+                className="text-slate-400 hover:text-slate-700 text-lg font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-3">
               <div>
-                <label className="block text-[10px] font-bold uppercase text-white/50 mb-1">
+                <label className="block text-[11px] font-bold uppercase text-slate-700 mb-1">
                   Question
                 </label>
                 <input
                   type="text"
-                  value={faq.question}
-                  onChange={(e) => handleFaqChange(faq.id, 'question', e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-white focus:outline-none focus:border-[#B7E84B]"
+                  value={editingFaq.data.question}
+                  onChange={(e) => setEditingFaq({
+                    ...editingFaq,
+                    data: { ...editingFaq.data, question: e.target.value }
+                  })}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs font-bold shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold uppercase text-white/50 mb-1">
+                <label className="block text-[11px] font-bold uppercase text-slate-700 mb-1">
                   Answer
                 </label>
                 <textarea
-                  rows={3}
-                  value={faq.answer}
-                  onChange={(e) => handleFaqChange(faq.id, 'answer', e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white/80 focus:outline-none focus:border-[#B7E84B] leading-relaxed"
+                  rows={4}
+                  value={editingFaq.data.answer}
+                  onChange={(e) => setEditingFaq({
+                    ...editingFaq,
+                    data: { ...editingFaq.data, answer: e.target.value }
+                  })}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs leading-relaxed font-medium shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
                 />
               </div>
             </div>
-          ))}
+
+            <div className="pt-3 flex justify-end gap-2 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setEditingFaq(null)}
+                className="px-4 py-2 rounded-xl text-xs font-bold uppercase text-slate-600 hover:bg-slate-100"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const updated = [...faqList];
+                  updated[editingFaq.index] = editingFaq.data;
+                  handleSaveFaqs(updated);
+                  setEditingFaq(null);
+                }}
+                className="px-6 py-2.5 rounded-xl text-xs font-black uppercase bg-emerald-600 hover:bg-emerald-700 text-white shadow-md cursor-pointer"
+              >
+                Save Question
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-    </form>
+      )}
+    </div>
   );
 };

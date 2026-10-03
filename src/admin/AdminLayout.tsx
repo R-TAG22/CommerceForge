@@ -1,62 +1,57 @@
-import React, { useState } from 'react';
-import {
-  LayoutDashboard,
-  Menu,
-  X,
-  LogOut,
-  ExternalLink,
-  Sparkles,
-  BarChart3,
-  Briefcase,
-  Layers,
-  ArrowLeftRight,
-  GitCommit,
-  Building2,
-  HelpCircle,
-  Megaphone,
-  PanelBottom,
-  Image as ImageIcon,
-  Settings as SettingsIcon,
-  CheckCircle2,
-  AlertCircle,
-  Eye,
-  RotateCcw,
-  UploadCloud,
-  Compass,
-  Sun,
-  Moon,
-  Palette,
-  Plus,
+import React, { useState, useEffect } from 'react';
+import { 
+  LayoutDashboard, 
+  Menu, 
+  X, 
+  LogOut, 
+  ExternalLink, 
+  Home, 
+  Users, 
+  Briefcase, 
+  Layers, 
+  HelpCircle, 
+  Compass, 
+  PanelBottom, 
+  Megaphone, 
+  Mail, 
+  Image as ImageIcon, 
+  Settings as SettingsIcon, 
+  UploadCloud, 
+  Eye, 
+  ChevronRight
 } from 'lucide-react';
 import { useCMS } from '../context/CMSContext';
-import { useAdminTheme } from './context/AdminThemeContext';
 import { useRouter } from './router';
-import { CommerceForgeLogo } from '../components/CommerceForgeLogo';
 import { useToast } from './components/Toast';
-import { ConfirmDialog } from './components/ConfirmDialog';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
 }
 
 export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
-  const {
-    currentUser,
-    hasUnpublishedChanges,
-    publishAll,
-    discardDrafts,
-    isPreviewMode,
-    setPreviewMode,
-    logout,
+  const { 
+    currentUser, 
+    hasUnpublishedChanges, 
+    publishAll, 
+    setPreviewMode, 
+    logout 
   } = useCMS();
   const { currentPath, navigate } = useRouter();
   const { showToast } = useToast();
-  const { theme, isDark, toggleTheme } = useAdminTheme();
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isPublishDialogOpen, setIsPublishDialogOpen] = useState(false);
-  const [isDiscardDialogOpen, setIsDiscardDialogOpen] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
+
+  // Force clean white-card and high-contrast styling on document root
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.remove('admin-dark');
+      document.documentElement.classList.add('admin-light');
+      document.body.style.backgroundColor = '#F8FAFC';
+      document.body.style.color = '#0F172A';
+    }
+  }, []);
 
   // Protected route check
   if (!currentUser) {
@@ -69,21 +64,10 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       setIsPublishing(true);
       await publishAll();
       showToast('success', 'Published Successfully', 'All CMS changes are now live on the public website.');
-      setIsPublishDialogOpen(false);
     } catch (err: unknown) {
       showToast('error', 'Publish Failed', err instanceof Error ? err.message : 'Unknown error');
     } finally {
       setIsPublishing(false);
-    }
-  };
-
-  const handleDiscard = async () => {
-    try {
-      await discardDrafts();
-      showToast('info', 'Drafts Discarded', 'Reverted all unpublished draft changes back to live website values.');
-      setIsDiscardDialogOpen(false);
-    } catch (err: unknown) {
-      showToast('error', 'Revert Failed', err instanceof Error ? err.message : 'Unknown error');
     }
   };
 
@@ -93,366 +77,219 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     navigate('/admin/login');
   };
 
-  const navGroups = [
+  const navSections = [
     {
-      group: 'Overview',
+      heading: null,
       items: [
         { label: 'Dashboard', path: '/admin', icon: LayoutDashboard },
       ],
     },
     {
-      group: 'Brand & Styling',
+      heading: 'Website Pages',
       items: [
-        { label: 'Theme Customizer', path: '/admin/theme', icon: Palette },
-        { label: 'Brand & Mission', path: '/admin/brand', icon: Building2 },
+        { label: 'Homepage', path: '/admin/pages/home', icon: Home },
+        { label: 'About', path: '/admin/pages/about', icon: Users },
+        { label: 'Work', path: '/admin/pages/work', icon: Briefcase },
+        { label: 'Packages', path: '/admin/pages/packages', icon: Layers },
+        { label: 'FAQ', path: '/admin/pages/faq', icon: HelpCircle },
       ],
     },
     {
-      group: 'Website Sections',
+      heading: 'Navigation',
       items: [
-        { label: 'Header & Navigation', path: '/admin/header', icon: Compass },
-        { label: 'Page Sections & Layouts', path: '/admin/sections', icon: Layers },
-        { label: 'Hero Section', path: '/admin/hero', icon: Sparkles },
-        { label: 'Statistics & Clients', path: '/admin/statistics', icon: BarChart3 },
-        { label: 'Portfolio Projects', path: '/admin/portfolio', icon: Briefcase },
-        { label: 'Packages & Rates', path: '/admin/packages', icon: Layers },
-        { label: 'Why Rebuild / Comparison', path: '/admin/comparison', icon: ArrowLeftRight },
-        { label: '4-Step Process', path: '/admin/process', icon: GitCommit },
-        { label: 'Frequently Asked Questions', path: '/admin/faq', icon: HelpCircle },
-        { label: 'Bottom CTA Banner', path: '/admin/cta', icon: Megaphone },
-        { label: 'Footer & Links', path: '/admin/footer', icon: PanelBottom },
+        { label: 'Navigation Menu', path: '/admin/navigation', icon: Compass },
       ],
     },
     {
-      group: 'Assets & Media',
+      heading: 'Global Content',
+      items: [
+        { label: 'Header', path: '/admin/global/header', icon: Compass },
+        { label: 'Footer', path: '/admin/global/footer', icon: PanelBottom },
+        { label: 'Buttons / CTAs', path: '/admin/global/cta', icon: Megaphone },
+        { label: 'Contact Information', path: '/admin/global/contact', icon: Mail },
+      ],
+    },
+    {
+      heading: 'Media',
       items: [
         { label: 'Media Library', path: '/admin/media', icon: ImageIcon },
       ],
     },
     {
-      group: 'System',
+      heading: 'Settings',
       items: [
-        { label: 'Settings & Firebase', path: '/admin/settings', icon: SettingsIcon },
+        { label: 'Website Settings', path: '/admin/settings', icon: SettingsIcon },
+        { label: 'Publishing', path: '/admin/publishing', icon: UploadCloud },
       ],
     },
   ];
 
   return (
-    <div className={`min-h-screen flex flex-col antialiased transition-colors duration-200 ${
-      isDark ? 'bg-[#0E1B13] text-white' : 'bg-[#F8FAF9] text-slate-900'
-    }`}>
-      {/* WCAG 2.1 AA Skip to Main Content Link */}
-      <a
-        href="#admin-main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2.5 focus:bg-[#B7E84B] focus:text-[#0F241A] focus:font-black focus:text-xs focus:uppercase focus:tracking-wider focus:rounded-xl focus:shadow-2xl focus:ring-4 focus:ring-emerald-400 focus:outline-none"
-      >
-        Skip to main content
-      </a>
-
-      {/* Top Banner if in Preview Mode */}
-      {isPreviewMode && (
-        <div className="bg-[#B7E84B] text-[#0F241A] px-4 py-2 text-xs font-bold flex items-center justify-between z-50">
-          <div className="flex items-center gap-2">
-            <Eye className="w-4 h-4" />
-            <span>Draft Preview Active — Viewing unpublished working copy</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setPreviewMode(false)}
-              className="underline hover:text-black cursor-pointer"
-            >
-              Exit Preview Mode
-            </button>
-            <button
-              onClick={() => navigate('/')}
-              className="px-2.5 py-1 rounded bg-[#0F241A] text-white text-[11px] font-black uppercase tracking-wider cursor-pointer"
-            >
-              View Public Site
-            </button>
-          </div>
-        </div>
+    <div className="min-h-screen flex antialiased bg-[#F8FAFC] text-slate-900 admin-cms">
+      {/* Mobile Sidebar Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
       )}
 
-      {/* Main Top Header */}
-      <header className={`h-16 px-4 sm:px-6 flex items-center justify-between shrink-0 z-40 sticky top-0 transition-colors border-b ${
-        isDark ? 'bg-[#12241A] border-[#1E3A2B]' : 'bg-white border-slate-200 shadow-xs'
+      {/* Sidebar Navigation - Pure Crisp White */}
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 flex flex-col border-r bg-white border-slate-200 text-slate-900 transition-transform duration-200 lg:static lg:translate-x-0 ${
+        isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
-        <div className="flex items-center gap-3">
-          {/* Mobile hamburger */}
-          <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className={`lg:hidden p-2 rounded-xl transition-colors ${
-              isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-            aria-label="Toggle menu"
-          >
-            {isSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
-
-          {/* Logo & Brand */}
-          <div
-            onClick={() => navigate('/admin')}
-            className="flex items-center gap-2.5 cursor-pointer"
-          >
-            <div className="w-8 h-8 rounded-xl bg-white p-1 flex items-center justify-center shadow-xs border border-black/10 overflow-hidden">
-              <img
-                src="/LOGO.png"
-                alt="CommerceForge Logo"
-                className="w-full h-full object-contain"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
+        {/* Brand / Logo */}
+        <div className="h-16 px-6 flex items-center justify-between border-b border-slate-200 bg-white">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-[#B7E84B] flex items-center justify-center text-[#0E1B13] font-black text-sm shadow-xs border border-emerald-600/20">
+              CF
             </div>
-            <div>
-              <span className={`font-black text-sm tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                Commerce<span className="text-[#B7E84B]">Forge</span>
+            <div className="flex flex-col">
+              <span className="text-sm font-black tracking-tight leading-none text-slate-900">
+                COMMERCEFORGE
               </span>
-              <span className="hidden sm:inline-block ml-2 px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-widest bg-[#B7E84B]/20 text-[#B7E84B] border border-[#B7E84B]/30">
-                CMS
+              <span className="text-[10px] font-black tracking-widest uppercase text-emerald-700 mt-0.5">
+                ADMIN CMS
               </span>
             </div>
           </div>
-        </div>
 
-        {/* Status Bar & Quick Actions */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          {/* Status badge */}
-          {hasUnpublishedChanges ? (
-            <div className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 text-[11px] font-bold">
-              <AlertCircle className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Unpublished Drafts</span>
-              <span className="sm:hidden">Draft</span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-[#B7E84B]/10 border border-[#B7E84B]/30 text-[#B7E84B] text-[11px] font-bold">
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">All Changes Live</span>
-              <span className="sm:hidden">Live</span>
-            </div>
-          )}
-
-          {/* Discard changes if dirty */}
-          {hasUnpublishedChanges && (
-            <button
-              onClick={() => setIsDiscardDialogOpen(true)}
-              title="Revert draft changes to live"
-              className={`p-2 sm:px-3 sm:py-1.5 rounded-xl border text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors ${
-                isDark ? 'bg-white/5 hover:bg-white/10 text-white/70 hover:text-white border-white/10' : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'
-              }`}
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span className="hidden md:inline">Discard</span>
-            </button>
-          )}
-
-          {/* Theme Customizer Quick Launch */}
-          <button
-            onClick={() => navigate('/admin/theme')}
-            className={`p-2 sm:px-3 sm:py-1.5 rounded-xl border text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors cursor-pointer ${
-              isDark ? 'bg-white/10 hover:bg-white/15 text-white border-white/15' : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'
-            }`}
-            title="Open Shopify-style Theme Customizer"
-          >
-            <Palette className="w-3.5 h-3.5 text-[#B7E84B]" />
-            <span className="hidden md:inline">Customizer</span>
-          </button>
-
-          {/* Live Preview Toggle */}
-          <button
-            onClick={() => {
-              setPreviewMode(true);
-              navigate('/');
-            }}
-            className={`p-2 sm:px-3 sm:py-1.5 rounded-xl border text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors cursor-pointer ${
-              isDark ? 'bg-white/10 hover:bg-white/15 text-white border-white/15' : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'
-            }`}
-          >
-            <Eye className="w-3.5 h-3.5 text-[#B7E84B]" />
-            <span className="hidden md:inline">Preview</span>
-          </button>
-
-          {/* Publish All Button */}
-          <button
-            onClick={handlePublish}
-            disabled={isPublishing}
-            className={`px-3 sm:px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all duration-200 shadow-md ${
-              hasUnpublishedChanges
-                ? 'bg-[#B7E84B] hover:bg-[#a6d83b] text-[#0F241A] shadow-[0_0_20px_rgba(183,232,75,0.4)] cursor-pointer ring-2 ring-[#B7E84B]/50'
-                : 'bg-[#B7E84B]/80 hover:bg-[#B7E84B] text-[#0F241A] cursor-pointer'
-            }`}
-            title="Publish all working draft changes directly to the live public website"
-          >
-            <UploadCloud className={`w-3.5 h-3.5 ${isPublishing ? 'animate-bounce' : ''}`} />
-            <span>{isPublishing ? 'Publishing...' : hasUnpublishedChanges ? 'Publish Live' : 'Re-Publish'}</span>
-          </button>
-
-          {/* Theme Switcher Button */}
           <button
             type="button"
-            onClick={toggleTheme}
-            role="switch"
-            aria-checked={!isDark}
-            aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
-            title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
-            className={`p-2 rounded-xl border flex items-center justify-center transition-all cursor-pointer ${
-              isDark
-                ? 'bg-white/10 hover:bg-white/20 text-[#B7E84B] border-white/15'
-                : 'bg-slate-100 hover:bg-slate-200 text-amber-600 border-slate-300'
-            }`}
+            onClick={() => setIsSidebarOpen(false)}
+            className="lg:hidden p-1.5 text-slate-500 hover:text-slate-900 cursor-pointer"
           >
-            {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Navigation Items List */}
+        <div className="flex-1 overflow-y-auto px-4 py-5 space-y-6 bg-white">
+          {navSections.map((group, gIdx) => (
+            <div key={gIdx} className="space-y-1">
+              {group.heading && (
+                <div className="px-3 pb-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-slate-400">
+                  {group.heading}
+                </div>
+              )}
+              {group.items.map((item) => {
+                const Icon = item.icon;
+                const isActive = currentPath === item.path || 
+                  (item.path === '/admin' && currentPath === '/admin/dashboard');
+
+                return (
+                  <button
+                    key={item.path}
+                    type="button"
+                    onClick={() => {
+                      navigate(item.path);
+                      setIsSidebarOpen(false);
+                    }}
+                    className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      isActive
+                        ? 'bg-[#B7E84B] text-[#0E1B13] shadow-xs font-black'
+                        : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100 font-bold'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#0E1B13]' : 'text-slate-500'}`} />
+                      <span>{item.label}</span>
+                    </div>
+
+                    {isActive && (
+                      <ChevronRight className="w-3.5 h-3.5 text-[#0E1B13]" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+
+        {/* Sidebar Footer with Live Link & Logout */}
+        <div className="p-4 border-t border-slate-200 bg-white space-y-2">
+          <button
+            type="button"
+            onClick={() => {
+              setPreviewMode(false);
+              window.open('#/', '_blank');
+            }}
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-slate-50 hover:bg-slate-100 text-slate-800 border border-slate-200 transition-colors cursor-pointer shadow-2xs"
+          >
+            <ExternalLink className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Visit Live Website</span>
           </button>
 
-          {/* User profile dropdown / sign out */}
-          <div className={`h-5 w-px mx-0.5 hidden sm:block ${isDark ? 'bg-white/15' : 'bg-slate-300'}`} />
-
-          <div className="flex items-center gap-1.5">
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black border ${
-              isDark ? 'bg-[#1E3A2B] border-[#B7E84B]/40 text-[#B7E84B]' : 'bg-slate-100 border-slate-300 text-slate-800'
-            }`}>
-              {currentUser.name.charAt(0)}
-            </div>
-            <button
-              onClick={handleLogout}
-              title="Sign Out"
-              className={`p-2 rounded-xl transition-colors cursor-pointer ${
-                isDark ? 'text-white/50 hover:text-red-400 hover:bg-white/5' : 'text-slate-400 hover:text-red-600 hover:bg-slate-100'
-              }`}
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Sign Out</span>
+          </button>
         </div>
-      </header>
+      </aside>
 
-      {/* Main Body */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar */}
-        <aside
-          className={`fixed lg:static inset-y-16 left-0 z-30 w-72 flex flex-col transition-all duration-200 lg:translate-x-0 border-r ${
-            isDark ? 'bg-[#102016] border-[#1E3A2B]' : 'bg-white border-slate-200 shadow-sm'
-          } ${
-            isSidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
-          }`}
-        >
-          <div className="flex-1 overflow-y-auto p-4 space-y-6">
-            {/* Quick Action: Prominent Add Section Button */}
-            <div className="pb-2 border-b border-black/10 dark:border-white/10">
-              <button
-                type="button"
-                onClick={() => {
-                  navigate('/admin/sections');
-                  setIsSidebarOpen(false);
-                }}
-                className="w-full py-2.5 px-3.5 rounded-xl bg-[#B7E84B] text-[#0F241A] font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-[#a5d83a] transition-all shadow-md active:scale-95 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none"
-                aria-label="Add new dynamic section to page"
-              >
-                <Plus className="w-4 h-4 stroke-[3]" />
-                <span>+ Add Section</span>
-              </button>
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-w-0 bg-[#F8FAFC]">
+        {/* Top Navbar - Pure White Header */}
+        <header className="h-16 px-4 sm:px-8 border-b border-slate-200 bg-white sticky top-0 z-30 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setIsSidebarOpen(true)}
+              className="lg:hidden p-2 rounded-xl hover:bg-slate-100 text-slate-700 cursor-pointer"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+
+            {/* Status indicator */}
+            <div className="flex items-center gap-2 text-xs font-semibold text-slate-800">
+              <span className={`w-2.5 h-2.5 rounded-full ${hasUnpublishedChanges ? 'bg-amber-500 animate-pulse' : 'bg-emerald-600'}`} />
+              <span className="hidden sm:inline">
+                {hasUnpublishedChanges ? 'Unpublished Draft Changes' : 'All Changes Published & Live'}
+              </span>
             </div>
-
-            {navGroups.map((grp) => (
-              <div key={grp.group}>
-                <h4 className={`px-3 text-[10px] font-extrabold uppercase tracking-[0.2em] mb-2 ${
-                  isDark ? 'text-white/40' : 'text-slate-400'
-                }`}>
-                  {grp.group}
-                </h4>
-                <div className="space-y-1">
-                  {grp.items.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = currentPath === item.path;
-                    return (
-                      <button
-                        key={item.path}
-                        onClick={() => {
-                          navigate(item.path);
-                          setIsSidebarOpen(false);
-                        }}
-                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold tracking-tight transition-all duration-150 text-left cursor-pointer ${
-                          isActive
-                            ? 'bg-[#B7E84B] text-[#0F241A] shadow-md shadow-[#B7E84B]/10 font-black'
-                            : isDark
-                            ? 'text-white/70 hover:text-white hover:bg-white/5'
-                            : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                        }`}
-                      >
-                        <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#0F241A]' : 'text-[#B7E84B]'}`} />
-                        <span className="truncate">{item.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
           </div>
 
-          {/* Sidebar Footer */}
-          <div className={`p-4 border-t ${isDark ? 'border-[#1E3A2B] bg-[#0C1911]' : 'border-slate-200 bg-slate-50'}`}>
+          {/* Action buttons */}
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            {/* Preview Button */}
             <button
-              onClick={() => navigate('/')}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
-                isDark ? 'bg-white/5 hover:bg-white/10 text-white/70 hover:text-white' : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
+              type="button"
+              onClick={() => {
+                setPreviewMode(true);
+                window.open('#/', '_blank');
+              }}
+              className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 transition-colors cursor-pointer shadow-xs"
+            >
+              <Eye className="w-3.5 h-3.5 text-emerald-600" />
+              <span className="hidden sm:inline">Preview</span>
+            </button>
+
+            {/* Publish Changes Button */}
+            <button
+              type="button"
+              disabled={isPublishing || !hasUnpublishedChanges}
+              onClick={handlePublish}
+              className={`inline-flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-xl text-xs font-black uppercase tracking-wider text-[#0E1B13] transition-all cursor-pointer shadow-xs ${
+                hasUnpublishedChanges
+                  ? 'bg-[#B7E84B] hover:bg-[#a6d93b] hover:scale-[1.02] active:scale-[0.98]'
+                  : 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
               }`}
             >
-              <div className="flex items-center gap-2">
-                <ExternalLink className="w-3.5 h-3.5 text-[#B7E84B]" />
-                <span>Visit Public Site</span>
-              </div>
-              <span className="text-[10px] opacity-40">/</span>
+              <UploadCloud className="w-3.5 h-3.5" />
+              <span>{isPublishing ? 'Publishing...' : 'Publish'}</span>
             </button>
-            <div className={`mt-2.5 px-3 flex items-center justify-between text-[10px] font-medium ${
-              isDark ? 'text-white/40' : 'text-slate-400'
-            }`}>
-              <span>Logged in as: {currentUser.name}</span>
-              <span className="text-[#B7E84B] font-bold">Theme: {theme}</span>
-            </div>
           </div>
-        </aside>
+        </header>
 
-        {/* Sidebar Overlay for mobile */}
-        {isSidebarOpen && (
-          <div
-            onClick={() => setIsSidebarOpen(false)}
-            className="fixed inset-0 bg-black/60 z-20 lg:hidden backdrop-blur-2xs"
-          />
-        )}
-
-        {/* Main Content Area */}
-        <main
-          id="admin-main-content"
-          tabIndex={-1}
-          role="region"
-          aria-label="Main Admin Content"
-          className={`flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 transition-colors outline-none ${
-            isDark ? 'bg-[#0A160F]' : 'bg-[#F8FAF9]'
-          }`}
-        >
-          <div className="max-w-6xl mx-auto">{children}</div>
+        {/* Page Content Body */}
+        <main id="admin-main-content" className="flex-1 p-4 sm:p-8 overflow-y-auto bg-[#F8FAFC] text-slate-900">
+          {children}
         </main>
       </div>
-
-      {/* Confirmation Dialogs */}
-      <ConfirmDialog
-        isOpen={isPublishDialogOpen}
-        title="Publish All Changes Live"
-        message="This will immediately push all your draft content, images, and section changes to the public website. Are you sure?"
-        confirmLabel="Publish To Live"
-        onConfirm={handlePublish}
-        onCancel={() => setIsPublishDialogOpen(false)}
-      />
-
-      <ConfirmDialog
-        isOpen={isDiscardDialogOpen}
-        title="Discard Draft Changes"
-        message="Are you sure you want to revert all unpublished working drafts back to the current live published version? Any unsaved edits will be lost."
-        confirmLabel="Discard & Revert"
-        isDestructive={true}
-        onConfirm={handleDiscard}
-        onCancel={() => setIsDiscardDialogOpen(false)}
-      />
     </div>
   );
 };

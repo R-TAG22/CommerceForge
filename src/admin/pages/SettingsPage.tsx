@@ -5,25 +5,17 @@ import {
   Download,
   Upload,
   RotateCcw,
-  CheckCircle2,
   Copy,
   Check,
-  Shield,
-  FileCode,
+  CheckCircle2,
   Sparkles,
-  Sun,
-  Moon,
-  Palette,
 } from 'lucide-react';
 import { useCMS } from '../../context/CMSContext';
-import { useAdminTheme } from '../context/AdminThemeContext';
 import { useToast } from '../components/Toast';
 import { ConfirmDialog } from '../components/ConfirmDialog';
-import { initialWebsiteData } from '../../services/providers/mock/initialData';
 
 export const SettingsPage: React.FC = () => {
-  const { draftContent, updateSection, resetToPublished } = useCMS();
-  const { theme, isDark, setTheme, toggleTheme } = useAdminTheme();
+  const { draftContent, updateSection } = useCMS();
   const { showToast } = useToast();
 
   const [copiedChecklist, setCopiedChecklist] = useState(false);
@@ -52,7 +44,6 @@ export const SettingsPage: React.FC = () => {
         if (!parsed.header || !parsed.hero || !parsed.portfolio) {
           throw new Error('Invalid CommerceForge schema');
         }
-        // Save section by section
         for (const [key, val] of Object.entries(parsed)) {
           if (key !== 'lastUpdated' && key !== 'publishedAt') {
             await updateSection(key as any, val as any);
@@ -98,307 +89,100 @@ export const db = getFirestore(app);
 export const auth = getAuth(app);`;
 
   const copyToChecklist = () => {
-    const text = `FIREBASE CONNECTION CHECKLIST
-1. Create a project at https://console.firebase.google.com
+    const text = `Firebase Setup Checklist:
+1. Create Firebase project at console.firebase.google.com
 2. Enable Cloud Firestore in Production/Test mode
-3. Enable Firebase Authentication (Email/Password provider)
-4. Add your web credentials into src/services/providers/firebase/firebaseConfig.ts
-5. Implement IContentService, IAuthService in src/services/providers/firebase/
-6. Swap mock providers with Firebase providers in src/services/cms/contentService.ts`;
+3. Enable Email/Password Auth under Authentication
+4. Enter credentials in src/services/providers/firebase/firebaseConfig.ts`;
     navigator.clipboard.writeText(text);
     setCopiedChecklist(true);
-    showToast('info', 'Copied Checklist', 'Checklist copied to clipboard.');
+    showToast('info', 'Checklist Copied', 'Checklist copied to clipboard.');
     setTimeout(() => setCopiedChecklist(false), 2000);
   };
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="max-w-5xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#B7E84B] mb-1">
-            <Settings className="w-4 h-4" />
-            <span>Infrastructure & Handoff</span>
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md text-[11px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200 mb-2">
+            <Settings className="w-3.5 h-3.5" />
+            <span>Infrastructure &amp; Backups</span>
           </div>
-          <h1 className="text-2xl font-black uppercase tracking-tight text-white">System Settings & Firebase</h1>
-          <p className="text-xs text-white/60">
-            Export backups, manage storage providers, and review your Firebase integration checklist
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">
+            System Settings &amp; Data
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1">
+            Export JSON backups, manage storage adapters, and review production deployment notes.
           </p>
         </div>
       </div>
 
-      {/* CMS Theme & Appearance Section */}
-      <div className={`p-6 rounded-2xl border transition-colors ${
-        isDark ? 'bg-[#12241A] border-white/10' : 'bg-white border-slate-200 shadow-xs'
-      }`}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-black/10 dark:border-white/10">
-          <div>
-            <div className="flex items-center gap-2">
-              <Palette className="w-4 h-4 text-[#B7E84B]" />
-              <h2 className={`text-base font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                CMS Theme & UI Appearance
-              </h2>
-            </div>
-            <p className={`text-xs mt-1 ${isDark ? 'text-white/60' : 'text-slate-500'}`}>
-              Customize your admin panel interface with Dark Dev Mode or Crisp Light mode. Includes instant toggle switch button.
-            </p>
-          </div>
-
-          {/* Switch Button */}
+      {/* Storage Adapter Card - Pure White */}
+      <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <span className={`text-xs font-bold uppercase tracking-wider ${isDark ? 'text-white/70' : 'text-slate-600'}`}>
-              {isDark ? 'Dark Mode' : 'Light Mode'}
-            </span>
-            <button
-              type="button"
-              role="switch"
-              aria-checked={!isDark}
-              aria-label="Toggle admin light and dark theme"
-              onClick={toggleTheme}
-              className={`relative inline-flex h-7 w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#B7E84B] focus:ring-offset-2 ${
-                isDark ? 'bg-[#1E3A2B]' : 'bg-[#B7E84B]'
-              }`}
-            >
-              <span
-                className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out flex items-center justify-center ${
-                  isDark ? 'translate-x-0' : 'translate-x-7'
-                }`}
-              >
-                {isDark ? (
-                  <Moon className="w-3.5 h-3.5 text-[#0F241A]" />
-                ) : (
-                  <Sun className="w-3.5 h-3.5 text-amber-600" />
-                )}
-              </span>
-            </button>
-          </div>
-        </div>
-
-        {/* Theme Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5">
-          {/* Dark Mode Card */}
-          <button
-            type="button"
-            onClick={() => setTheme('dark')}
-            className={`p-4 rounded-xl border text-left transition-all cursor-pointer flex items-start gap-4 ${
-              isDark
-                ? 'bg-[#1E3A2B] border-[#B7E84B] ring-2 ring-[#B7E84B]/40 shadow-md'
-                : 'bg-slate-50 hover:bg-slate-100 border-slate-200'
-            }`}
-          >
-            <div className="w-10 h-10 rounded-lg bg-[#0E1B13] border border-white/20 flex items-center justify-center text-[#B7E84B] shrink-0">
-              <Moon className="w-5 h-5" />
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <span className={`text-sm font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                  Dark Dev Mode (Default)
-                </span>
-                {isDark && (
-                  <span className="px-2 py-0.5 rounded-full bg-[#B7E84B] text-[#0F241A] text-[10px] font-black uppercase">
-                    Active
-                  </span>
-                )}
-              </div>
-              <p className={`text-xs mt-1 leading-relaxed ${isDark ? 'text-white/70' : 'text-slate-500'}`}>
-                Deep charcoal and obsidian backdrop with forest green and neon lime accents. Ideal for low-light code editing.
-              </p>
-            </div>
-          </button>
-
-          {/* Light Mode Card */}
-          <button
-            type="button"
-            onClick={() => setTheme('light')}
-            className={`p-4 rounded-xl border text-left transition-all cursor-pointer flex items-start gap-4 ${
-              !isDark
-                ? 'bg-white border-[#1E3A2B] ring-2 ring-[#1E3A2B]/20 shadow-md'
-                : 'bg-[#162C20] hover:bg-[#1a3527] border-white/5'
-            }`}
-          >
-            <div className="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-amber-600 shrink-0">
-              <Sun className="w-5 h-5" />
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <span className={`text-sm font-bold uppercase tracking-wider ${!isDark ? 'text-slate-900' : 'text-white'}`}>
-                  Crisp Light Mode
-                </span>
-                {!isDark && (
-                  <span className="px-2 py-0.5 rounded-full bg-[#1E3A2B] text-white text-[10px] font-black uppercase">
-                    Active
-                  </span>
-                )}
-              </div>
-              <p className={`text-xs mt-1 leading-relaxed ${!isDark ? 'text-slate-600' : 'text-white/70'}`}>
-                High-contrast crisp white canvas with slate borders and distinct typography. Clean, modern, and accessible in bright environments.
-              </p>
-            </div>
-          </button>
-        </div>
-      </div>
-
-      {/* Provider Architecture Banner */}
-      <div className="p-6 rounded-2xl bg-[#12241A] border border-[#B7E84B]/30 space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-[#EAF3E8]/10 text-[#B7E84B]">
+            <div className="p-3 rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-200">
               <Database className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-white uppercase tracking-wider">
-                Current Storage Adapter: Mock / LocalStorage Layer
+              <h2 className="text-sm font-black text-slate-900 uppercase tracking-wider">
+                Current Storage Provider: LocalStorage Persistence Layer
               </h2>
-              <p className="text-xs text-white/60">
-                Data persists in your browser localStorage without requiring external API keys.
+              <p className="text-xs text-slate-600 font-medium mt-0.5">
+                All changes persist instantly in your browser storage without requiring external API keys.
               </p>
             </div>
           </div>
 
-          <span className="px-3 py-1 rounded-full bg-[#B7E84B] text-[#0F241A] text-[10px] font-black uppercase">
-            Active Provider
-          </span>
-        </div>
-      </div>
-
-      {/* Firebase Handoff Checklist */}
-      <div className="p-6 rounded-2xl bg-[#12241A] border border-white/10 space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-base font-bold uppercase tracking-wider text-white">
-                Firebase Connection Checklist
-              </h2>
-              <span className="px-2 py-0.5 rounded bg-white/10 text-[10px] font-bold text-white/80">
-                Self-Service Setup
-              </span>
-            </div>
-            <p className="text-xs text-white/60 mt-1">
-              Follow these exact steps when you are ready to connect your own Firebase Firestore & Auth project:
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={copyToChecklist}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold uppercase tracking-wider transition-colors shrink-0"
-          >
-            {copiedChecklist ? <Check className="w-3.5 h-3.5 text-[#B7E84B]" /> : <Copy className="w-3.5 h-3.5" />}
-            <span>{copiedChecklist ? 'Copied' : 'Copy Checklist'}</span>
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-4 rounded-xl bg-[#162C20] border border-white/5 space-y-3">
-            <div className="flex items-center gap-2 text-xs font-bold text-[#B7E84B] uppercase tracking-wider">
-              <span className="w-5 h-5 rounded-full bg-[#B7E84B]/20 flex items-center justify-center text-[10px]">
-                1
-              </span>
-              <span>Create Firebase Project</span>
-            </div>
-            <p className="text-xs text-white/70 leading-relaxed">
-              Visit <a href="https://console.firebase.google.com" target="_blank" rel="noreferrer" className="text-[#B7E84B] underline">console.firebase.google.com</a> and click "Create a project". Choose your preferred project name and analytics settings.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-xl bg-[#162C20] border border-white/5 space-y-3">
-            <div className="flex items-center gap-2 text-xs font-bold text-[#B7E84B] uppercase tracking-wider">
-              <span className="w-5 h-5 rounded-full bg-[#B7E84B]/20 flex items-center justify-center text-[10px]">
-                2
-              </span>
-              <span>Enable Cloud Firestore</span>
-            </div>
-            <p className="text-xs text-white/70 leading-relaxed">
-              In Firebase Console navigate to <strong>Build &gt; Firestore Database</strong>. Click "Create database" and choose your primary region. Collections: <code className="text-[#B7E84B]">website_content</code>, <code className="text-[#B7E84B]">media_assets</code>.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-xl bg-[#162C20] border border-white/5 space-y-3">
-            <div className="flex items-center gap-2 text-xs font-bold text-[#B7E84B] uppercase tracking-wider">
-              <span className="w-5 h-5 rounded-full bg-[#B7E84B]/20 flex items-center justify-center text-[10px]">
-                3
-              </span>
-              <span>Enable Firebase Authentication</span>
-            </div>
-            <p className="text-xs text-white/70 leading-relaxed">
-              In Firebase Console navigate to <strong>Build &gt; Authentication</strong>. Click "Get Started", select "Email/Password" and enable it. Create your admin user under the "Users" tab.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-xl bg-[#162C20] border border-white/5 space-y-3">
-            <div className="flex items-center gap-2 text-xs font-bold text-[#B7E84B] uppercase tracking-wider">
-              <span className="w-5 h-5 rounded-full bg-[#B7E84B]/20 flex items-center justify-center text-[10px]">
-                4
-              </span>
-              <span>Plug Credentials into Adapter</span>
-            </div>
-            <p className="text-xs text-white/70 leading-relaxed">
-              Open the pre-built template in <code className="text-[#B7E84B]">src/services/providers/firebase/</code>. Replace placeholder credentials with your real keys.
-            </p>
-          </div>
-        </div>
-
-        {/* Code Snippet Box */}
-        <div className="p-4 rounded-xl bg-black/50 border border-white/10 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-mono text-white/60">
-              Template: src/services/providers/firebase/firebaseConfig.ts
+          <div className="flex items-center gap-2">
+            <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-black uppercase border border-emerald-200">
+              Active Provider
             </span>
-            <button
-              type="button"
-              onClick={() => {
-                navigator.clipboard.writeText(firebaseSnippet);
-                setCopiedSnippet(true);
-                showToast('info', 'Copied', 'Config snippet copied.');
-                setTimeout(() => setCopiedSnippet(false), 2000);
-              }}
-              className="inline-flex items-center gap-1 text-[11px] font-bold text-[#B7E84B] hover:underline"
-            >
-              {copiedSnippet ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-              <span>{copiedSnippet ? 'Copied' : 'Copy Snippet'}</span>
-            </button>
           </div>
-          <pre className="text-xs font-mono text-[#8FA98F] overflow-x-auto p-2 leading-relaxed">
-            {firebaseSnippet}
-          </pre>
         </div>
       </div>
 
-      {/* Backup, Export & Reset */}
-      <div className="p-6 rounded-2xl bg-[#12241A] border border-white/10 space-y-6">
-        <h2 className="text-base font-bold uppercase tracking-wider text-white border-b border-white/10 pb-3">
-          Backup, Export & Maintenance
-        </h2>
+      {/* Backup, Export & Reset - Pure White Card */}
+      <div className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-6">
+        <div>
+          <h2 className="text-base font-black uppercase tracking-wider text-slate-900">
+            Backup, Export &amp; Reset
+          </h2>
+          <p className="text-xs text-slate-600 font-medium mt-0.5">
+            Download your CMS content as JSON or restore original defaults at any time.
+          </p>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {/* Export */}
-          <div className="p-4 rounded-xl bg-[#162C20] border border-white/5 space-y-3">
-            <h3 className="text-xs font-bold uppercase text-white tracking-wider flex items-center gap-1.5">
-              <Download className="w-4 h-4 text-[#B7E84B]" />
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+            <h3 className="text-xs font-black uppercase text-slate-900 tracking-wider flex items-center gap-2">
+              <Download className="w-4 h-4 text-emerald-700" />
               <span>Export Content JSON</span>
             </h3>
-            <p className="text-xs text-white/60">
+            <p className="text-xs text-slate-600 font-medium leading-relaxed">
               Download your full website content as a structured JSON file.
             </p>
             <button
               type="button"
               onClick={handleExportJSON}
-              className="w-full py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold uppercase tracking-wider transition-colors"
+              className="w-full py-2.5 rounded-xl bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shadow-2xs"
             >
               Download Backup
             </button>
           </div>
 
           {/* Import */}
-          <div className="p-4 rounded-xl bg-[#162C20] border border-white/5 space-y-3">
-            <h3 className="text-xs font-bold uppercase text-white tracking-wider flex items-center gap-1.5">
-              <Upload className="w-4 h-4 text-[#B7E84B]" />
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+            <h3 className="text-xs font-black uppercase text-slate-900 tracking-wider flex items-center gap-2">
+              <Upload className="w-4 h-4 text-emerald-700" />
               <span>Import Content JSON</span>
             </h3>
-            <p className="text-xs text-white/60">
+            <p className="text-xs text-slate-600 font-medium leading-relaxed">
               Upload a previous JSON backup to restore all sections.
             </p>
-            <label className="block w-full text-center py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer">
+            <label className="block w-full text-center py-2.5 rounded-xl bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shadow-2xs">
               Choose File
               <input
                 type="file"
@@ -410,22 +194,125 @@ export const auth = getAuth(app);`;
           </div>
 
           {/* Reset */}
-          <div className="p-4 rounded-xl bg-[#162C20] border border-white/5 space-y-3">
-            <h3 className="text-xs font-bold uppercase text-red-400 tracking-wider flex items-center gap-1.5">
-              <RotateCcw className="w-4 h-4 text-red-400" />
+          <div className="p-4 rounded-2xl bg-rose-50/50 border border-rose-200 space-y-3">
+            <h3 className="text-xs font-black uppercase text-rose-800 tracking-wider flex items-center gap-2">
+              <RotateCcw className="w-4 h-4 text-rose-600" />
               <span>Reset to Defaults</span>
             </h3>
-            <p className="text-xs text-white/60">
+            <p className="text-xs text-rose-700 font-medium leading-relaxed">
               Clear local working storage and restore original website content.
             </p>
             <button
               type="button"
               onClick={() => setIsResetConfirmOpen(true)}
-              className="w-full py-2 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-300 text-xs font-bold uppercase tracking-wider transition-colors"
+              className="w-full py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shadow-xs"
             >
               Reset Storage
             </button>
           </div>
+        </div>
+      </div>
+
+      {/* Optional Firebase Checklist - Pure White Card */}
+      <div className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <h2 className="text-base font-black uppercase tracking-wider text-slate-900">
+                Firebase Firestore Integration
+              </h2>
+              <span className="px-2 py-0.5 rounded bg-slate-100 text-[10px] font-bold text-slate-700 border border-slate-200">
+                Optional Backend
+              </span>
+            </div>
+            <p className="text-xs text-slate-600 font-medium mt-1">
+              Follow these steps when you are ready to connect a cloud Firebase Firestore &amp; Auth database:
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={copyToChecklist}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider transition-colors shrink-0 cursor-pointer border border-slate-200 shadow-2xs"
+          >
+            {copiedChecklist ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+            <span>{copiedChecklist ? 'Copied' : 'Copy Checklist'}</span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+            <div className="flex items-center gap-2 text-xs font-black text-emerald-800 uppercase tracking-wider">
+              <span className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-[10px]">
+                1
+              </span>
+              <span>Create Firebase Project</span>
+            </div>
+            <p className="text-xs text-slate-600 font-medium leading-relaxed">
+              Visit <a href="https://console.firebase.google.com" target="_blank" rel="noreferrer" className="text-emerald-700 underline font-semibold">console.firebase.google.com</a> and click "Create a project".
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+            <div className="flex items-center gap-2 text-xs font-black text-emerald-800 uppercase tracking-wider">
+              <span className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-[10px]">
+                2
+              </span>
+              <span>Enable Cloud Firestore</span>
+            </div>
+            <p className="text-xs text-slate-600 font-medium leading-relaxed">
+              Navigate to <strong>Build &gt; Firestore Database</strong>. Collections: <code className="text-emerald-800 font-mono">website_content</code>, <code className="text-emerald-800 font-mono">media_assets</code>.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+            <div className="flex items-center gap-2 text-xs font-black text-emerald-800 uppercase tracking-wider">
+              <span className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-[10px]">
+                3
+              </span>
+              <span>Enable Firebase Authentication</span>
+            </div>
+            <p className="text-xs text-slate-600 font-medium leading-relaxed">
+              Navigate to <strong>Build &gt; Authentication</strong>. Enable "Email/Password" and add your authorized dev credentials.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+            <div className="flex items-center gap-2 text-xs font-black text-emerald-800 uppercase tracking-wider">
+              <span className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-[10px]">
+                4
+              </span>
+              <span>Configure Firebase Adapter</span>
+            </div>
+            <p className="text-xs text-slate-600 font-medium leading-relaxed">
+              Fill in credentials inside <code className="text-emerald-800 font-mono">src/services/providers/firebase/firebaseConfig.ts</code>.
+            </p>
+          </div>
+        </div>
+
+        {/* Code Snippet Box */}
+        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-mono text-slate-300">
+              Template: src/services/providers/firebase/firebaseConfig.ts
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                navigator.clipboard.writeText(firebaseSnippet);
+                setCopiedSnippet(true);
+                showToast('info', 'Copied', 'Config snippet copied.');
+                setTimeout(() => setCopiedSnippet(false), 2000);
+              }}
+              className="inline-flex items-center gap-1 text-[11px] font-bold text-[#B7E84B] hover:underline cursor-pointer"
+            >
+              {copiedSnippet ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+              <span>{copiedSnippet ? 'Copied' : 'Copy Snippet'}</span>
+            </button>
+          </div>
+          <pre className="text-xs font-mono text-emerald-300 overflow-x-auto p-2 leading-relaxed">
+            {firebaseSnippet}
+          </pre>
         </div>
       </div>
 

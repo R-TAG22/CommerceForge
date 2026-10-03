@@ -6,7 +6,6 @@ import {
   Copy,
   Check,
   Search,
-  ExternalLink,
   Eye,
   AlertCircle,
   Edit3,
@@ -59,41 +58,23 @@ export const MediaLibrary: React.FC = () => {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       try {
-        const cleanName = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
-        await mediaService.uploadMedia(file, { altText: cleanName });
+        const newAsset = await mediaService.uploadMedia(file);
+        setMediaItems((prev) => [newAsset, ...prev]);
+        showToast('success', 'Media Uploaded', `${file.name} saved to CMS assets.`);
       } catch (err: unknown) {
-        showToast('error', 'Upload failed', err instanceof Error ? err.message : 'Upload failed');
+        showToast('error', 'Upload Failed', err instanceof Error ? err.message : 'Upload failed');
       }
     }
-
     setIsUploading(false);
-    showToast('success', 'Uploaded', 'Media file(s) added with auto-generated Alt text.');
-    loadMedia();
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleCopy = (item: MediaAsset) => {
-    navigator.clipboard.writeText(item.url);
+    const fullUrl = assetUrl(item.url);
+    navigator.clipboard.writeText(fullUrl);
     setCopiedId(item.id);
-    showToast('info', 'Copied URL', `Copied path to clipboard: ${item.url}`);
+    showToast('info', 'URL Copied', 'Asset address copied to clipboard');
     setTimeout(() => setCopiedId(null), 2000);
-  };
-
-  const handleSaveAltText = async () => {
-    if (!editingAltItem) return;
-    try {
-      if (mediaService.updateMediaAltText) {
-        await mediaService.updateMediaAltText(editingAltItem.id, newAltText.trim());
-      }
-      setMediaItems((prev) =>
-        prev.map((item) =>
-          item.id === editingAltItem.id ? { ...item, altText: newAltText.trim() } : item
-        )
-      );
-      showToast('success', 'Alt Text Saved', 'Image alt text updated for screen readers.');
-      setEditingAltItem(null);
-    } catch (err: unknown) {
-      showToast('error', 'Update Failed', err instanceof Error ? err.message : 'Could not save alt text');
-    }
   };
 
   const handleDeleteConfirm = async () => {
@@ -101,74 +82,80 @@ export const MediaLibrary: React.FC = () => {
     try {
       await mediaService.deleteMedia(deletingId);
       setMediaItems((prev) => prev.filter((m) => m.id !== deletingId));
-      showToast('info', 'Deleted', 'Media asset removed.');
+      showToast('success', 'Deleted', 'Media asset removed successfully.');
     } catch (err: unknown) {
-      showToast('error', 'Delete failed', err instanceof Error ? err.message : 'Delete failed');
+      showToast('error', 'Delete Failed', err instanceof Error ? err.message : 'Could not delete');
     } finally {
       setDeletingId(null);
     }
   };
 
-  const missingAltCount = mediaItems.filter((m) => !m.altText || !m.altText.trim()).length;
-
-  const filtered = mediaItems
-    .filter((m) => {
-      const name = m.fileName || (m as any).name || '';
-      const matchesSearch =
-        name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        m.url.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (m.altText && m.altText.toLowerCase().includes(searchQuery.toLowerCase()));
-
-      if (filterMissingAltOnly) {
-        return matchesSearch && (!m.altText || !m.altText.trim());
+  const handleSaveAltText = async () => {
+    if (!editingAltItem) return;
+    try {
+      if (mediaService.updateMediaAltText) {
+        const updated = await mediaService.updateMediaAltText(editingAltItem.id, newAltText.trim());
+        setMediaItems((prev) => prev.map((item) => (item.id === updated.id ? updated : item)));
       }
-      return matchesSearch;
-    });
+      showToast('success', 'Alt Text Saved', 'Image accessibility metadata updated.');
+      setEditingAltItem(null);
+    } catch (err: unknown) {
+      showToast('error', 'Update Failed', err instanceof Error ? err.message : 'Failed to update alt text');
+    }
+  };
+
+  const filtered = mediaItems.filter((item) => {
+    const matchesSearch =
+      (item.fileName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (item.altText || '').toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesAltFilter = filterMissingAltOnly ? !item.altText || !item.altText.trim() : true;
+    return matchesSearch && matchesAltFilter;
+  });
+
+  const missingAltCount = mediaItems.filter((item) => !item.altText || !item.altText.trim()).length;
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#B7E84B] mb-1">
-            <ImageIcon className="w-4 h-4" />
-            <span>Asset Repository</span>
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md text-[11px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200 mb-2">
+            <ImageIcon className="w-3.5 h-3.5" />
+            <span>Digital Asset Manager</span>
           </div>
-          <h1 className="text-2xl font-black uppercase tracking-tight text-white">Media Library</h1>
-          <p className="text-xs text-zinc-300">
-            Upload screenshots, client logos, and brand graphics. WCAG 2.1 AA screen reader alt text is monitored automatically.
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">
+            Media Library
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1">
+            Store and organize client logos, hero banners, and project case study screenshots ({mediaItems.length} assets).
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <input
             type="file"
-            ref={fileInputRef}
-            onChange={(e) => handleFileUpload(e.target.files)}
             multiple
             accept="image/*"
+            ref={fileInputRef}
+            onChange={(e) => handleFileUpload(e.target.files)}
             className="hidden"
-            aria-label="Upload media file"
           />
           <button
             type="button"
-            onClick={() => fileInputRef.current?.click()}
             disabled={isUploading}
-            aria-label="Upload images to media library"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#B7E84B] hover:bg-[#a6d83b] text-[#0F241A] text-xs font-black uppercase tracking-wider transition-colors shadow-md cursor-pointer disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none"
+            onClick={() => fileInputRef.current?.click()}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#B7E84B] hover:bg-[#a6d83b] text-[#0E1B13] text-xs font-black uppercase tracking-wider transition-all shadow-xs cursor-pointer disabled:opacity-50"
           >
             <Upload className="w-4 h-4" />
-            <span>{isUploading ? 'Uploading...' : 'Upload Image'}</span>
+            <span>{isUploading ? 'Uploading...' : 'Upload Media'}</span>
           </button>
         </div>
       </div>
 
-      {/* WCAG Accessibility Audit Banner */}
+      {/* WCAG Alt Text Compliance Banner */}
       <div
-        className={`p-4 rounded-2xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${
-          missingAltCount > 0
-            ? 'bg-amber-500/10 border-amber-500/30 text-amber-200'
-            : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-200'
+        className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white shadow-xs ${
+          missingAltCount > 0 ? 'border-amber-300' : 'border-emerald-300'
         }`}
         role="status"
         aria-live="polite"
@@ -176,20 +163,20 @@ export const MediaLibrary: React.FC = () => {
         <div className="flex items-center gap-3">
           <div
             className={`p-2 rounded-xl ${
-              missingAltCount > 0 ? 'bg-amber-500/20 text-amber-300' : 'bg-emerald-500/20 text-emerald-300'
+              missingAltCount > 0 ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'
             }`}
           >
             {missingAltCount > 0 ? <AlertCircle className="w-5 h-5" /> : <ShieldCheck className="w-5 h-5" />}
           </div>
           <div>
-            <span className="text-xs font-black uppercase tracking-wider block">
+            <span className="text-xs font-black uppercase tracking-wider block text-slate-900">
               {missingAltCount > 0
-                ? `Accessibility Warning: ${missingAltCount} asset${missingAltCount > 1 ? 's' : ''} missing Alt text`
-                : 'WCAG AA Alt Text Compliance: 100%'}
+                ? `Accessibility Notice: ${missingAltCount} asset${missingAltCount > 1 ? 's' : ''} missing Alt text`
+                : 'Accessibility (WCAG AA): 100% Compliant'}
             </span>
-            <span className="text-[11px] opacity-80 block">
+            <span className="text-[11px] text-slate-600 block mt-0.5 font-medium">
               {missingAltCount > 0
-                ? 'Screen readers require descriptive alt text for all informative web images.'
+                ? 'Screen readers require descriptive alt text for images to ensure accessibility.'
                 : 'All media assets have screen reader descriptions configured.'}
             </span>
           </div>
@@ -199,19 +186,18 @@ export const MediaLibrary: React.FC = () => {
           <button
             type="button"
             onClick={() => setFilterMissingAltOnly(!filterMissingAltOnly)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shrink-0 focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shrink-0 border ${
               filterMissingAltOnly
-                ? 'bg-amber-400 text-black'
-                : 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40'
+                ? 'bg-amber-500 text-slate-900 border-amber-600'
+                : 'bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-300'
             }`}
-            aria-pressed={filterMissingAltOnly}
           >
             {filterMissingAltOnly ? 'Show All Assets' : `Filter ${missingAltCount} Missing Alt`}
           </button>
         )}
       </div>
 
-      {/* Drag & Drop Zone */}
+      {/* Drag & Drop Zone - Pure White Card */}
       <div
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => {
@@ -227,41 +213,41 @@ export const MediaLibrary: React.FC = () => {
             fileInputRef.current?.click();
           }
         }}
-        className="p-8 rounded-2xl border-2 border-dashed border-white/20 hover:border-[#B7E84B]/60 bg-[#12241A]/50 hover:bg-[#12241A] transition-all flex flex-col items-center justify-center text-center cursor-pointer group focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none"
+        className="p-8 rounded-3xl border-2 border-dashed border-slate-300 hover:border-emerald-500 bg-white hover:bg-slate-50/50 transition-all flex flex-col items-center justify-center text-center cursor-pointer group shadow-xs"
       >
-        <div className="p-3 rounded-2xl bg-white/5 group-hover:bg-[#B7E84B]/20 group-hover:text-[#B7E84B] transition-colors mb-3">
-          <Upload className="w-6 h-6 text-white/60 group-hover:text-[#B7E84B]" />
+        <div className="p-3.5 rounded-2xl bg-emerald-50 text-emerald-700 group-hover:bg-[#B7E84B] group-hover:text-[#0E1B13] transition-colors mb-3">
+          <Upload className="w-6 h-6" />
         </div>
-        <p className="text-xs font-bold uppercase tracking-wider text-white">
+        <p className="text-sm font-black uppercase tracking-wider text-slate-900">
           Click to upload or drag and drop images
         </p>
-        <p className="text-[11px] text-zinc-400 mt-1">PNG, JPG, SVG, WebP up to 10MB each</p>
+        <p className="text-xs text-slate-500 font-medium mt-1">PNG, JPG, SVG, WebP up to 10MB each</p>
       </div>
 
-      {/* Search Bar */}
-      <div className="p-4 rounded-2xl bg-[#12241A] border border-white/10 flex flex-col sm:flex-row gap-4 items-center justify-between">
+      {/* Search Bar - Pure White Card */}
+      <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col sm:flex-row gap-4 items-center justify-between">
         <div className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 text-white/40 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Filter media by name or alt text..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white placeholder:text-white/40 focus:outline-none focus:border-[#B7E84B] focus-visible:ring-2 focus-visible:ring-emerald-400"
+            className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-50 border border-slate-300 text-xs font-semibold text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20"
             aria-label="Search media files"
           />
         </div>
 
-        <span className="text-xs text-zinc-400">
+        <span className="text-xs text-slate-600 font-semibold">
           Showing {filtered.length} of {mediaItems.length} assets
         </span>
       </div>
 
-      {/* Grid of Media Assets */}
+      {/* Grid of Media Assets - Pure White Cards */}
       {loading ? (
-        <div className="p-12 text-center text-zinc-400 text-xs">Loading media assets...</div>
+        <div className="p-12 text-center text-slate-500 font-semibold text-xs">Loading media assets...</div>
       ) : filtered.length === 0 ? (
-        <div className="p-12 text-center text-zinc-400 text-xs rounded-2xl bg-white/5 border border-white/10">
+        <div className="p-12 text-center text-slate-600 font-medium text-xs rounded-2xl bg-white border border-slate-200 shadow-xs">
           No media assets match your current filter.
         </div>
       ) : (
@@ -273,7 +259,7 @@ export const MediaLibrary: React.FC = () => {
             return (
               <div
                 key={item.id}
-                className="p-3 rounded-2xl bg-[#12241A] border border-white/10 hover:border-[#B7E84B]/50 transition-all group flex flex-col justify-between"
+                className="p-3.5 rounded-2xl bg-white border border-slate-200 hover:border-slate-400 shadow-xs transition-all group flex flex-col justify-between"
               >
                 {/* Image Preview Container */}
                 <div
@@ -284,7 +270,7 @@ export const MediaLibrary: React.FC = () => {
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') setPreviewItem(item);
                   }}
-                  className="aspect-video rounded-xl bg-black/40 overflow-hidden relative border border-white/10 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none"
+                  className="aspect-video rounded-xl bg-slate-100 overflow-hidden relative border border-slate-100 cursor-pointer"
                 >
                   <img
                     src={assetUrl(item.url)}
@@ -293,17 +279,17 @@ export const MediaLibrary: React.FC = () => {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <Eye className="w-5 h-5 text-white" />
                   </div>
                 </div>
 
                 {/* Name & Size */}
                 <div className="mt-3">
-                  <p className="text-xs font-bold text-white truncate" title={displayName}>
+                  <p className="text-xs font-black text-slate-900 truncate" title={displayName}>
                     {displayName}
                   </p>
-                  <p className="text-[10px] text-zinc-400 mt-0.5">
+                  <p className="text-[10px] text-slate-500 font-medium mt-0.5">
                     {item.fileSize ? `${(item.fileSize / 1024).toFixed(1)} KB` : 'Preset asset'}
                   </p>
 
@@ -315,13 +301,12 @@ export const MediaLibrary: React.FC = () => {
                         setEditingAltItem(item);
                         setNewAltText(item.altText || '');
                       }}
-                      className={`w-full text-left px-2 py-1 rounded-lg text-[10px] font-bold border transition-colors flex items-center justify-between gap-1 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none ${
+                      className={`w-full text-left px-2 py-1 rounded-lg text-[10px] font-bold border transition-colors flex items-center justify-between gap-1 cursor-pointer ${
                         hasAlt
-                          ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/25'
-                          : 'bg-amber-500/20 border-amber-500/40 text-amber-300 hover:bg-amber-500/30'
+                          ? 'bg-emerald-50 border-emerald-200 text-emerald-800 hover:bg-emerald-100'
+                          : 'bg-amber-50 border-amber-200 text-amber-800 hover:bg-amber-100'
                       }`}
-                      title="Click to edit WCAG screen reader description"
-                      aria-label={`Edit alt text for ${displayName}. Current status: ${hasAlt ? item.altText : 'Missing alt text'}`}
+                      title="Click to edit screen reader description"
                     >
                       <span className="truncate">
                         {hasAlt ? `Alt: ${item.altText}` : 'Missing Alt Text'}
@@ -332,21 +317,20 @@ export const MediaLibrary: React.FC = () => {
                 </div>
 
                 {/* Actions */}
-                <div className="mt-3 pt-2.5 border-t border-white/5 flex items-center justify-between">
+                <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between">
                   <button
                     type="button"
                     onClick={() => handleCopy(item)}
-                    aria-label={`Copy URL for ${displayName}`}
-                    className="inline-flex items-center gap-1 text-[10px] font-bold uppercase text-[#B7E84B] hover:underline cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none rounded px-1"
+                    className="inline-flex items-center gap-1 text-[11px] font-black uppercase text-emerald-700 hover:text-emerald-800 cursor-pointer"
                   >
                     {copiedId === item.id ? (
                       <>
-                        <Check className="w-3 h-3 text-[#B7E84B]" />
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
                         <span>Copied</span>
                       </>
                     ) : (
                       <>
-                        <Copy className="w-3 h-3" />
+                        <Copy className="w-3.5 h-3.5" />
                         <span>Copy URL</span>
                       </>
                     )}
@@ -356,7 +340,7 @@ export const MediaLibrary: React.FC = () => {
                     type="button"
                     onClick={() => setDeletingId(item.id)}
                     aria-label={`Delete ${displayName}`}
-                    className="p-1 text-zinc-400 hover:text-red-400 transition-colors cursor-pointer rounded focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:outline-none"
+                    className="p-1 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer rounded"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -372,69 +356,66 @@ export const MediaLibrary: React.FC = () => {
         <div
           role="dialog"
           aria-modal="true"
-          aria-labelledby="alt-text-title"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs"
         >
-          <div className="bg-[#12241A] border border-[#B7E84B]/40 rounded-3xl p-6 max-w-lg w-full text-white space-y-4 shadow-2xl">
-            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 max-w-lg w-full text-slate-900 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-[#B7E84B]" />
-                <h3 id="alt-text-title" className="text-sm font-black uppercase tracking-wider">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                <h3 className="text-sm font-black uppercase tracking-wider text-slate-900">
                   Edit Screen Reader Alt Text
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setEditingAltItem(null)}
-                aria-label="Close alt text modal"
-                className="p-1 rounded-lg text-white/60 hover:text-white hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none"
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-900 hover:bg-slate-100 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="flex items-center gap-3 p-2 rounded-xl bg-black/30 border border-white/10">
+            <div className="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50 border border-slate-200">
               <img
                 src={assetUrl(editingAltItem.url)}
                 alt=""
                 onError={(e) => handleImageError(e, FALLBACK_STORE_IMAGE)}
-                className="w-16 h-12 object-cover rounded-lg shrink-0 border border-white/10"
+                className="w-16 h-12 object-cover rounded-lg shrink-0 border border-slate-200"
               />
               <div className="truncate text-xs">
-                <p className="font-bold truncate text-white">{editingAltItem.fileName || (editingAltItem as any).name}</p>
-                <p className="text-[10px] text-zinc-400 truncate">{editingAltItem.url}</p>
+                <p className="font-bold truncate text-slate-900">{editingAltItem.fileName || (editingAltItem as any).name}</p>
+                <p className="text-[10px] text-slate-500 truncate font-mono">{editingAltItem.url}</p>
               </div>
             </div>
 
             <div>
-              <label htmlFor="modal-alt-text-input" className="block text-xs font-bold uppercase tracking-wider mb-1.5 text-zinc-200">
+              <label className="block text-xs font-black uppercase tracking-wider mb-1.5 text-slate-800">
                 Descriptive Alt Text (WCAG 2.1 AA)
               </label>
               <textarea
-                id="modal-alt-text-input"
                 rows={3}
                 value={newAltText}
                 onChange={(e) => setNewAltText(e.target.value)}
                 placeholder="Describe what the image depicts for non-sighted users..."
-                className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/20 text-xs text-white placeholder:text-zinc-500 focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none"
+                className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20"
               />
-              <p className="text-[10px] text-zinc-400 mt-1">
+              <p className="text-[10px] text-slate-500 mt-1 font-medium">
                 Be specific and concise. Avoid starting with phrases like "image of" or "picture of".
               </p>
             </div>
 
-            <div className="flex justify-end gap-2 pt-3 border-t border-white/10">
+            <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
               <button
                 type="button"
                 onClick={() => setEditingAltItem(null)}
-                className="px-4 py-2 rounded-xl border border-white/20 text-xs font-bold uppercase tracking-wider text-zinc-300 hover:text-white cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none"
+                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold uppercase tracking-wider text-slate-700 cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleSaveAltText}
-                className="px-5 py-2 rounded-xl bg-[#B7E84B] text-[#0F241A] font-black text-xs uppercase tracking-wider hover:bg-[#a5d83a] transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none shadow-md"
+                className="px-5 py-2 rounded-xl bg-[#B7E84B] text-[#0F241A] font-black text-xs uppercase tracking-wider hover:bg-[#a5d83a] transition-all cursor-pointer shadow-xs"
               >
                 Save Alt Text
               </button>
@@ -449,24 +430,25 @@ export const MediaLibrary: React.FC = () => {
           role="dialog"
           aria-modal="true"
           onClick={() => setPreviewItem(null)}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs cursor-pointer"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs cursor-pointer"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#12241A] border border-[#B7E84B]/30 rounded-3xl p-6 max-w-3xl w-full text-white space-y-4"
+            className="bg-white border border-slate-200 rounded-3xl p-6 max-w-3xl w-full text-slate-900 space-y-4 shadow-2xl"
           >
-            <div className="flex items-center justify-between pb-3 border-b border-white/10">
-              <span className="text-xs font-bold truncate max-w-md">{previewItem.fileName || (previewItem as any).name}</span>
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <span className="text-xs font-black truncate max-w-md text-slate-900">
+                {previewItem.fileName || (previewItem as any).name}
+              </span>
               <button
                 type="button"
                 onClick={() => setPreviewItem(null)}
-                aria-label="Close preview"
-                className="px-3 py-1 rounded-lg bg-white/10 text-xs font-bold uppercase cursor-pointer hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none"
+                className="px-3 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-bold uppercase cursor-pointer"
               >
                 Close
               </button>
             </div>
-            <div className="max-h-[60vh] overflow-hidden rounded-2xl bg-black/40 flex items-center justify-center">
+            <div className="max-h-[60vh] overflow-hidden rounded-2xl bg-slate-50 flex items-center justify-center border border-slate-100">
               <img
                 src={assetUrl(previewItem.url)}
                 alt={previewItem.altText || previewItem.fileName || (previewItem as any).name}
@@ -474,13 +456,12 @@ export const MediaLibrary: React.FC = () => {
                 className="max-h-full max-w-full object-contain"
               />
             </div>
-            <div className="flex items-center justify-between text-xs text-zinc-300">
-              <span className="truncate max-w-md">{previewItem.url}</span>
+            <div className="flex items-center justify-between text-xs text-slate-700">
+              <span className="truncate max-w-md font-mono text-[11px] text-slate-500">{previewItem.url}</span>
               <button
                 type="button"
                 onClick={() => handleCopy(previewItem)}
-                aria-label="Copy image URL"
-                className="px-3 py-1.5 rounded-xl bg-[#B7E84B] text-[#0F241A] font-black uppercase text-[11px] cursor-pointer hover:bg-[#a5d83a] focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:outline-none"
+                className="px-3.5 py-1.5 rounded-xl bg-[#B7E84B] text-[#0F241A] font-black uppercase text-[11px] cursor-pointer hover:bg-[#a5d83a] shadow-xs"
               >
                 Copy URL
               </button>

@@ -1,572 +1,634 @@
 import React, { useState } from 'react';
-import {
-  Layers,
-  Plus,
-  Edit2,
-  Trash2,
-  Copy,
-  ArrowUp,
-  ArrowDown,
-  Save,
-  X,
-  Star,
-  CheckCircle2,
-  UploadCloud,
+import { 
+  Layers, 
+  Plus, 
+  Trash2, 
+  Edit3, 
+  ArrowUp, 
+  ArrowDown, 
+  Check, 
+  ExternalLink,
+  Sparkles,
+  HelpCircle
 } from 'lucide-react';
 import { useCMS } from '../../context/CMSContext';
-import { PackagesSectionContent, PricingPackage } from '../../types/cms';
 import { useToast } from '../components/Toast';
-import { ConfirmDialog } from '../components/ConfirmDialog';
+import { PricingPackage, PackagesPageTerms } from '../../types/cms';
 
 export const PackagesEditor: React.FC = () => {
-  const { draftContent, updateSection, publishSection } = useCMS();
+  const { draftContent, updateSection, updateDraftContent, setPreviewMode } = useCMS();
   const { showToast } = useToast();
 
-  const [sectionData, setSectionData] = useState<PackagesSectionContent>(
-    JSON.parse(JSON.stringify(draftContent.packages))
-  );
-  const [editingPackage, setEditingPackage] = useState<PricingPackage | null>(null);
-  const [isDeletingId, setIsDeletingId] = useState<string | null>(null);
-  const [featuresText, setFeaturesText] = useState('');
-  const [isSaving, setIsSaving] = useState(false);
-  const [isPublishing, setIsPublishing] = useState(false);
+  const [activeTab, setActiveTab] = useState<'tiers' | 'intro' | 'terms'>('tiers');
 
-  const handleSave = async (updated?: PackagesSectionContent) => {
-    const toSave = updated || sectionData;
-    setIsSaving(true);
-    try {
-      await updateSection('packages', toSave);
-      showToast('success', 'Packages Draft Saved', 'Pricing packages updated in draft. Click "Publish Live" to push live.');
-    } catch (err: unknown) {
-      showToast('error', 'Save Failed', err instanceof Error ? err.message : 'Save failed');
-    } finally {
-      setIsSaving(false);
+  const [packagesData, setPackagesData] = useState(draftContent.packages);
+  const [packagesList, setPackagesList] = useState<PricingPackage[]>(draftContent.packages?.packages || []);
+  const [termsData, setTermsData] = useState<PackagesPageTerms>(draftContent.packagesTerms || {
+    id: 'pkg-terms',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    milestoneTitle: 'Transparent 50/50 Milestone Terms',
+    milestoneText: '50% deposit upfront to begin architecture & design, and the remaining 50% only before final launch & domain deployment.',
+    hostingTitle: 'Fast managed edge hosting:',
+    hostingPrice: '$14/mo or $140/yr',
+    hostingDetails: 'Includes global CDN, SSL, & automated backups',
+    craftBespoke: {
+      title1: '100% BESPOKE HANDCRAFTED CODE',
+      desc1: 'We write clean, high-performance TypeScript & modern CSS tailored strictly to your store.',
+      bullets1: ['Zero bulky unused plugins', 'Sub-800ms Time-To-First-Byte', 'Core Web Vitals 98+'],
+      title2: 'FULL CODEBASE & ASSET OWNERSHIP',
+      desc2: 'You own your store, your domain, and your code from day one.',
+      bullets2: ['No recurring vendor lock-in', 'Direct GitHub repo transfer', 'Free domain DNS setup'],
     }
-  };
+  });
 
-  const handlePublishNow = async (updated?: PackagesSectionContent) => {
-    const toSave = updated || sectionData;
-    setIsPublishing(true);
-    try {
-      await publishSection('packages', toSave);
-      showToast('success', 'Published Live!', 'Pricing packages are now live on the public website.');
-    } catch (err: unknown) {
-      showToast('error', 'Publish Failed', err instanceof Error ? err.message : 'Publish failed');
-    } finally {
-      setIsPublishing(false);
+  const [editingPkg, setEditingPkg] = useState<{ index: number; data: PricingPackage } | null>(null);
+
+  React.useEffect(() => {
+    if (draftContent.packages) {
+      setPackagesData(draftContent.packages);
+      setPackagesList(draftContent.packages.packages || []);
     }
-  };
-
-  const handleOpenEdit = (pkg: PricingPackage) => {
-    setEditingPackage(JSON.parse(JSON.stringify(pkg)));
-    setFeaturesText(pkg.features?.join('\n') || '');
-  };
-
-  const handleSaveEditModal = (publishImmediately = false) => {
-    if (!editingPackage) return;
-    const updatedPkg: PricingPackage = {
-      ...editingPackage,
-      features: featuresText.split('\n').map((s) => s.trim()).filter(Boolean),
-      updatedAt: new Date().toISOString(),
-    };
-
-    const nextPackages = sectionData.packages.map((p) => (p.id === updatedPkg.id ? updatedPkg : p));
-    const nextData = { ...sectionData, packages: nextPackages };
-    setSectionData(nextData);
-    setEditingPackage(null);
-    if (publishImmediately) {
-      handlePublishNow(nextData);
-    } else {
-      handleSave(nextData);
+    if (draftContent.packagesTerms) {
+      setTermsData(draftContent.packagesTerms);
     }
+  }, [draftContent]);
+
+  const handleSaveTiers = async (updated: PricingPackage[]) => {
+    setPackagesList(updated);
+    await updateSection('packages', {
+      ...packagesData,
+      packages: updated,
+    });
+    showToast('success', 'Packages Saved', 'Pricing tiers updated on public site.');
   };
 
-  const handleAddNewPackage = () => {
-    const newPkg: PricingPackage = {
+  const handleSaveIntro = async () => {
+    await updateSection('packages', {
+      ...packagesData,
+      packages: packagesList,
+    });
+    showToast('success', 'Intro Saved', 'Rates headline and subheading saved.');
+  };
+
+  const handleSaveTerms = async () => {
+    await updateDraftContent({ packagesTerms: termsData });
+    showToast('success', 'Terms Saved', 'Milestone terms and hosting pricing saved.');
+  };
+
+  const handleAddTier = () => {
+    const newTier: PricingPackage = {
       id: `pkg-${Date.now()}`,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       name: 'NEW TIER',
       price: '$450',
       currency: '$',
       billingPeriodText: 'starting rate',
-      turnaroundTime: '14 business days',
-      description: 'Custom package description for business expansion.',
+      description: 'Ideal package for scaling direct-to-consumer businesses needing advanced features.',
+      turnaroundTime: '15–20 business days',
       features: [
-        'Custom modern layout',
-        'Mobile responsive design',
-        'Fast edge deployment',
+        'Custom interactive product customizer',
+        'Sub-800ms speed guarantee',
+        'Mobile-first conversion funnel',
+        'Full codebase ownership',
       ],
-      ctaText: 'CHOOSE TIER ($450)',
-      ctaUrl: '#contact',
+      ctaText: 'START THIS PROJECT',
+      ctaUrl: '#inquiry',
       featured: false,
-      badge: 'Specialized',
-      sortOrder: sectionData.packages.length,
+      badge: 'Popular for DTC Brands',
+      sortOrder: packagesList.length,
       published: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     };
-
-    const nextData = {
-      ...sectionData,
-      packages: [...sectionData.packages, newPkg],
-    };
-    setSectionData(nextData);
-    handleOpenEdit(newPkg);
+    const updated = [...packagesList, newTier];
+    handleSaveTiers(updated);
+    setEditingPkg({ index: packagesList.length, data: newTier });
   };
 
-  const handleDuplicate = (pkg: PricingPackage) => {
-    const copy: PricingPackage = {
-      ...JSON.parse(JSON.stringify(pkg)),
-      id: `pkg-${Date.now()}`,
-      name: `${pkg.name} (Copy)`,
-      sortOrder: sectionData.packages.length,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    const nextData = {
-      ...sectionData,
-      packages: [...sectionData.packages, copy],
-    };
-    setSectionData(nextData);
-    handleSave(nextData);
-    showToast('info', 'Package Duplicated', `Created copy of ${pkg.name}`);
+  const handleMoveTier = (index: number, direction: 'up' | 'down') => {
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= packagesList.length) return;
+    const updated = [...packagesList];
+    const temp = updated[index];
+    updated[index] = updated[targetIndex];
+    updated[targetIndex] = temp;
+    const sorted = updated.map((p, idx) => ({ ...p, sortOrder: idx }));
+    handleSaveTiers(sorted);
   };
 
-  const handleDeleteConfirm = () => {
-    if (!isDeletingId) return;
-    const nextPackages = sectionData.packages.filter((p) => p.id !== isDeletingId);
-    const nextData = { ...sectionData, packages: nextPackages };
-    setSectionData(nextData);
-    setIsDeletingId(null);
-    handleSave(nextData);
-    showToast('info', 'Package Deleted', 'Pricing package removed.');
-  };
-
-  const handleMove = (index: number, direction: 'up' | 'down') => {
-    const target = direction === 'up' ? index - 1 : index + 1;
-    if (target < 0 || target >= sectionData.packages.length) return;
-
-    const list = [...sectionData.packages];
-    const temp = list[index];
-    list[index] = list[target];
-    list[target] = temp;
-    list.forEach((p, idx) => (p.sortOrder = idx));
-
-    const nextData = { ...sectionData, packages: list };
-    setSectionData(nextData);
-    handleSave(nextData);
-  };
-
-  const handleTogglePublished = (id: string) => {
-    const nextPackages = sectionData.packages.map((p) =>
-      p.id === id ? { ...p, published: !p.published } : p
-    );
-    const nextData = { ...sectionData, packages: nextPackages };
-    setSectionData(nextData);
-    handleSave(nextData);
+  const handleDeleteTier = (index: number) => {
+    if (window.confirm(`Delete package "${packagesList[index].name}"?`)) {
+      const updated = packagesList.filter((_, i) => i !== index);
+      handleSaveTiers(updated);
+      if (editingPkg?.index === index) {
+        setEditingPkg(null);
+      }
+    }
   };
 
   return (
-    <div className="space-y-8 pb-12">
-      {/* Header & Save */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+    <div className="max-w-5xl mx-auto space-y-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 pb-6">
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#B7E84B] mb-1">
-            <Layers className="w-4 h-4" />
-            <span>Pricing Architecture</span>
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md text-[11px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200 mb-2">
+            Page Editor
           </div>
-          <h1 className="text-2xl font-black uppercase tracking-tight text-white">Packages & Rates</h1>
-          <p className="text-xs text-white/60">
-            Configure productized tiers, turnaround commitments, and feature checklists
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">
+            Packages &amp; Rates Editor
+          </h1>
+          <p className="mt-1 text-sm text-slate-600 font-medium">
+            Control productized pricing packages, milestone terms, and hosting rates ({packagesList.length} packages).
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <button
             type="button"
-            onClick={() => handleSave()}
-            disabled={isSaving || isPublishing}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold uppercase tracking-wider transition-colors border border-white/10 disabled:opacity-50 cursor-pointer"
+            onClick={handleAddTier}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm cursor-pointer"
           >
-            <Save className="w-4 h-4 text-[#B7E84B]" />
-            <span>{isSaving ? 'Saving...' : 'Save Drafts'}</span>
+            <Plus className="w-4 h-4" />
+            <span>Add Pricing Tier</span>
           </button>
+
           <button
             type="button"
-            onClick={() => handlePublishNow()}
-            disabled={isSaving || isPublishing}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#B7E84B] hover:bg-[#a6d83b] text-[#0F241A] text-xs font-black uppercase tracking-wider transition-colors shadow-md disabled:opacity-50 cursor-pointer"
+            onClick={() => {
+              setPreviewMode(true);
+              window.open('#/packages', '_blank');
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 shadow-xs transition-all cursor-pointer"
           >
-            <UploadCloud className="w-4 h-4" />
-            <span>{isPublishing ? 'Publishing...' : 'Publish Live'}</span>
-          </button>
-          <button
-            type="button"
-            onClick={handleAddNewPackage}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white text-xs font-bold uppercase tracking-wider transition-colors border border-white/15 cursor-pointer"
-          >
-            <Plus className="w-4 h-4 text-[#B7E84B]" />
-            <span>Add Package</span>
+            <ExternalLink className="w-3.5 h-3.5 text-emerald-600" />
+            <span>View Packages</span>
           </button>
         </div>
       </div>
 
-      {/* Section Headlines */}
-      <div className="p-6 rounded-2xl bg-[#12241A] border border-white/10 space-y-4">
-        <div className="flex items-center justify-between border-b border-white/10 pb-3">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-white">Section Intro Headlines</h2>
-          <button
-            type="button"
-            onClick={() => handleSave()}
-            disabled={isSaving}
-            className="text-xs font-bold text-[#B7E84B] hover:underline"
-          >
-            {isSaving ? 'Saving...' : 'Save Intro Changes'}
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-white/70 mb-1">
-              Eyebrow Label
-            </label>
-            <input
-              type="text"
-              value={sectionData.eyebrow}
-              onChange={(e) => setSectionData({ ...sectionData, eyebrow: e.target.value })}
-              className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-[#B7E84B]"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-white/70 mb-1">
-              Heading Prefix
-            </label>
-            <input
-              type="text"
-              value={sectionData.heading}
-              onChange={(e) => setSectionData({ ...sectionData, heading: e.target.value })}
-              className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-[#B7E84B]"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-[#B7E84B] mb-1">
-              Heading Highlight (Green)
-            </label>
-            <input
-              type="text"
-              value={sectionData.headingHighlight}
-              onChange={(e) => setSectionData({ ...sectionData, headingHighlight: e.target.value })}
-              className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-[#B7E84B]/40 text-xs text-[#B7E84B] font-bold focus:outline-none focus:border-[#B7E84B]"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-white/70 mb-1">
-            Subheading
-          </label>
-          <input
-            type="text"
-            value={sectionData.subheading}
-            onChange={(e) => setSectionData({ ...sectionData, subheading: e.target.value })}
-            className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-[#B7E84B]"
-          />
-        </div>
+      {/* Tabs */}
+      <div className="flex items-center gap-2 border-b border-slate-200">
+        <button
+          type="button"
+          onClick={() => setActiveTab('tiers')}
+          className={`px-4 py-2.5 text-xs font-bold uppercase tracking-wider border-b-2 transition-colors cursor-pointer ${
+            activeTab === 'tiers'
+              ? 'border-emerald-600 text-emerald-700 font-black'
+              : 'border-transparent text-slate-500 hover:text-slate-900'
+          }`}
+        >
+          1. Pricing Packages ({packagesList.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('intro')}
+          className={`px-4 py-2.5 text-xs font-bold uppercase tracking-wider border-b-2 transition-colors cursor-pointer ${
+            activeTab === 'intro'
+              ? 'border-emerald-600 text-emerald-700 font-black'
+              : 'border-transparent text-slate-500 hover:text-slate-900'
+          }`}
+        >
+          2. Rates Intro
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('terms')}
+          className={`px-4 py-2.5 text-xs font-bold uppercase tracking-wider border-b-2 transition-colors cursor-pointer ${
+            activeTab === 'terms'
+              ? 'border-emerald-600 text-emerald-700 font-black'
+              : 'border-transparent text-slate-500 hover:text-slate-900'
+          }`}
+        >
+          3. 50/50 Milestones &amp; Hosting
+        </button>
       </div>
 
-      {/* Packages List */}
-      <div className="space-y-4">
-        <h2 className="text-sm font-bold uppercase tracking-wider text-white">Configured Packages</h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {sectionData.packages.map((pkg, index) => (
+      {/* TAB 1: TIERS */}
+      {activeTab === 'tiers' && (
+        <div className="space-y-4">
+          {packagesList.map((pkg, index) => (
             <div
-              key={pkg.id}
-              className={`p-6 rounded-2xl border transition-all flex flex-col justify-between ${
+              key={pkg.id || index}
+              className={`p-5 rounded-2xl border transition-all duration-200 bg-white shadow-sm ${
                 pkg.featured
-                  ? 'bg-gradient-to-b from-[#162C20] to-[#12241A] border-[#B7E84B]/50 ring-1 ring-[#B7E84B]/30'
-                  : 'bg-[#12241A] border-white/10'
+                  ? 'border-emerald-500 ring-2 ring-emerald-500/20 shadow-md'
+                  : 'border-slate-200 hover:border-slate-300'
               }`}
             >
-              <div>
-                {/* Header Row */}
-                <div className="flex items-center justify-between gap-2 mb-3">
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg font-black tracking-tight text-white uppercase">{pkg.name}</span>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-2.5 flex-wrap">
+                    <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-slate-100 text-xs font-black text-slate-800">
+                      {index + 1}
+                    </span>
+                    <h3 className="text-lg font-black text-slate-900">
+                      {pkg.name}
+                    </h3>
+                    <span className="text-base font-black text-emerald-700 font-mono">
+                      {pkg.price}
+                    </span>
                     {pkg.featured && (
-                      <span className="px-2 py-0.5 rounded-full bg-[#B7E84B] text-[#0F241A] text-[9px] font-black uppercase tracking-wider flex items-center gap-1">
-                        <Star className="w-2.5 h-2.5 fill-current" />
-                        <span>Featured</span>
+                      <span className="px-2.5 py-0.5 rounded text-[10px] font-black uppercase bg-emerald-50 text-emerald-700 border border-emerald-300">
+                        Most Popular
                       </span>
                     )}
-                    {pkg.badge && !pkg.featured && (
-                      <span className="px-2 py-0.5 rounded-full bg-white/10 text-white/70 text-[9px] font-bold uppercase">
+                    {pkg.badge && (
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-slate-100 text-slate-700 border border-slate-200">
                         {pkg.badge}
                       </span>
                     )}
                   </div>
 
-                  <div className="flex items-center gap-1">
+                  <p className="text-xs text-slate-600 mt-1.5 line-clamp-1 font-medium">
+                    {pkg.description}
+                  </p>
+
+                  <div className="flex items-center gap-4 mt-2 text-xs text-slate-500 font-medium">
+                    <span>⚡ Turnaround: <strong>{pkg.turnaroundTime || '7–10 days'}</strong></span>
+                    <span>•</span>
+                    <span>{pkg.features?.length || 0} Features Included</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex items-center border border-slate-300 rounded-lg overflow-hidden bg-slate-50 shadow-xs">
                     <button
                       type="button"
                       disabled={index === 0}
-                      onClick={() => handleMove(index, 'up')}
-                      className="p-1 text-white/40 hover:text-white disabled:opacity-20"
+                      onClick={() => handleMoveTier(index, 'up')}
+                      className="p-1.5 hover:bg-slate-200 text-slate-700 disabled:opacity-30 cursor-pointer"
+                      title="Move up"
                     >
                       <ArrowUp className="w-3.5 h-3.5" />
                     </button>
                     <button
                       type="button"
-                      disabled={index === sectionData.packages.length - 1}
-                      onClick={() => handleMove(index, 'down')}
-                      className="p-1 text-white/40 hover:text-white disabled:opacity-20"
+                      disabled={index === packagesList.length - 1}
+                      onClick={() => handleMoveTier(index, 'down')}
+                      className="p-1.5 hover:bg-slate-200 text-slate-700 disabled:opacity-30 cursor-pointer"
+                      title="Move down"
                     >
                       <ArrowDown className="w-3.5 h-3.5" />
                     </button>
                   </div>
-                </div>
 
-                {/* Price & Turnaround */}
-                <div className="flex items-baseline gap-2 mb-2">
-                  <span className="text-3xl font-black text-[#B7E84B] tracking-tight">{pkg.price}</span>
-                  <span className="text-xs text-white/50">{pkg.billingPeriodText}</span>
-                </div>
-
-                <div className="text-xs font-semibold text-white/80 mb-3">
-                  ⏱ Turnaround: <span className="text-white">{pkg.turnaroundTime}</span>
-                </div>
-
-                <p className="text-xs text-white/60 leading-relaxed mb-4">{pkg.description}</p>
-
-                {/* Features Preview */}
-                <div className="space-y-1.5 pt-3 border-t border-white/10 mb-6">
-                  {pkg.features.slice(0, 4).map((f, i) => (
-                    <div key={i} className="flex items-start gap-2 text-xs text-white/70">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#B7E84B] shrink-0 mt-0.5" />
-                      <span className="truncate">{f}</span>
-                    </div>
-                  ))}
-                  {pkg.features.length > 4 && (
-                    <span className="text-[11px] text-white/40 block pt-1">
-                      +{pkg.features.length - 4} more deliverables
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Card Actions */}
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleTogglePublished(pkg.id)}
-                  className={`px-3 py-1 rounded-xl text-[11px] font-bold uppercase tracking-wider ${
-                    pkg.published ? 'bg-[#EAF3E8]/10 text-[#B7E84B]' : 'bg-white/5 text-white/40'
-                  }`}
-                >
-                  {pkg.published ? 'Live' : 'Draft'}
-                </button>
-
-                <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => handleDuplicate(pkg)}
-                    className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white"
+                    onClick={() => setEditingPkg({ index, data: { ...pkg } })}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider bg-[#B7E84B] text-[#0E1B13] hover:bg-[#a6d93b] cursor-pointer shadow-xs"
                   >
-                    <Copy className="w-3.5 h-3.5" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleOpenEdit(pkg)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white text-xs font-bold uppercase tracking-wider"
-                  >
-                    <Edit2 className="w-3 h-3 text-[#B7E84B]" />
+                    <Edit3 className="w-3.5 h-3.5" />
                     <span>Edit</span>
                   </button>
+
                   <button
                     type="button"
-                    onClick={() => setIsDeletingId(pkg.id)}
-                    className="p-1.5 rounded-lg bg-white/5 hover:bg-red-500/20 text-white/40 hover:text-red-400"
+                    onClick={() => handleDeleteTier(index)}
+                    className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg cursor-pointer"
+                    title="Delete package"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               </div>
             </div>
           ))}
         </div>
-      </div>
+      )}
 
-      {/* Edit Package Modal */}
-      {editingPackage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs overflow-y-auto">
-          <div className="bg-[#12241A] border border-[#B7E84B]/30 rounded-3xl max-w-2xl w-full my-8 p-6 sm:p-8 text-white shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-4 border-b border-white/10">
-              <div>
-                <h3 className="text-lg font-black uppercase tracking-tight">Edit Package Tier</h3>
-                <p className="text-xs text-white/60">Configure pricing, deliverables, and badges</p>
-              </div>
-              <button
-                onClick={() => setEditingPackage(null)}
-                className="p-1.5 rounded-xl text-white/50 hover:text-white hover:bg-white/10"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-white/70 mb-1">
-                  Package Name
-                </label>
-                <input
-                  type="text"
-                  value={editingPackage.name}
-                  onChange={(e) => setEditingPackage({ ...editingPackage, name: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#B7E84B] mb-1">
-                  Price String (e.g. $159 or ₱4,000)
-                </label>
-                <input
-                  type="text"
-                  value={editingPackage.price}
-                  onChange={(e) => setEditingPackage({ ...editingPackage, price: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-[#B7E84B]/40 text-xs text-[#B7E84B] font-black"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-white/70 mb-1">
-                  Billing Period / Subtext
-                </label>
-                <input
-                  type="text"
-                  value={editingPackage.billingPeriodText}
-                  onChange={(e) =>
-                    setEditingPackage({ ...editingPackage, billingPeriodText: e.target.value })
-                  }
-                  placeholder="starting rate or or $75 USD"
-                  className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-white/70 mb-1">
-                  Turnaround Time
-                </label>
-                <input
-                  type="text"
-                  value={editingPackage.turnaroundTime}
-                  onChange={(e) =>
-                    setEditingPackage({ ...editingPackage, turnaroundTime: e.target.value })
-                  }
-                  placeholder="7–10 business days"
-                  className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-white/70 mb-1">
-                  Card Badge (e.g. Most Popular)
-                </label>
-                <input
-                  type="text"
-                  value={editingPackage.badge}
-                  onChange={(e) => setEditingPackage({ ...editingPackage, badge: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-white/70 mb-1">
-                  CTA Button Label
-                </label>
-                <input
-                  type="text"
-                  value={editingPackage.ctaText}
-                  onChange={(e) => setEditingPackage({ ...editingPackage, ctaText: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4 p-3.5 rounded-xl bg-[#162C20] border border-white/10">
-              <label className="flex items-center gap-2 cursor-pointer text-xs text-white font-bold">
-                <input
-                  type="checkbox"
-                  checked={editingPackage.featured}
-                  onChange={(e) => setEditingPackage({ ...editingPackage, featured: e.target.checked })}
-                  className="rounded border-white/20 text-[#B7E84B] focus:ring-[#B7E84B]"
-                />
-                <span>Set as Featured / Most Popular Highlight</span>
-              </label>
-            </div>
-
+      {/* TAB 2: INTRO */}
+      {activeTab === 'intro' && (
+        <div className="p-6 sm:p-8 rounded-2xl border border-slate-200 bg-white shadow-sm space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-white/70 mb-1">
-                Package Description
+              <label className="block text-xs font-black uppercase tracking-wider text-slate-800 mb-1.5">
+                Eyebrow
+              </label>
+              <input
+                type="text"
+                value={packagesData.eyebrow || ''}
+                onChange={(e) => setPackagesData({ ...packagesData, eyebrow: e.target.value })}
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-900 font-bold text-xs shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-black uppercase tracking-wider text-slate-800 mb-1.5">
+                Headline
+              </label>
+              <input
+                type="text"
+                value={packagesData.heading || ''}
+                onChange={(e) => setPackagesData({ ...packagesData, heading: e.target.value })}
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-900 font-bold text-xs shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-black uppercase tracking-wider text-slate-800 mb-1.5">
+              Subheading
+            </label>
+            <textarea
+              rows={3}
+              value={packagesData.subheading || ''}
+              onChange={(e) => setPackagesData({ ...packagesData, subheading: e.target.value })}
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-900 font-medium text-xs shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+            />
+          </div>
+
+          <div className="pt-4 flex justify-end">
+            <button
+              type="button"
+              onClick={handleSaveIntro}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 text-white shadow-md cursor-pointer transition-colors"
+            >
+              <Check className="w-4 h-4" />
+              <span>Save Rates Intro</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 3: TERMS & HOSTING */}
+      {activeTab === 'terms' && (
+        <div className="p-6 sm:p-8 rounded-2xl border border-slate-200 bg-white shadow-sm space-y-6">
+          <div className="p-5 rounded-xl border border-slate-200 bg-slate-50/70 space-y-4">
+            <h3 className="text-xs font-black uppercase tracking-wider text-emerald-700">
+              50/50 Milestone Terms
+            </h3>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">
+                Terms Headline
+              </label>
+              <input
+                type="text"
+                value={termsData.milestoneTitle}
+                onChange={(e) => setTermsData({ ...termsData, milestoneTitle: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 text-xs font-bold shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">
+                Terms Description
               </label>
               <textarea
                 rows={2}
-                value={editingPackage.description}
-                onChange={(e) => setEditingPackage({ ...editingPackage, description: e.target.value })}
-                className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white"
+                value={termsData.milestoneText}
+                onChange={(e) => setTermsData({ ...termsData, milestoneText: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 text-xs shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
               />
             </div>
+          </div>
 
+          <div className="p-5 rounded-xl border border-slate-200 bg-slate-50/70 space-y-4">
+            <h3 className="text-xs font-black uppercase tracking-wider text-emerald-700">
+              Fast Managed Edge Hosting
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">
+                  Hosting Title
+                </label>
+                <input
+                  type="text"
+                  value={termsData.hostingTitle}
+                  onChange={(e) => setTermsData({ ...termsData, hostingTitle: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 text-xs shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">
+                  Hosting Price
+                </label>
+                <input
+                  type="text"
+                  value={termsData.hostingPrice}
+                  onChange={(e) => setTermsData({ ...termsData, hostingPrice: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 text-xs font-black text-emerald-700 shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+                />
+              </div>
+            </div>
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-white/70 mb-1">
-                Included Features & Deliverables (1 item per line)
+              <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">
+                Hosting Details / Inclusions
               </label>
-              <textarea
-                rows={6}
-                value={featuresText}
-                onChange={(e) => setFeaturesText(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white font-mono leading-relaxed"
+              <input
+                type="text"
+                value={termsData.hostingDetails}
+                onChange={(e) => setTermsData({ ...termsData, hostingDetails: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 text-xs shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
               />
             </div>
+          </div>
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
+          <div className="pt-4 flex justify-end">
+            <button
+              type="button"
+              onClick={handleSaveTerms}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 text-white shadow-md cursor-pointer transition-colors"
+            >
+              <Check className="w-4 h-4" />
+              <span>Save Milestone &amp; Hosting Terms</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Tier Drawer / Modal */}
+      {editingPkg && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-white border border-slate-200 p-6 sm:p-8 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-base font-black text-slate-900">
+                Edit Package: {editingPkg.data.name}
+              </h3>
               <button
                 type="button"
-                onClick={() => setEditingPackage(null)}
-                className="px-5 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-bold uppercase tracking-wider"
+                onClick={() => setEditingPkg(null)}
+                className="text-slate-400 hover:text-slate-700 text-lg font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold uppercase text-slate-700 mb-1">
+                    Package Name
+                  </label>
+                  <input
+                    type="text"
+                    value={editingPkg.data.name}
+                    onChange={(e) => setEditingPkg({
+                      ...editingPkg,
+                      data: { ...editingPkg.data, name: e.target.value }
+                    })}
+                    className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 text-xs font-bold shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold uppercase text-slate-700 mb-1">
+                    Price (e.g. $260)
+                  </label>
+                  <input
+                    type="text"
+                    value={editingPkg.data.price}
+                    onChange={(e) => setEditingPkg({
+                      ...editingPkg,
+                      data: { ...editingPkg.data, price: e.target.value }
+                    })}
+                    className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 text-xs font-bold shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold uppercase text-slate-700 mb-1">
+                    Turnaround Time
+                  </label>
+                  <input
+                    type="text"
+                    value={editingPkg.data.turnaroundTime || ''}
+                    onChange={(e) => setEditingPkg({
+                      ...editingPkg,
+                      data: { ...editingPkg.data, turnaroundTime: e.target.value }
+                    })}
+                    className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 text-xs shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+                    placeholder="10–15 business days"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold uppercase text-slate-700 mb-1">
+                    Audience Badge
+                  </label>
+                  <input
+                    type="text"
+                    value={editingPkg.data.badge || ''}
+                    onChange={(e) => setEditingPkg({
+                      ...editingPkg,
+                      data: { ...editingPkg.data, badge: e.target.value }
+                    })}
+                    className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 text-xs shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+                    placeholder="Best for Growing Brands"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="inline-flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={editingPkg.data.featured}
+                    onChange={(e) => setEditingPkg({
+                      ...editingPkg,
+                      data: { ...editingPkg.data, featured: e.target.checked }
+                    })}
+                    className="rounded text-emerald-600"
+                  />
+                  <span>Mark as "Most Popular" (Highlighted Card)</span>
+                </label>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold uppercase text-slate-700 mb-1">
+                  Description
+                </label>
+                <textarea
+                  rows={2}
+                  value={editingPkg.data.description}
+                  onChange={(e) => setEditingPkg({
+                    ...editingPkg,
+                    data: { ...editingPkg.data, description: e.target.value }
+                  })}
+                  className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 text-xs shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+                />
+              </div>
+
+              {/* Features List */}
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-[11px] font-black uppercase text-slate-700">
+                    Included Features List
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingPkg({
+                        ...editingPkg,
+                        data: {
+                          ...editingPkg.data,
+                          features: [...(editingPkg.data.features || []), 'New feature item'],
+                        }
+                      });
+                    }}
+                    className="text-[11px] font-black uppercase text-emerald-700 hover:underline cursor-pointer"
+                  >
+                    + Add Feature
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  {(editingPkg.data.features || []).map((feat, fIdx) => (
+                    <div key={fIdx} className="flex gap-2 items-center">
+                      <input
+                        type="text"
+                        value={feat}
+                        onChange={(e) => {
+                          const updated = [...(editingPkg.data.features || [])];
+                          updated[fIdx] = e.target.value;
+                          setEditingPkg({
+                            ...editingPkg,
+                            data: { ...editingPkg.data, features: updated }
+                          });
+                        }}
+                        className="flex-1 px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 text-xs shadow-xs focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = editingPkg.data.features.filter((_, i) => i !== fIdx);
+                          setEditingPkg({
+                            ...editingPkg,
+                            data: { ...editingPkg.data, features: updated }
+                          });
+                        }}
+                        className="p-1.5 text-rose-500 hover:bg-rose-50 rounded cursor-pointer"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-3 flex justify-end gap-2 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setEditingPkg(null)}
+                className="px-4 py-2 rounded-xl text-xs font-bold uppercase text-slate-600 hover:bg-slate-100"
               >
                 Cancel
               </button>
               <button
                 type="button"
-                onClick={() => handleSaveEditModal(false)}
-                className="px-5 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold uppercase tracking-wider transition-colors border border-white/10"
+                onClick={() => {
+                  const updated = [...packagesList];
+                  updated[editingPkg.index] = editingPkg.data;
+                  handleSaveTiers(updated);
+                  setEditingPkg(null);
+                }}
+                className="px-6 py-2.5 rounded-xl text-xs font-black uppercase bg-emerald-600 hover:bg-emerald-700 text-white shadow-md cursor-pointer"
               >
-                Save to Draft
-              </button>
-              <button
-                type="button"
-                onClick={() => handleSaveEditModal(true)}
-                className="px-6 py-2 rounded-xl bg-[#B7E84B] hover:bg-[#a6d83b] text-[#0F241A] text-xs font-black uppercase tracking-wider shadow-md transition-colors"
-              >
-                Save & Publish Live
+                Save Package
               </button>
             </div>
           </div>
         </div>
       )}
-
-      {/* Delete Dialog */}
-      <ConfirmDialog
-        isOpen={!!isDeletingId}
-        title="Delete Pricing Package"
-        message="Are you sure you want to remove this package tier? It will be removed from the pricing section."
-        confirmLabel="Delete Package"
-        isDestructive={true}
-        onConfirm={handleDeleteConfirm}
-        onCancel={() => setIsDeletingId(null)}
-      />
     </div>
   );
 };

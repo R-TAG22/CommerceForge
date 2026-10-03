@@ -17,16 +17,11 @@ export const HeroContent: React.FC<HeroContentProps> = ({ onCtaClick }) => {
   const [showReviewsModal, setShowReviewsModal] = useState<boolean>(false);
   const heroData = activeContent?.hero;
 
-  const isOldHeadline = heroData?.headlineLine1 === 'THE DIGITAL';
-  const headlineLine1 = !isOldHeadline && heroData?.headlineLine1 !== undefined ? heroData.headlineLine1 : 'TURN VISITORS';
-  const headlineLine2 = !isOldHeadline && heroData?.headlineLine2 !== undefined ? heroData.headlineLine2 : 'INTO';
-  const headlineHighlight = !isOldHeadline && heroData?.headlineHighlight !== undefined ? heroData.headlineHighlight : 'BUYERS';
-  const headlineLine3 = !isOldHeadline && heroData?.headlineLine3 !== undefined ? heroData.headlineLine3 : '';
-  
-  const isOldDescription = heroData?.description?.includes('sluggish, outdated websites');
-  const description = !isOldDescription && heroData?.description 
-    ? heroData.description 
-    : 'We rebuild slow, outdated site into high-speed sales engines. Handcrafted, mobile-first and delivered in 7 days.';
+  const headlineLine1 = heroData?.headlineLine1 !== undefined ? heroData.headlineLine1 : 'TURN VISITORS';
+  const headlineLine2 = heroData?.headlineLine2 !== undefined ? heroData.headlineLine2 : 'INTO';
+  const headlineHighlight = heroData?.headlineHighlight !== undefined ? heroData.headlineHighlight : 'BUYERS';
+  const headlineLine3 = heroData?.headlineLine3 !== undefined ? heroData.headlineLine3 : '';
+  const description = heroData?.description !== undefined ? heroData.description : 'We rebuild slow, outdated site into high-speed sales engines. Handcrafted, mobile-first and delivered in 7 days.';
 
   // Customer avatars for miniature stack
   const clientAvatars = [

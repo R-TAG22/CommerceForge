@@ -35,9 +35,17 @@ export const Header: React.FC<HeaderProps> = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navItems: NavItem[] = (headerData?.navItems
-    ? headerData.navItems.filter((i) => i.visible).map((i) => i.label as NavItem)
-    : ['HOME', 'ABOUT', 'WORK', 'PACKAGES', 'FAQ']) as NavItem[];
+  const rawNavItems = headerData?.navItems || [
+    { id: 'nav-1', label: 'HOME', url: '/', sectionId: 'hero', sortOrder: 0, visible: true },
+    { id: 'nav-2', label: 'ABOUT', url: '/about', sectionId: 'about', sortOrder: 1, visible: true },
+    { id: 'nav-3', label: 'WORK', url: '/work', sectionId: 'work', sortOrder: 2, visible: true },
+    { id: 'nav-4', label: 'PACKAGES', url: '/packages', sectionId: 'packages', sortOrder: 3, visible: true },
+    { id: 'nav-5', label: 'FAQ', url: '/faqs', sectionId: 'faq', sortOrder: 4, visible: true },
+  ];
+
+  const navItems = [...rawNavItems]
+    .filter((item) => item.visible !== false)
+    .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
 
   const brandName = headerData?.brandName || 'Commerce';
   const brandHighlight = headerData?.brandHighlight || 'Forge';
@@ -45,49 +53,34 @@ export const Header: React.FC<HeaderProps> = ({
   const ctaText = headerData?.ctaText || 'HIRE US';
   const ctaVisible = headerData?.ctaVisible !== false;
 
-  const PAGE_ROUTES: Record<string, string> = {
-    HOME: '/',
-    ABOUT: '/about',
-    WORK: '/work',
-    PACKAGES: '/packages',
-    FAQ: '/faqs',
-  };
-
-  const handleNav = (item: NavItem) => {
+  const handleNav = (item: string | { label: string; url?: string; sectionId?: string }) => {
+    const navObj = typeof item === 'string' ? { label: item, url: item === 'HOME' ? '/' : `/${item.toLowerCase()}` } : item;
     if (onNavClick) {
-      onNavClick(item);
+      onNavClick(navObj.label as any);
     }
-    const targetRoute = PAGE_ROUTES[item];
-    if (targetRoute) {
-      navigate(targetRoute);
+    const targetUrl = navObj.url || '/';
+    if (targetUrl.startsWith('#') || targetUrl.startsWith('/#')) {
+      const sectionId = targetUrl.replace(/^\/?#/, '');
+      if (currentPath !== '/') {
+        navigate(`/#${sectionId}`);
+      } else if (onNavigate) {
+        onNavigate(sectionId);
+      } else {
+        document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+      }
       return;
     }
-
-    const sectionMap: Record<string, string> = {
-      HOME: 'hero',
-      WORK: 'work',
-      PACKAGES: 'packages',
-      PROCESS: 'process',
-      ABOUT: 'about',
-      FAQ: 'faq',
-    };
-    const targetId = sectionMap[item] || item.toLowerCase();
-    if (onNavigate) {
-      onNavigate(targetId);
-    } else {
-      document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
-    }
+    navigate(targetUrl);
   };
 
   // Determine which nav item is active based on current URL path
-  const getIsActive = (item: NavItem) => {
-    if (currentPath === '/' && item === 'HOME') return true;
-    if (currentPath === '/about' && item === 'ABOUT') return true;
-    if (currentPath === '/work' && item === 'WORK') return true;
-    if (currentPath === '/packages' && item === 'PACKAGES') return true;
-    if ((currentPath === '/faqs' || currentPath === '/faq') && item === 'FAQ') return true;
+  const getIsActive = (item: { label: string; url?: string }) => {
+    const url = (item.url || '').trim();
+    if (url === '/' && currentPath === '/') return true;
+    if (url && url !== '/' && (currentPath === url || currentPath.startsWith(url))) return true;
+    if ((currentPath === '/faqs' || currentPath === '/faq') && (url === '/faqs' || url === '/faq' || item.label.toUpperCase() === 'FAQ')) return true;
 
-    if (activeNav) return activeNav === item;
+    if (activeNav && activeNav === item.label) return true;
     return false;
   };
 
@@ -169,8 +162,8 @@ export const Header: React.FC<HeaderProps> = ({
                 const isActive = getIsActive(item);
                 return (
                   <button
-                    key={item}
-                    id={`nav-link-${item.toLowerCase()}`}
+                    key={item.id || item.label}
+                    id={`nav-link-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
                     onClick={() => handleNav(item)}
                     className={`relative py-1 text-xs lg:text-sm font-bold tracking-[0.16em] lg:tracking-[0.18em] transition-all duration-200 uppercase cursor-pointer ${
                       isActive 
@@ -180,7 +173,7 @@ export const Header: React.FC<HeaderProps> = ({
                           : 'text-[#064E3B]/70 hover:text-[#064E3B] hover:tracking-[0.20em]'
                     }`}
                   >
-                    {item}
+                    {item.label}
                     {isActive && (
                       <span className="absolute -bottom-1 left-0 w-full h-[2.5px] bg-[#B7E84B] rounded-full shadow-[0_0_8px_rgba(183,232,75,0.7)]" />
                     )}
@@ -230,8 +223,8 @@ export const Header: React.FC<HeaderProps> = ({
               const isActive = getIsActive(item);
               return (
                 <button
-                  key={item}
-                  id={`mobile-nav-link-${item.toLowerCase()}`}
+                  key={item.id || item.label}
+                  id={`mobile-nav-link-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
                   onClick={() => handleNav(item)}
                   className={`relative shrink-0 py-1 px-1 text-[11px] font-bold tracking-[0.14em] uppercase transition-all duration-200 ${
                     isActive 
@@ -239,7 +232,7 @@ export const Header: React.FC<HeaderProps> = ({
                       : isDark ? 'text-white/70 hover:text-white' : 'text-[#064E3B]/70 hover:text-[#064E3B]'
                   }`}
                 >
-                  {item}
+                  {item.label}
                   {isActive && (
                     <span className="absolute -bottom-0.5 left-0 w-full h-[2px] bg-[#B7E84B] rounded-full shadow-[0_0_6px_rgba(183,232,75,0.7)]" />
                   )}

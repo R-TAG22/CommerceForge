@@ -2,12 +2,16 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { usePublicTheme } from '../context/PublicThemeContext';
 import { useReducedMotion } from '../hooks/useReducedMotion';
+import { useCMS } from '../context/CMSContext';
 
 export interface ClientLogoItem {
   id: string;
   name: string;
   category: string;
-  renderLogo: (isDark: boolean) => React.ReactNode;
+  renderLogo?: (isDark: boolean) => React.ReactNode;
+  logoUrl?: string;
+  visible?: boolean;
+  sortOrder?: number;
 }
 
 export const CLIENT_LOGOS: ClientLogoItem[] = [
@@ -192,9 +196,37 @@ export const CLIENT_LOGOS: ClientLogoItem[] = [
 export const MetricsBar: React.FC = () => {
   const { isDark } = usePublicTheme();
   const prefersReducedMotion = useReducedMotion();
+  const { activeContent } = useCMS();
+
+  const defaultMap = new Map(CLIENT_LOGOS.map((l) => [l.id, l]));
+
+  const activeLogos = (activeContent?.clientLogos && activeContent.clientLogos.length > 0)
+    ? activeContent.clientLogos
+        .filter((l) => l.visible !== false)
+        .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
+        .map((l) => {
+          const matched = defaultMap.get(l.id);
+          return {
+            ...l,
+            renderLogo: l.logoUrl
+              ? () => (
+                  <div className="flex items-center gap-2.5">
+                    <img src={l.logoUrl} alt={l.name} className="h-7 w-auto object-contain max-w-[120px]" />
+                    <span className="font-bold text-xs uppercase tracking-wider">{l.name}</span>
+                  </div>
+                )
+              : matched?.renderLogo || (() => (
+                  <div className="flex flex-col text-left">
+                    <span className="font-black text-sm uppercase tracking-wider">{l.name}</span>
+                    <span className="text-[9px] uppercase opacity-60 tracking-widest">{l.category}</span>
+                  </div>
+                )),
+          };
+        })
+    : CLIENT_LOGOS;
 
   // Repeating array to create a seamless infinite marquee loop
-  const marqueeItems = [...CLIENT_LOGOS, ...CLIENT_LOGOS, ...CLIENT_LOGOS];
+  const marqueeItems = [...activeLogos, ...activeLogos, ...activeLogos];
 
   return (
     <motion.section 

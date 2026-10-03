@@ -558,7 +558,37 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
 
   const { activeContent } = useCMS();
 
-  const filteredSites = CLIENT_SITES.filter((site) => {
+  const liveSites: ClientSite[] = (activeContent?.portfolio && activeContent.portfolio.length > 0)
+    ? activeContent.portfolio
+        .filter((p) => p.published !== false)
+        .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
+        .map((p) => ({
+          id: p.id,
+          name: p.title || p.clientName || 'Project Showcase',
+          url: p.url || '#',
+          displayUrl: p.displayUrl || (p.url ? p.url.replace(/^https?:\/\//, '').replace(/\/$/, '') : 'live-store.dev'),
+          industry: p.categoryLabel || p.category?.toUpperCase() || 'E-COMMERCE',
+          category: p.category || 'ecommerce',
+          tagline: p.tagline || '',
+          headline: p.rebuildHighlight || p.tagline || '',
+          metrics: {
+            label: p.metricsLabel || 'Conversion Lift',
+            value: p.metricsValue || 'N/A',
+            sub: 'Audited merchant outcome',
+          },
+          speed: p.speedScore || 'sub-600ms TTFB',
+          vitals: '99/100 Vitals',
+          stack: p.stack && p.stack.length > 0 ? p.stack : ['React', 'TypeScript', 'Tailwind CSS'],
+          image: p.previewImage || `${import.meta.env.BASE_URL}screenshots/placeholder.png`,
+          accentHex: p.accentColor || '#B7E84B',
+          summary: p.rebuildHighlight || p.tagline || '',
+          highlights: p.deliverables && p.deliverables.length > 0 ? p.deliverables : ['Mobile-first checkout', 'Edge CDN caching', 'Zero builder bloat'],
+          beforeProblems: p.beforeProblems || [],
+          afterSolutions: p.afterSolutions || [],
+        }))
+    : CLIENT_SITES;
+
+  const filteredSites = liveSites.filter((site) => {
     if (!selectedFilter) return true;
     return matchesTag(site, selectedFilter);
   });

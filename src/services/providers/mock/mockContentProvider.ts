@@ -55,6 +55,12 @@ export class MockContentProvider implements IContentService, IPortfolioService, 
         cta: { ...INITIAL_WEBSITE_CONTENT.cta, ...(parsed.cta || {}) },
         footer: { ...INITIAL_WEBSITE_CONTENT.footer, ...(parsed.footer || {}) },
         customSections: cleanedCustomSections,
+        pageSections: parsed.pageSections || INITIAL_WEBSITE_CONTENT.pageSections,
+        teamMembers: Array.isArray(parsed.teamMembers) && parsed.teamMembers.length > 0 ? parsed.teamMembers : INITIAL_WEBSITE_CONTENT.teamMembers,
+        promiseSection: parsed.promiseSection ? { ...INITIAL_WEBSITE_CONTENT.promiseSection, ...parsed.promiseSection } : INITIAL_WEBSITE_CONTENT.promiseSection,
+        clientLogos: Array.isArray(parsed.clientLogos) && parsed.clientLogos.length > 0 ? parsed.clientLogos : INITIAL_WEBSITE_CONTENT.clientLogos,
+        packagesTerms: parsed.packagesTerms ? { ...INITIAL_WEBSITE_CONTENT.packagesTerms, ...parsed.packagesTerms } : INITIAL_WEBSITE_CONTENT.packagesTerms,
+        faqsPageConfig: parsed.faqsPageConfig ? { ...INITIAL_WEBSITE_CONTENT.faqsPageConfig, ...parsed.faqsPageConfig } : INITIAL_WEBSITE_CONTENT.faqsPageConfig,
       };
     } catch {
       return null;

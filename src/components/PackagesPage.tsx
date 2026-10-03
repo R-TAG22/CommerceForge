@@ -16,6 +16,17 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({ onSelectPackage, onH
   const prefersReducedMotion = useReducedMotion();
   const packagesData = activeContent?.packages;
 
+  const eyebrow = packagesData?.eyebrow || 'TRANSPARENT PRODUCTIZED RATES';
+  const heading = packagesData?.heading || 'PRICING THAT RESPECTS YOUR BUSINESS.';
+  const subheading = packagesData?.subheading || 'No surprise invoices, hidden retainer fees, or bloated agency markups. Every project is scoped, guaranteed, and delivered on a milestone payment model.';
+
+  const terms = activeContent?.packagesTerms;
+  const milestoneTitle = terms?.milestoneTitle || 'Transparent 50/50 Milestone Terms';
+  const milestoneText = terms?.milestoneText || '50% deposit upfront to begin architecture & design, and the remaining 50% only before final launch & domain deployment.';
+  const hostingTitle = terms?.hostingTitle || 'Fast managed edge hosting:';
+  const hostingPrice = terms?.hostingPrice || '$14/mo or $140/yr';
+  const hostingDetails = terms?.hostingDetails || 'Includes global CDN, SSL, & automated backups';
+
   const defaultPackages = [
     {
       id: 'basic',
@@ -95,7 +106,10 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({ onSelectPackage, onH
   ];
 
   const packagesList = packagesData?.packages && packagesData.packages.length > 0
-    ? packagesData.packages.map((pkg: any) => {
+    ? packagesData.packages
+        .filter((pkg: any) => pkg.published !== false)
+        .sort((a: any, b: any) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
+        .map((pkg: any) => {
         const rawPrice = String(pkg.price || '');
         const formattedPrice = rawPrice.startsWith('$') || rawPrice.startsWith('₱')
           ? rawPrice
@@ -128,16 +142,16 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({ onSelectPackage, onH
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EAF3E8] border border-[#B7E84B]/40 mb-4 shadow-xs">
             <span className="w-2 h-2 rounded-full bg-[#B7E84B] animate-pulse" />
             <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.16em] text-[#1E3A2B]">
-              TRANSPARENT PRODUCTIZED RATES
+              {eyebrow}
             </span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-[#1E3A2B]">
-            PRICING THAT RESPECTS YOUR BUSINESS.
+            {heading}
           </h1>
 
           <p className="mt-4 text-[#4A584E] text-base sm:text-lg leading-relaxed">
-            No surprise invoices, hidden retainer fees, or bloated agency markups. Every project is scoped, guaranteed, and delivered on a milestone payment model.
+            {subheading}
           </p>
 
           {/* Guarantee Badges */}
@@ -258,18 +272,18 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({ onSelectPackage, onH
             </div>
             <div>
               <strong className="block text-[#1E3A2B] font-bold text-sm sm:text-base">
-                Transparent 50/50 Milestone Terms
+                {milestoneTitle}
               </strong>
               <span className="text-xs sm:text-[13px] text-[#4A584E] mt-0.5 block">
-                50% deposit upfront to begin architecture & design, and the remaining 50% only before final launch & domain deployment.
+                {milestoneText}
               </span>
             </div>
           </div>
 
           <div className="text-left md:text-right shrink-0 bg-[#F1F6F0] px-4 py-3 rounded-2xl border border-[#1E3A2B]/8">
-            <span className="font-semibold block text-[#4A584E]">Fast managed edge hosting:</span>
-            <strong className="text-[#1E3A2B] font-bold text-sm">$14/mo or $140/yr</strong>
-            <span className="text-[10px] text-[#6A786E] block mt-0.5">Includes global CDN, SSL, & automated backups</span>
+            <span className="font-semibold block text-[#4A584E]">{hostingTitle}</span>
+            <strong className="text-[#1E3A2B] font-bold text-sm">{hostingPrice}</strong>
+            <span className="text-[10px] text-[#6A786E] block mt-0.5">{hostingDetails}</span>
           </div>
         </div>
       </motion.section>

@@ -5,6 +5,7 @@ import { CommerceForgePromise } from './CommerceForgePromise';
 import { usePublicTheme } from '../context/PublicThemeContext';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { assetUrl } from '../utils/imageFallbacks';
+import { useCMS } from '../context/CMSContext';
 
 interface AboutPageProps {
   onHireClick?: () => void;
@@ -63,6 +64,15 @@ export const TEAM_MEMBERS: TeamMember[] = [
 export const AboutPage: React.FC<AboutPageProps> = ({ onHireClick, onRequestRevenueClick }) => {
   const { isDark } = usePublicTheme();
   const prefersReducedMotion = useReducedMotion();
+  const { activeContent } = useCMS();
+
+  const teamMembers = (activeContent?.teamMembers && activeContent.teamMembers.length > 0)
+    ? activeContent.teamMembers.filter((m) => m.visible !== false).sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
+    : TEAM_MEMBERS;
+
+  const teamEyebrow = activeContent?.brand?.teamEyebrow || 'CORE DEV TEAM LEADERSHIP';
+  const teamHeading = activeContent?.brand?.teamHeading || 'MEET THE TEAM';
+  const teamDescription = activeContent?.brand?.teamDescription || 'The dedicated developers, operations specialists, and digital artisans behind every high-performance CommerceForge storefront.';
 
   return (
     <div className={`w-full transition-colors duration-300 ${isDark ? 'text-white' : 'text-[#1E3A2B]'}`}>
@@ -95,26 +105,26 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onHireClick, onRequestReve
             <span className={`text-[11px] sm:text-xs font-bold uppercase tracking-[0.16em] ${
               isDark ? 'text-[#B7E84B]' : 'text-[#1E3A2B]'
             }`}>
-              CORE DEV TEAM LEADERSHIP
+              {teamEyebrow}
             </span>
           </div>
 
           <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-black uppercase tracking-tight ${
             isDark ? 'text-white' : 'text-[#1E3A2B]'
           }`}>
-            MEET THE TEAM
+            {teamHeading}
           </h2>
 
           <p className={`mt-4 text-base sm:text-lg leading-relaxed font-medium ${
             isDark ? 'text-gray-300' : 'text-[#4A584E]'
           }`}>
-            The dedicated developers, operations specialists, and digital artisans behind every high-performance CommerceForge storefront.
+            {teamDescription}
           </p>
         </div>
 
         {/* 4 Responsive Columns for Team Members */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 items-stretch">
-          {TEAM_MEMBERS.map((member) => (
+          {teamMembers.map((member) => (
             <div
               key={member.id}
               className={`rounded-2xl border p-4 sm:p-5 transition-all duration-300 flex flex-col justify-between group ${

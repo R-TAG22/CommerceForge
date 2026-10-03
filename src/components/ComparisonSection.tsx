@@ -53,28 +53,15 @@ export const ComparisonSection: React.FC<ComparisonSectionProps> = ({ onCtaClick
     },
   ];
 
-  // If CMS items are the legacy ones (e.g. aspect === 'Mobile Usability'), fallback to the engineered metrics
-  const hasLegacyAspect = comparisonData?.items?.some(it => it.aspect === 'Mobile Usability');
-  const items = (!hasLegacyAspect && comparisonData?.items && comparisonData.items.length > 0)
+  const items = (comparisonData?.items && comparisonData.items.length > 0)
     ? comparisonData.items
     : defaultItems;
 
-  const headline = (comparisonData?.headingPrefix && comparisonData.headingPrefix.includes('PERFORMANCE AS PRESTIGE'))
-    ? comparisonData.headingPrefix
-    : 'PERFORMANCE AS PRESTIGE: THE ENGINEERED ADVANTAGE';
-
-  const subheading = comparisonData?.subheading?.includes('streamlined breakdown')
-    ? comparisonData.subheading
-    : 'A streamlined breakdown of traditional builds vs. our engineering-first infrastructure.';
-
-  const oldColumnTitle = comparisonData?.oldColumnHeading?.includes('TRADITIONAL BUILD')
-    ? comparisonData.oldColumnHeading
-    : 'TRADITIONAL BUILD (DESIGN-FIRST)';
-
-  const newColumnTitle = comparisonData?.newColumnHeading?.includes('ENGINEERED BUILD')
-    ? comparisonData.newColumnHeading
-    : 'ENGINEERED BUILD (INFRASTRUCTURE-FIRST)';
-
+  const eyebrow = comparisonData?.eyebrow || 'ENGINEERED ADVANTAGE';
+  const headline = comparisonData?.headingPrefix || 'PERFORMANCE AS PRESTIGE: THE ENGINEERED ADVANTAGE';
+  const subheading = comparisonData?.subheading || 'A streamlined breakdown of traditional builds vs. our engineering-first infrastructure.';
+  const oldColumnTitle = comparisonData?.oldColumnHeading || 'TRADITIONAL BUILD (DESIGN-FIRST)';
+  const newColumnTitle = comparisonData?.newColumnHeading || 'ENGINEERED BUILD (INFRASTRUCTURE-FIRST)';
   const ctaButtonText = comparisonData?.ctaText || 'REQUEST A TECH AUDIT';
 
   const renderValueWithStatus = (text: string, isEngineered: boolean) => {

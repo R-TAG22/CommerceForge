@@ -16,6 +16,18 @@ export const FaqsPage: React.FC<FaqsPageProps> = ({ onCtaClick }) => {
   const prefersReducedMotion = useReducedMotion();
   const faqData = activeContent?.faq;
 
+  const config = activeContent?.faqsPageConfig;
+  const eyebrow = config?.heroBadge || faqData?.eyebrow || 'TRANSPARENCY FIRST';
+  const heading = config?.heroHeading || `${faqData?.headingPrefix || 'FREQUENTLY ASKED'} ${faqData?.headingHighlight || 'QUESTIONS.'}`;
+  const subheading = config?.heroSubheading || faqData?.subheading || 'Got questions before we collaborate? Here is everything you need to know about our productized rates, delivery timelines, codebase ownership, and guarantees.';
+  const searchPlaceholder = config?.searchPlaceholder || 'Search answers (e.g. pricing, revisions, ownership)...';
+  const notFoundTitle = config?.notFoundTitle || 'No matching questions found';
+  const notFoundText = config?.notFoundText || 'Have a specific question? Feel free to ask us directly.';
+  const notFoundButtonText = config?.notFoundButtonText || 'Ask Us Directly';
+  const stillQuestionsTitle = faqData?.stillQuestionsTitle || 'Still have questions about your store?';
+  const stillQuestionsText = faqData?.stillQuestionsText || 'We are glad to answer questions regarding custom stacks, migrations, or project timelines before you commit to anything.';
+  const ctaButtonText = faqData?.ctaText || 'SEND US A MESSAGE';
+
   const defaultFaqs = [
     {
       q: 'How much does a website cost?',
@@ -97,16 +109,16 @@ export const FaqsPage: React.FC<FaqsPageProps> = ({ onCtaClick }) => {
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EAF3E8] border border-[#B7E84B]/40 mb-4 shadow-xs">
             <span className="w-2 h-2 rounded-full bg-[#B7E84B] animate-pulse" />
             <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.16em] text-[#1E3A2B]">
-              TRANSPARENCY FIRST
+              {eyebrow}
             </span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-[#1E3A2B]">
-            FREQUENTLY ASKED QUESTIONS.
+            {heading}
           </h1>
 
           <p className="mt-4 text-[#4A584E] text-base sm:text-lg leading-relaxed">
-            Got questions before we collaborate? Here is everything you need to know about our productized rates, delivery timelines, codebase ownership, and guarantees.
+            {subheading}
           </p>
 
           {/* Search Bar */}
@@ -116,7 +128,7 @@ export const FaqsPage: React.FC<FaqsPageProps> = ({ onCtaClick }) => {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search answers (e.g. pricing, revisions, ownership)..."
+              placeholder={searchPlaceholder}
               className="w-full pl-12 pr-4 py-3.5 rounded-full bg-white border border-[#1E3A2B]/15 text-sm text-[#1E3A2B] placeholder:text-[#4A584E]/50 focus:outline-hidden focus:ring-2 focus:ring-[#B7E84B] shadow-xs"
               aria-label="Search FAQs"
             />
@@ -135,15 +147,15 @@ export const FaqsPage: React.FC<FaqsPageProps> = ({ onCtaClick }) => {
         {filteredFaqs.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-3xl border border-[#1E3A2B]/10 p-8">
             <HelpCircle className="w-10 h-10 mx-auto text-[#B7E84B] mb-2" />
-            <h3 className="text-base font-bold text-[#1E3A2B]">No matching questions found</h3>
+            <h3 className="text-base font-bold text-[#1E3A2B]">{notFoundTitle}</h3>
             <p className="text-xs text-[#4A584E] mt-1">
-              Have a specific question? Feel free to ask us directly.
+              {notFoundText}
             </p>
             <button
               onClick={onCtaClick}
               className="mt-4 px-5 py-2.5 rounded-full bg-[#1E3A2B] text-white text-xs font-bold uppercase tracking-wider"
             >
-              Ask Us Directly
+              {notFoundButtonText}
             </button>
           </div>
         ) : (
@@ -217,17 +229,17 @@ export const FaqsPage: React.FC<FaqsPageProps> = ({ onCtaClick }) => {
             <MessageSquare className="w-6 h-6" />
           </div>
           <h2 className="text-2xl font-black uppercase tracking-tight text-[#1E3A2B]">
-            Still have questions about your store?
+            {stillQuestionsTitle}
           </h2>
           <p className="mt-2 text-[#4A584E] text-sm leading-relaxed">
-            We are glad to answer questions regarding custom stacks, migrations, or project timelines before you commit to anything.
+            {stillQuestionsText}
           </p>
           <div className="mt-6">
             <button
               onClick={onCtaClick}
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#1E3A2B] text-white font-bold text-xs uppercase tracking-wider hover:bg-[#0F241A] shadow-md transition-all hover:scale-105 cursor-pointer"
             >
-              <span>SEND US A MESSAGE</span>
+              <span>{ctaButtonText}</span>
               <ArrowRight className="w-4 h-4 text-[#B7E84B]" />
             </button>
           </div>

@@ -353,4 +353,23 @@
   color: var(--brand-accent-accessible);
 }
 
+/* ========================================================================= */
+/* 4. High-Contrast Admin CMS Styles (Ensures 100% Text Legibility)         */
+/* ========================================================================= */
+.admin-cms {
+  color: #0F172A !important;
+}
+
+.admin-cms input:not([type="checkbox"]):not([type="radio"]),
+.admin-cms textarea,
+.admin-cms select {
+  color: #0F172A !important;
+  background-color: #FFFFFF !important;
+}
+
+.admin-cms input::placeholder,
+.admin-cms textarea::placeholder {
+  color: #94A3B8 !important;
+}
+
 
