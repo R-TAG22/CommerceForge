@@ -70,7 +70,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenInquiry }) => 
         { id: 'l-9', label: 'Client Work & Case Studies', url: '/work' },
         { id: 'l-10', label: 'Why Rebuild? (Comparison)', url: '/#comparison' },
         { id: 'l-11', label: 'Our 4-Step Process', url: '/#process' },
-        { id: 'l-blog', label: 'Articles & Insights (Blog)', url: '/#blog' },
+        { id: 'l-blog', label: 'Articles & Insights (Blog)', url: '/blog' },
         { id: 'l-12', label: 'About the Dev Team', url: '/about' },
       ],
     },

@@ -19,7 +19,7 @@ export const INITIAL_WEBSITE_CONTENT: WebsiteContent = {
       { id: 'nav-2', label: 'ABOUT', url: '/about', sectionId: 'about', sortOrder: 1, visible: true },
       { id: 'nav-3', label: 'WORK', url: '/work', sectionId: 'work', sortOrder: 2, visible: true },
       { id: 'nav-4', label: 'PACKAGES', url: '/packages', sectionId: 'packages', sortOrder: 3, visible: true },
-      { id: 'nav-5', label: 'BLOG', url: '/#blog', sectionId: 'blog', sortOrder: 4, visible: true },
+      { id: 'nav-5', label: 'BLOG', url: '/blog', sectionId: 'blog', sortOrder: 4, visible: true },
       { id: 'nav-6', label: 'FAQ', url: '/faqs', sectionId: 'faq', sortOrder: 5, visible: true },
     ],
   },

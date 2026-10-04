@@ -39,7 +39,7 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'nav-2', label: 'ABOUT', url: '/about', sectionId: 'about', sortOrder: 1, visible: true },
     { id: 'nav-3', label: 'WORK', url: '/work', sectionId: 'work', sortOrder: 2, visible: true },
     { id: 'nav-4', label: 'PACKAGES', url: '/packages', sectionId: 'packages', sortOrder: 3, visible: true },
-    { id: 'nav-5', label: 'BLOG', url: '/#blog', sectionId: 'blog', sortOrder: 4, visible: true },
+    { id: 'nav-5', label: 'BLOG', url: '/blog', sectionId: 'blog', sortOrder: 4, visible: true },
     { id: 'nav-6', label: 'FAQ', url: '/faqs', sectionId: 'faq', sortOrder: 5, visible: true },
   ];
 
@@ -47,10 +47,10 @@ export const Header: React.FC<HeaderProps> = ({
     ? [...headerData.navItems]
     : defaultNavItems;
 
-  // Ensure BLOG is included in the navigation menu
+  // Ensure BLOG is included in the navigation menu pointing to /blog
   if (!rawNavItems.some((i) => i.label.toUpperCase() === 'BLOG')) {
     const faqIdx = rawNavItems.findIndex((i) => i.label.toUpperCase() === 'FAQ' || i.label.toUpperCase() === 'FAQS');
-    const blogItem = { id: 'nav-blog', label: 'BLOG', url: '/#blog', sectionId: 'blog', sortOrder: 4, visible: true };
+    const blogItem = { id: 'nav-blog', label: 'BLOG', url: '/blog', sectionId: 'blog', sortOrder: 4, visible: true };
     if (faqIdx !== -1) {
       rawNavItems.splice(faqIdx, 0, blogItem);
     } else {
@@ -76,24 +76,9 @@ export const Header: React.FC<HeaderProps> = ({
     const labelUpper = (navObj.label || '').toUpperCase();
     const targetUrl = navObj.url || '/';
 
-    // Requirement: when someone clicks "BLOG", redirect to the homepage and scroll to the blog section
-    if (labelUpper === 'BLOG' || targetUrl === '/blog' || targetUrl === '/#blog') {
-      if (currentPath !== '/') {
-        navigate('/');
-        setTimeout(() => {
-          const el = document.getElementById('blog');
-          if (el) {
-            el.scrollIntoView({ behavior: 'smooth' });
-          }
-        }, 120);
-      } else {
-        const el = document.getElementById('blog');
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth' });
-        } else if (onNavigate) {
-          onNavigate('blog');
-        }
-      }
+    // Navigate to dedicated separate Blog page
+    if (labelUpper === 'BLOG' || targetUrl === '/blog' || targetUrl === '/blogs') {
+      navigate('/blog');
       return;
     }
 
@@ -117,7 +102,7 @@ export const Header: React.FC<HeaderProps> = ({
     if (url === '/' && currentPath === '/') return true;
     if (url && url !== '/' && (currentPath === url || currentPath.startsWith(url))) return true;
     if ((currentPath === '/faqs' || currentPath === '/faq') && (url === '/faqs' || url === '/faq' || item.label.toUpperCase() === 'FAQ')) return true;
-    if (item.label.toUpperCase() === 'BLOG' && (currentPath === '/blog' || (typeof window !== 'undefined' && window.location.hash.includes('blog')))) return true;
+    if (item.label.toUpperCase() === 'BLOG' && (currentPath === '/blog' || currentPath === '/blogs')) return true;
 
     if (activeNav && activeNav === item.label) return true;
     return false;

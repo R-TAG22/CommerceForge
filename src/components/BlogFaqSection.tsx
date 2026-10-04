@@ -248,11 +248,18 @@ export const BlogFaqSection: React.FC<BlogFaqSectionProps> = ({ onCtaClick }) =>
                   Featured Article
                 </span>
               </div>
-              <span className={`text-[11px] font-bold tracking-wider uppercase ${
-                isDark ? 'text-white/50' : 'text-[#064E3B]/60'
-              }`}>
-                {activePost.date}
-              </span>
+              <button
+                onClick={() => {
+                  navigate('/blog');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className={`inline-flex items-center gap-1 text-[11px] font-bold tracking-wider uppercase transition-colors hover:underline cursor-pointer ${
+                  isDark ? 'text-[#B7E84B]' : 'text-[#064E3B]'
+                }`}
+              >
+                <span>View All Articles</span>
+                <ArrowRight className="w-3 h-3" />
+              </button>
             </div>
 
             {/* Main Featured Blog Card */}

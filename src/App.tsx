@@ -25,6 +25,7 @@ import { WorkPage } from './components/WorkPage';
 import { PackagesPage } from './components/PackagesPage';
 import { FaqsPage } from './components/FaqsPage';
 import { HireUsPage } from './components/HireUsPage';
+import { BlogPage } from './components/BlogPage';
 import { DynamicSectionRenderer } from './components/DynamicSectionRenderer';
 
 function PublicWebsite() {
@@ -117,17 +118,6 @@ function PublicWebsite() {
     }
   };
 
-  // Handle direct /blog route: redirect to homepage and smoothly scroll to blog section
-  useEffect(() => {
-    if (currentPath === '/blog') {
-      navigate('/');
-      setTimeout(() => {
-        const el = document.getElementById('blog');
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }, 150);
-    }
-  }, [currentPath, navigate]);
-
   // Handle hash scrolling on page navigation or reload
   useEffect(() => {
     if (typeof window !== 'undefined' && window.location.hash) {
@@ -149,7 +139,8 @@ function PublicWebsite() {
       '/about': 'About Our Dev Team & Craft — CommerceForge',
       '/work': 'Selected Work & Rebuild Case Studies — CommerceForge',
       '/packages': 'Productized Packages & Rates — CommerceForge',
-      '/blog': 'CommerceForge — Insights, Articles & FAQs',
+      '/blog': 'Blog & Engineering Insights — CommerceForge',
+      '/blogs': 'Blog & Engineering Insights — CommerceForge',
       '/faqs': 'Frequently Asked Questions — CommerceForge',
       '/faq': 'Frequently Asked Questions — CommerceForge',
       '/hire-us': 'Hire Us & Start a Project — CommerceForge',
@@ -214,8 +205,14 @@ function PublicWebsite() {
         );
 
       case '/blog':
-        // When someone navigates to /blog directly, redirect to homepage and show blog section
-        return null;
+      case '/blogs':
+        return (
+          <>
+            <BlogPage onHireClick={() => setIsInquiryOpen(true)} />
+            <DynamicSectionRenderer page="blog" onHireClick={() => setIsInquiryOpen(true)} />
+            <CtaBanner onCtaClick={() => setIsInquiryOpen(true)} />
+          </>
+        );
 
       case '/':
       default: {
