@@ -1,7 +1,6 @@
 import React from 'react';
-import { ArrowUp } from 'lucide-react';
+import { ArrowUp, Lock } from 'lucide-react';
 import { useRouter } from '../admin/router';
-import { usePublicTheme } from '../context/PublicThemeContext';
 import { useCMS } from '../context/CMSContext';
 
 interface FooterProps {
@@ -11,7 +10,6 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenInquiry }) => {
   const { navigate } = useRouter();
-  const { isDark } = usePublicTheme();
   const { activeContent } = useCMS();
   const footerData = activeContent?.footer;
 
@@ -86,17 +84,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenInquiry }) => 
     },
   ];
 
-  const rawColumns = footerData?.columns && footerData.columns.length > 0 ? footerData.columns : defaultColumns;
-
-  // Filter out any "Admin" button or link so the public footer never contains admin links
-  const columns = rawColumns.map((col) => ({
-    ...col,
-    links: (col.links || []).filter((link) => {
-      const label = (link.label || '').toLowerCase();
-      const url = (link.url || '').toLowerCase();
-      return !label.includes('admin') && !url.includes('admin');
-    }),
-  }));
+  const columns = footerData?.columns && footerData.columns.length > 0 ? footerData.columns : defaultColumns;
 
   return (
     <footer
@@ -203,6 +191,16 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenInquiry }) => 
           </p>
 
           <div className="flex items-center gap-5 shrink-0">
+            <button
+              type="button"
+              onClick={() => navigate('/admin')}
+              className="inline-flex items-center gap-1 hover:text-[#B7E84B] transition-colors cursor-pointer"
+              title="Open CMS Admin Dashboard"
+            >
+              <Lock className="w-3 h-3" />
+              <span>Admin</span>
+            </button>
+
             <button
               type="button"
               onClick={scrollToTop}

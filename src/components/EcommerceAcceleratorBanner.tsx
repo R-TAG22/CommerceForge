@@ -2,7 +2,6 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Check } from 'lucide-react';
 import { useReducedMotion } from '../hooks/useReducedMotion';
-import { usePublicTheme } from '../context/PublicThemeContext';
 
 interface EcommerceAcceleratorBannerProps {
   onRequestProjection?: () => void;
@@ -14,7 +13,6 @@ export const EcommerceAcceleratorBanner: React.FC<EcommerceAcceleratorBannerProp
   onTalkToStrategist,
 }) => {
   const prefersReducedMotion = useReducedMotion();
-  const { isDark } = usePublicTheme();
 
   const features = [
     { label: 'Fast Loading (< 0.5s)' },
@@ -31,11 +29,7 @@ export const EcommerceAcceleratorBanner: React.FC<EcommerceAcceleratorBannerProp
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
       transition={{ duration: prefersReducedMotion ? 0 : 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
-      className={`w-full py-16 sm:py-24 my-8 sm:my-12 rounded-3xl sm:rounded-4xl overflow-hidden shadow-xl border transition-colors duration-300 ${
-        isDark
-          ? 'bg-[#111620] text-white border-white/10'
-          : 'bg-[#12241A] text-white border-[#1E3A2B]/40'
-      }`}
+      className="w-full py-16 sm:py-24 my-8 sm:my-12 rounded-3xl sm:rounded-4xl overflow-hidden shadow-xl border transition-colors duration-300 bg-[#12241A] text-white border-[#1E3A2B]/40"
       aria-label="Ecommerce Accelerator"
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">

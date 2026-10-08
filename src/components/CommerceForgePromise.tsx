@@ -81,12 +81,12 @@ export const CommerceForgePromise: React.FC<CommerceForgePromiseProps> = ({ onSe
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
       transition={{ duration: prefersReducedMotion ? 0 : 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
-      className="w-full bg-white dark:bg-[#0B0F17] py-14 sm:py-20 lg:py-24 transition-colors duration-300"
+      className="w-full bg-[#F8FAF8] py-14 sm:py-20 lg:py-24 transition-colors duration-300"
       aria-label="The CommerceForge Promise"
     >
       <div className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12">
         {/* Green-white translucent rounded-corner frame */}
-        <div className="relative rounded-3xl sm:rounded-4xl p-8 sm:p-12 lg:p-16 border border-[#2D5A3E]/15 dark:border-white/10 bg-[#EAF3E8]/85 dark:bg-[#12241A]/90 backdrop-blur-md shadow-xl shadow-[#1E3A2B]/5 overflow-hidden text-center flex flex-col items-center">
+        <div className="relative rounded-3xl sm:rounded-4xl p-8 sm:p-12 lg:p-16 border border-[#2D5A3E]/15 bg-[#EAF3E8]/85 backdrop-blur-md shadow-xl shadow-[#1E3A2B]/5 overflow-hidden text-center flex flex-col items-center">
           
           {/* Subtle Decorative Ambient Glows */}
           <div 
@@ -105,12 +105,12 @@ export const CommerceForgePromise: React.FC<CommerceForgePromiseProps> = ({ onSe
             </div>
 
             {/* Main Heading */}
-            <h2 className="text-[#12241A] dark:text-white font-black text-3xl sm:text-4xl lg:text-5xl tracking-tight leading-[1.12] max-w-4xl mx-auto mb-4 uppercase select-none">
+            <h2 className="text-[#12241A] font-black text-3xl sm:text-4xl lg:text-5xl tracking-tight leading-[1.12] max-w-4xl mx-auto mb-4 uppercase select-none">
               {heading}
             </h2>
 
             {/* Subheadline Copy */}
-            <p className="text-[#2D5A3E]/90 dark:text-[#9EB3A6] text-base sm:text-lg max-w-3xl mx-auto leading-relaxed mb-12 sm:mb-14 font-medium">
+            <p className="text-[#2D5A3E]/90 text-base sm:text-lg max-w-3xl mx-auto leading-relaxed mb-12 sm:mb-14 font-medium">
               {description}
             </p>
 
@@ -119,7 +119,7 @@ export const CommerceForgePromise: React.FC<CommerceForgePromiseProps> = ({ onSe
               {cards.map((card) => (
                 <div
                   key={card.id || card.title}
-                  className="bg-white/95 dark:bg-[#0B1510]/85 backdrop-blur-xs border border-[#2D5A3E]/15 dark:border-white/10 rounded-2xl p-7 flex flex-col justify-between shadow-xs hover:shadow-md hover:border-[#2D5A3E]/35 transition-all duration-300 hover:-translate-y-1 group"
+                  className="bg-white/95 backdrop-blur-xs border border-[#2D5A3E]/15 rounded-2xl p-7 flex flex-col justify-between shadow-xs hover:shadow-md hover:border-[#2D5A3E]/35 transition-all duration-300 hover:-translate-y-1 group"
                 >
                   <div>
                     {/* Icon Badge */}
@@ -128,12 +128,12 @@ export const CommerceForgePromise: React.FC<CommerceForgePromiseProps> = ({ onSe
                     </div>
 
                     {/* Card Title */}
-                    <h3 className="text-[#12241A] dark:text-white font-black text-lg uppercase tracking-wide mb-2.5 leading-snug">
+                    <h3 className="text-[#12241A] font-black text-lg uppercase tracking-wide mb-2.5 leading-snug">
                       {card.title}
                     </h3>
 
                     {/* Card Description */}
-                    <p className="text-[#4A5D50] dark:text-[#8FA899] text-sm leading-relaxed font-normal">
+                    <p className="text-[#4A5D50] text-sm leading-relaxed font-normal">
                       {card.description}
                     </p>
                   </div>

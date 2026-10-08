@@ -65,7 +65,7 @@ const SECTION_TEMPLATES: PresetTemplateConfig[] = [
     description: 'Split 50/50 image and storytelling narrative with alt-text accessibility and CTA button.',
     icon: ImageIcon,
     badge: 'STORY & SHOWCASE',
-    defaultBg: 'dark-studio',
+    defaultBg: 'crisp-light',
   },
   {
     type: 'logo-cloud',
@@ -74,7 +74,7 @@ const SECTION_TEMPLATES: PresetTemplateConfig[] = [
     description: 'Grid of recognized client partner logos or brand names to build instant credibility.',
     icon: Users,
     badge: 'SOCIAL PROOF',
-    defaultBg: 'charcoal-glass',
+    defaultBg: 'crisp-light',
   },
   {
     type: 'feature-cards',
@@ -83,7 +83,7 @@ const SECTION_TEMPLATES: PresetTemplateConfig[] = [
     description: 'Multi-column cards with icons, benefit titles, and clear value proposition copy.',
     icon: Grid,
     badge: 'CAPABILITIES',
-    defaultBg: 'dark-studio',
+    defaultBg: 'crisp-light',
   },
   {
     type: 'testimonials',
@@ -92,7 +92,7 @@ const SECTION_TEMPLATES: PresetTemplateConfig[] = [
     description: 'Verified quotes with 5-star ratings, author credentials, and company logos.',
     icon: Quote,
     badge: 'VERIFIED REVIEWS',
-    defaultBg: 'forest-muted',
+    defaultBg: 'crisp-light',
   },
   {
     type: 'cta-banner',
@@ -101,7 +101,7 @@ const SECTION_TEMPLATES: PresetTemplateConfig[] = [
     description: 'Compelling headline, subtitle, 2 action buttons, and customizable background styles.',
     icon: Megaphone,
     badge: 'CONVERSION',
-    defaultBg: 'dark-studio',
+    defaultBg: 'crisp-light',
   },
   {
     type: 'raw-embed',
@@ -110,15 +110,15 @@ const SECTION_TEMPLATES: PresetTemplateConfig[] = [
     description: 'Embed external forms, calendars, calculators, custom HTML, or third-party widgets.',
     icon: Code,
     badge: 'DEVELOPER EMBED',
-    defaultBg: 'charcoal-glass',
+    defaultBg: 'crisp-light',
   },
 ];
 
 const BACKGROUND_STYLES: { id: SectionBackgroundStyle; label: string; desc: string }[] = [
-  { id: 'dark-studio', label: 'Dark Dev', desc: 'Midnight Charcoal (#0B0F17) with glowing borders' },
   { id: 'crisp-light', label: 'Crisp Light', desc: 'Warm Tinted White (#FAFAF9) with deep forest text' },
-  { id: 'forest-muted', label: 'Forest Green Muted', desc: 'Deep Organic Pine (#12241A) with dev team lime' },
-  { id: 'charcoal-glass', label: 'Charcoal Glass', desc: 'Frosted Glassmorphism (bg-white/5, blur-md)' },
+  { id: 'forest-muted', label: 'Sage Mint Light', desc: 'Subtle light sage tint (#E8F0E6) with forest green text' },
+  { id: 'dark-studio', label: 'Soft Canvas Light', desc: 'Pale off-white studio tint (#F4F7F4) with subtle border' },
+  { id: 'charcoal-glass', label: 'Frosted Glass Light', desc: 'Clean translucent glass with soft shadow' },
 ];
 
 export const SectionsEditor: React.FC = () => {
@@ -389,7 +389,7 @@ export const SectionsEditor: React.FC = () => {
         </div>
 
         {/* Page Filter Tabs */}
-        <div className="mt-6 flex flex-wrap items-center gap-1.5 border-b border-black/10 dark:border-white/10 pb-3">
+        <div className="mt-6 flex flex-wrap items-center gap-1.5 border-b border-black/10 pb-3">
           {(['all', 'home', 'about', 'work', 'packages', 'faqs', 'hire-us'] as PageOption[]).map((tab) => {
             const count = sections.filter((s) => (tab === 'all' ? true : s.page === tab)).length;
             const isActive = activeTab === tab;

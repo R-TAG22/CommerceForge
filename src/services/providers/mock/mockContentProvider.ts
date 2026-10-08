@@ -55,7 +55,21 @@ export class MockContentProvider implements IContentService, IPortfolioService, 
         cta: { ...INITIAL_WEBSITE_CONTENT.cta, ...(parsed.cta || {}) },
         footer: { ...INITIAL_WEBSITE_CONTENT.footer, ...(parsed.footer || {}) },
         customSections: cleanedCustomSections,
-        pageSections: parsed.pageSections || INITIAL_WEBSITE_CONTENT.pageSections,
+        pageSections: (() => {
+          const rawSections = parsed.pageSections || INITIAL_WEBSITE_CONTENT.pageSections;
+          if (!rawSections?.home) return rawSections;
+          let seenKnowledge = false;
+          const cleanedHome = rawSections.home.filter((sec: any) => {
+            const isKnowledge = sec.id === 'blog-faq' || sec.type === 'blog-faq' || sec.id === 'faq' || sec.type === 'faq' || sec.id === 'blog' || sec.type === 'blog';
+            if (isKnowledge) {
+              if (seenKnowledge) return false;
+              seenKnowledge = true;
+              return true;
+            }
+            return true;
+          });
+          return { ...rawSections, home: cleanedHome };
+        })(),
         teamMembers: Array.isArray(parsed.teamMembers) && parsed.teamMembers.length > 0 ? parsed.teamMembers : INITIAL_WEBSITE_CONTENT.teamMembers,
         promiseSection: parsed.promiseSection ? { ...INITIAL_WEBSITE_CONTENT.promiseSection, ...parsed.promiseSection } : INITIAL_WEBSITE_CONTENT.promiseSection,
         clientLogos: Array.isArray(parsed.clientLogos) && parsed.clientLogos.length > 0 ? parsed.clientLogos : INITIAL_WEBSITE_CONTENT.clientLogos,

@@ -11,26 +11,36 @@ interface PublicThemeContextType {
 
 const THEME_STORAGE_KEY = 'commerceforge_public_theme';
 
-const PublicThemeContext = createContext<PublicThemeContextType | undefined>(undefined);
+const PublicThemeContext = createContext<PublicThemeContextType>({
+  theme: 'light',
+  isDark: false,
+  toggleTheme: () => {},
+  setTheme: () => {},
+});
 
 export const PublicThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      localStorage.removeItem(THEME_STORAGE_KEY);
-      localStorage.removeItem('commerceforge_theme_config');
+      // Permanently enforce light theme across the entire site
+      localStorage.setItem(THEME_STORAGE_KEY, 'light');
       const root = document.documentElement;
       root.classList.remove('dark');
       root.removeAttribute('data-theme');
-      document.body.style.backgroundColor = 'var(--bg-canvas, #FAFAF9)';
-      document.body.style.color = 'var(--text-primary, #0F241A)';
+      document.body.classList.remove('dark');
+      document.body.style.backgroundColor = '#F8FAF8';
+      document.body.style.color = '#1E3A2B';
     }
   }, []);
 
-  const setTheme = () => {};
-  const toggleTheme = () => {};
-
   return (
-    <PublicThemeContext.Provider value={{ theme: 'light', isDark: false, toggleTheme, setTheme }}>
+    <PublicThemeContext.Provider
+      value={{
+        theme: 'light',
+        isDark: false,
+        toggleTheme: () => {},
+        setTheme: () => {},
+      }}
+    >
       {children}
     </PublicThemeContext.Provider>
   );
@@ -43,3 +53,4 @@ export const usePublicTheme = () => {
   }
   return context;
 };
+

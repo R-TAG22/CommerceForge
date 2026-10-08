@@ -861,7 +861,7 @@ export const INITIAL_WEBSITE_CONTENT: WebsiteContent = {
       { id: 'logos', name: 'Client Brand Logos Marquee', type: 'logos', visible: true, sortOrder: 1 },
       { id: 'comparison', name: 'Performance Comparison Table', type: 'comparison', visible: true, sortOrder: 2 },
       { id: 'process', name: '4-Step Rebuild Process', type: 'process', visible: true, sortOrder: 3 },
-      { id: 'blog-faq', name: 'Blog Insights & FAQs', type: 'blog-faq', visible: true, sortOrder: 4 },
+      { id: 'blog-faq', name: 'Knowledge & Insights (Blog & FAQs)', type: 'blog-faq', visible: true, sortOrder: 4 },
       { id: 'cta', name: 'Bottom Call To Action Banner', type: 'cta', visible: true, sortOrder: 5 },
     ],
     about: [

@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { usePublicTheme } from '../context/PublicThemeContext';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { useCMS } from '../context/CMSContext';
 
@@ -194,7 +193,6 @@ export const CLIENT_LOGOS: ClientLogoItem[] = [
 ];
 
 export const MetricsBar: React.FC = () => {
-  const { isDark } = usePublicTheme();
   const prefersReducedMotion = useReducedMotion();
   const { activeContent } = useCMS();
 
@@ -397,11 +395,7 @@ export const MetricsBar: React.FC = () => {
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: prefersReducedMotion ? 0 : 0.6 }}
-      className={`w-full py-5 sm:py-7 border-y relative overflow-hidden select-none transition-colors duration-300 ${
-        isDark 
-          ? 'bg-[#0B0F17]/90 border-white/10 text-white/70' 
-          : 'bg-[#FAFAF9] border-[#064E3B]/10 text-[#064E3B]/75'
-      }`}
+      className="w-full py-5 sm:py-7 border-y relative overflow-hidden select-none transition-colors duration-300 bg-[#FAFAF9] border-[#064E3B]/10 text-[#064E3B]/75"
       aria-label="Client Brand Logos"
     >
       {/* Optional Sub-Heading (Configurable in CMS) */}
@@ -415,20 +409,12 @@ export const MetricsBar: React.FC = () => {
 
       {/* Left Gradient Fade Mask */}
       <div 
-        className={`absolute left-0 top-0 bottom-0 w-16 sm:w-32 z-10 pointer-events-none transition-colors ${
-          isDark 
-            ? 'bg-gradient-to-r from-[#0B0F17] via-[#0B0F17]/80 to-transparent' 
-            : 'bg-gradient-to-r from-[#FAFAF9] via-[#FAFAF9]/80 to-transparent'
-        }`} 
+        className="absolute left-0 top-0 bottom-0 w-16 sm:w-32 z-10 pointer-events-none transition-colors bg-gradient-to-r from-[#FAFAF9] via-[#FAFAF9]/80 to-transparent" 
       />
 
       {/* Right Gradient Fade Mask */}
       <div 
-        className={`absolute right-0 top-0 bottom-0 w-16 sm:w-32 z-10 pointer-events-none transition-colors ${
-          isDark 
-            ? 'bg-gradient-to-l from-[#0B0F17] via-[#0B0F17]/80 to-transparent' 
-            : 'bg-gradient-to-l from-[#FAFAF9] via-[#FAFAF9]/80 to-transparent'
-        }`} 
+        className="absolute right-0 top-0 bottom-0 w-16 sm:w-32 z-10 pointer-events-none transition-colors bg-gradient-to-l from-[#FAFAF9] via-[#FAFAF9]/80 to-transparent" 
       />
 
       {/* Infinite Continuous Scrolling Track */}
@@ -437,15 +423,11 @@ export const MetricsBar: React.FC = () => {
           {marqueeItems.map((brand, idx) => (
             <div
               key={`${brand.id}-${idx}`}
-              className={`flex items-center justify-center px-6 sm:px-10 lg:px-12 py-1.5 transition-all duration-300 shrink-0 cursor-default group ${
-                isDark 
-                  ? 'hover:text-[#B7E84B] hover:opacity-100 opacity-70' 
-                  : 'hover:text-[#064E3B] hover:opacity-100 opacity-75'
-              }`}
+              className="flex items-center justify-center px-6 sm:px-10 lg:px-12 py-1.5 transition-all duration-300 shrink-0 cursor-default group hover:text-[#064E3B] hover:opacity-100 opacity-75"
               title={`${brand.name} — ${brand.category}`}
             >
               <div className="transition-transform duration-300 group-hover:scale-105">
-                {brand.renderLogo(isDark)}
+                {brand.renderLogo ? brand.renderLogo(false) : null}
               </div>
             </div>
           ))}

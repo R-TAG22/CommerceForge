@@ -1,5 +1,4 @@
 import React, { useRef, useEffect } from 'react';
-import { usePublicTheme } from '../context/PublicThemeContext';
 
 interface InteractiveGlobeProps {
   className?: string;
@@ -82,7 +81,6 @@ export const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({
   size = 560,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const { isDark } = usePublicTheme();
 
   // Interactive rotation state with gentle auto-rotation and drag momentum
   const rotationRef = useRef<{
@@ -160,15 +158,9 @@ export const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({
 
       // Subtle atmospheric halo around globe edge
       const glowGrad = ctx.createRadialGradient(cx, cy, radius * 0.82, cx, cy, radius * 1.05);
-      if (isDark) {
-        glowGrad.addColorStop(0, 'rgba(183, 232, 75, 0.0)');
-        glowGrad.addColorStop(0.85, 'rgba(183, 232, 75, 0.05)');
-        glowGrad.addColorStop(1, 'rgba(183, 232, 75, 0)');
-      } else {
-        glowGrad.addColorStop(0, 'rgba(30, 58, 43, 0.0)');
-        glowGrad.addColorStop(0.85, 'rgba(17, 24, 39, 0.04)');
-        glowGrad.addColorStop(1, 'rgba(17, 24, 39, 0)');
-      }
+      glowGrad.addColorStop(0, 'rgba(30, 58, 43, 0.0)');
+      glowGrad.addColorStop(0.85, 'rgba(17, 24, 39, 0.04)');
+      glowGrad.addColorStop(1, 'rgba(17, 24, 39, 0)');
       ctx.fillStyle = glowGrad;
       ctx.beginPath();
       ctx.arc(cx, cy, radius * 1.05, 0, Math.PI * 2);
@@ -177,7 +169,7 @@ export const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({
       // Faint outer sphere border ring
       ctx.beginPath();
       ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-      ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(17, 24, 39, 0.08)';
+      ctx.strokeStyle = 'rgba(17, 24, 39, 0.08)';
       ctx.lineWidth = 1;
       ctx.setLineDash([4, 4]);
       ctx.stroke();
@@ -214,9 +206,7 @@ export const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({
           if (pt.isLand) {
             // Shopify Admin style high-density dotted landmasses
             const dotSize = Math.max(1.0, 1.45 * depthAlpha);
-            ctx.fillStyle = isDark
-              ? `rgba(255, 255, 255, ${(0.92 * depthAlpha).toFixed(2)})`
-              : `rgba(17, 24, 39, ${(0.88 * depthAlpha).toFixed(2)})`;
+            ctx.fillStyle = `rgba(17, 24, 39, ${(0.88 * depthAlpha).toFixed(2)})`;
             ctx.beginPath();
             ctx.arc(px, py, dotSize, 0, Math.PI * 2);
             ctx.fill();
@@ -224,9 +214,7 @@ export const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({
             // Subtle sparse water dots for contour structure
             if (i % 3 === 0 && z2 > 0.08) {
               const dotSize = 0.7 * depthAlpha;
-              ctx.fillStyle = isDark
-                ? `rgba(183, 232, 75, ${(0.25 * depthAlpha).toFixed(2)})`
-                : `rgba(17, 24, 39, ${(0.18 * depthAlpha).toFixed(2)})`;
+              ctx.fillStyle = `rgba(17, 24, 39, ${(0.18 * depthAlpha).toFixed(2)})`;
               ctx.beginPath();
               ctx.arc(px, py, dotSize, 0, Math.PI * 2);
               ctx.fill();
@@ -271,16 +259,14 @@ export const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({
           // Ripple pulse ring
           ctx.beginPath();
           ctx.arc(hx, hy, 3.5 + pulse * 7, 0, Math.PI * 2);
-          ctx.strokeStyle = isDark
-            ? `rgba(183, 232, 75, ${(0.75 * (1 - pulse) * z2).toFixed(2)})`
-            : `rgba(29, 92, 83, ${(0.65 * (1 - pulse) * z2).toFixed(2)})`;
+          ctx.strokeStyle = `rgba(29, 92, 83, ${(0.65 * (1 - pulse) * z2).toFixed(2)})`;
           ctx.lineWidth = 1.3;
           ctx.stroke();
 
           // Solid core dot
           ctx.beginPath();
           ctx.arc(hx, hy, 2.5, 0, Math.PI * 2);
-          ctx.fillStyle = isDark ? '#B7E84B' : '#1D5C53';
+          ctx.fillStyle = '#1D5C53';
           ctx.fill();
         }
       }
@@ -294,7 +280,7 @@ export const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, [isDark]);
+  }, []);
 
   // Pointer drag event handlers for mouse & touch interaction
   const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {

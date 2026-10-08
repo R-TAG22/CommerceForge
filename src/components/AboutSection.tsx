@@ -124,22 +124,22 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
           {/* LEFT COLUMN: WHO WE ARE                                                   */}
           {/* ========================================================================= */}
           <div className="flex flex-col justify-start">
-            <span className="text-xs sm:text-sm font-bold uppercase tracking-[0.18em] text-[#6B7280] dark:text-[#9CA3AF] mb-3 sm:mb-4">
+            <span className="text-xs sm:text-sm font-bold uppercase tracking-[0.18em] text-[#6B7280] mb-3 sm:mb-4">
               {eyebrow}
             </span>
 
-            <h2 className="text-4xl sm:text-5xl lg:text-[54px] font-black uppercase tracking-tight text-[#111827] dark:text-white leading-[1.05]">
+            <h2 className="text-4xl sm:text-5xl lg:text-[54px] font-black uppercase tracking-tight text-[#111827] leading-[1.05]">
               {headingPrefix}<br />
               {headingHighlight}
             </h2>
 
-            <h3 className="mt-7 sm:mt-9 text-2xl sm:text-3xl lg:text-[32px] font-black uppercase tracking-tight text-[#111827] dark:text-gray-100 leading-[1.1]">
+            <h3 className="mt-7 sm:mt-9 text-2xl sm:text-3xl lg:text-[32px] font-black uppercase tracking-tight text-[#111827] leading-[1.1]">
               {subHeading}
             </h3>
 
             <div className="mt-5 space-y-4 max-w-xl">
               {paragraphs.map((p, idx) => (
-                <p key={idx} className="text-base sm:text-[17px] text-[#4B5563] dark:text-gray-300 leading-relaxed font-normal">
+                <p key={idx} className="text-base sm:text-[17px] text-[#4B5563] leading-relaxed font-normal">
                   {p}
                 </p>
               ))}
@@ -170,19 +170,19 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
           {/* RIGHT COLUMN: WHAT WE DO (2x2 Clean Cards Grid)                           */}
           {/* ========================================================================= */}
           <div className="flex flex-col justify-start">
-            <span className="text-xs sm:text-sm font-bold uppercase tracking-[0.18em] text-[#6B7280] dark:text-[#9CA3AF] mb-3 sm:mb-4">
+            <span className="text-xs sm:text-sm font-bold uppercase tracking-[0.18em] text-[#6B7280] mb-3 sm:mb-4">
               {servicesEyebrow}
             </span>
 
-            <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-black uppercase tracking-tight text-[#111827] dark:text-white leading-[1.08] whitespace-pre-line">
+            <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-black uppercase tracking-tight text-[#111827] leading-[1.08] whitespace-pre-line">
               {servicesHeading}
             </h2>
 
             {/* 2x2 Services Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-5 sm:mt-6">
               {serviceItems.map((item, idx) => (
-                <div key={idx} className="p-6 sm:p-7 rounded-2xl border border-gray-200/90 dark:border-white/10 bg-white/95 dark:bg-[#121B29]/95 backdrop-blur-xs shadow-xs hover:shadow-md hover:border-gray-300 dark:hover:border-white/20 transition-all duration-300 flex flex-col justify-start group">
-                  <div className="w-12 h-10 flex items-center text-[#111827] dark:text-white mb-4">
+                <div key={idx} className="p-6 sm:p-7 rounded-2xl border border-gray-200/90 bg-white/95 backdrop-blur-xs shadow-xs hover:shadow-md hover:border-gray-300 transition-all duration-300 flex flex-col justify-start group">
+                  <div className="w-12 h-10 flex items-center text-[#111827] mb-4">
                     {item.type === 'chart' && (
                       <div className="flex flex-col justify-center">
                         <div className="flex items-center gap-1.5 mb-1.5 pl-0.5">
@@ -221,10 +221,10 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                     )}
                   </div>
 
-                  <h3 className="text-sm sm:text-[15px] font-extrabold uppercase tracking-tight text-[#111827] dark:text-white">
+                  <h3 className="text-sm sm:text-[15px] font-extrabold uppercase tracking-tight text-[#111827]">
                     {item.title}
                   </h3>
-                  <p className="mt-1.5 text-xs sm:text-sm text-[#4B5563] dark:text-gray-300 leading-snug">
+                  <p className="mt-1.5 text-xs sm:text-sm text-[#4B5563] leading-snug">
                     {item.desc}
                   </p>
                 </div>
@@ -236,7 +236,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
 
         {/* Milestone Terms Footer Note */}
         <div className="mt-12 sm:mt-16 text-center">
-          <p className="inline-flex items-center justify-center gap-1.5 text-xs sm:text-sm font-medium text-[#4B5563] dark:text-gray-400">
+          <p className="inline-flex items-center justify-center gap-1.5 text-xs sm:text-sm font-medium text-[#4B5563]">
             <span>{pricingMilestoneText}</span>
           </p>
         </div>

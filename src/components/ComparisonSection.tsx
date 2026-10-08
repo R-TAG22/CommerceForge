@@ -2,7 +2,6 @@ import React from 'react';
 import { Check, X } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useCMS } from '../context/CMSContext';
-import { usePublicTheme } from '../context/PublicThemeContext';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { useRouter } from '../admin/router';
 
@@ -12,7 +11,6 @@ interface ComparisonSectionProps {
 
 export const ComparisonSection: React.FC<ComparisonSectionProps> = ({ onCtaClick }) => {
   const { activeContent } = useCMS();
-  const { isDark } = usePublicTheme();
   const prefersReducedMotion = useReducedMotion();
   const { navigate } = useRouter();
   const comparisonData = activeContent?.comparison;
@@ -74,8 +72,8 @@ export const ComparisonSection: React.FC<ComparisonSectionProps> = ({ onCtaClick
       const status = match[2];
       return (
         <span className="font-bold">
-          <span className={isDark ? 'text-white' : 'text-[#12241A]'}>{val} </span>
-          <span className={isEngineered ? (isDark ? 'text-[#B7E84B]' : 'text-emerald-700') : (isDark ? 'text-red-400' : 'text-red-600')}>
+          <span className="text-[#12241A]">{val} </span>
+          <span className={isEngineered ? 'text-emerald-700' : 'text-red-600'}>
             {status}
           </span>
         </span>
@@ -85,9 +83,7 @@ export const ComparisonSection: React.FC<ComparisonSectionProps> = ({ onCtaClick
     // Direct percentage like +35% or -20%
     return (
       <span className={`font-bold ${
-        isEngineered 
-          ? isDark ? 'text-[#B7E84B]' : 'text-emerald-700' 
-          : isDark ? 'text-red-400' : 'text-red-600'
+        isEngineered ? 'text-emerald-700' : 'text-red-600'
       }`}>
         {text}
       </span>
@@ -95,17 +91,13 @@ export const ComparisonSection: React.FC<ComparisonSectionProps> = ({ onCtaClick
   };
 
   return (
-    <motion.section 
-      id="comparison" 
+    <motion.section
+      id="comparison"
       initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
       transition={{ duration: prefersReducedMotion ? 0 : 0.65, ease: [0.21, 0.47, 0.32, 0.98] }}
-      className={`w-full py-16 sm:py-24 border-t transition-colors duration-300 ${
-        isDark 
-          ? 'bg-[#0B0F17] border-white/10' 
-          : 'bg-[#F4F8F3] border-[#064E3B]/10'
-      }`}
+      className="w-full py-16 sm:py-24 border-t transition-colors duration-300 bg-[#F4F8F3] border-[#064E3B]/10"
       aria-label="Performance as Prestige: The Engineered Advantage"
     >
       <div className="max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12">
@@ -113,25 +105,17 @@ export const ComparisonSection: React.FC<ComparisonSectionProps> = ({ onCtaClick
         {/* Section Header */}
         <div className="text-center max-w-4xl mx-auto mb-10 sm:mb-14">
           {eyebrow && (
-            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full mb-3 border ${
-              isDark ? 'bg-white/5 border-[#B7E84B]/30' : 'bg-emerald-50 border-[#B7E84B]/40'
-            }`}>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-3 border bg-emerald-50 border-[#B7E84B]/40">
               <span className="w-1.5 h-1.5 rounded-full bg-[#B7E84B]" />
-              <span className={`text-[11px] font-bold uppercase tracking-[0.16em] ${
-                isDark ? 'text-[#B7E84B]' : 'text-[#064E3B]'
-              }`}>
+              <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#064E3B]">
                 {eyebrow}
               </span>
             </div>
           )}
-          <h2 className={`text-2xl sm:text-3xl md:text-4xl lg:text-[44px] font-black uppercase tracking-tight leading-tight ${
-            isDark ? 'text-white' : 'text-[#12241A]'
-          }`}>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[44px] font-black uppercase tracking-tight leading-tight text-[#12241A]">
             {headline}
           </h2>
-          <p className={`text-sm sm:text-base md:text-lg mt-2.5 sm:mt-3 font-medium leading-relaxed ${
-            isDark ? 'text-white/70' : 'text-[#12241A]/80'
-          }`}>
+          <p className="text-sm sm:text-base md:text-lg mt-2.5 sm:mt-3 font-medium leading-relaxed text-[#12241A]/80">
             {subheading}
           </p>
         </div>
@@ -141,24 +125,16 @@ export const ComparisonSection: React.FC<ComparisonSectionProps> = ({ onCtaClick
           
           {/* Left Card: Traditional Build (Design-First) */}
           <div 
-            className={`rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-9 border flex flex-col justify-between transition-all duration-300 shadow-sm ${
-              isDark 
-                ? 'bg-white/[0.02] border-white/10 hover:border-white/20' 
-                : 'bg-white/95 border-[#064E3B]/15 hover:border-[#064E3B]/30'
-            }`}
+            className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-9 border flex flex-col justify-between transition-all duration-300 shadow-sm bg-white/95 border-[#064E3B]/15 hover:border-[#064E3B]/30"
           >
             <div>
               {/* Column Title */}
-              <h3 className={`text-sm sm:text-base md:text-lg font-black uppercase tracking-wider ${
-                isDark ? 'text-white' : 'text-[#12241A]'
-              }`}>
+              <h3 className="text-sm sm:text-base md:text-lg font-black uppercase tracking-wider text-[#12241A]">
                 {oldColumnTitle}
               </h3>
 
               {/* Thin Divider Line */}
-              <div className={`w-full border-b mt-3 sm:mt-4 mb-5 sm:mb-6 ${
-                isDark ? 'border-white/10' : 'border-[#064E3B]/10'
-              }`} />
+              <div className="w-full border-b mt-3 sm:mt-4 mb-5 sm:mb-6 border-[#064E3B]/10" />
 
               {/* Items List */}
               <ul className="space-y-4 sm:space-y-5">
@@ -169,11 +145,7 @@ export const ComparisonSection: React.FC<ComparisonSectionProps> = ({ onCtaClick
                   >
                     {/* Red Circular Icon with Cross */}
                     <div 
-                      className={`w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-full flex items-center justify-center shrink-0 border ${
-                        isDark 
-                          ? 'bg-red-950/60 border-red-800/60 text-red-400' 
-                          : 'bg-red-100/90 border-red-200 text-red-600'
-                      }`}
+                      className="w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-full flex items-center justify-center shrink-0 border bg-red-100/90 border-red-200 text-red-600"
                       aria-hidden="true"
                     >
                       <X className="w-3.5 h-3.5 stroke-[2.5]" />
@@ -181,7 +153,7 @@ export const ComparisonSection: React.FC<ComparisonSectionProps> = ({ onCtaClick
 
                     {/* Metric Text */}
                     <div className="flex-1">
-                      <span className={isDark ? 'text-white/90' : 'text-[#12241A]'}>
+                      <span className="text-[#12241A]">
                         {item.aspect}:{' '}
                       </span>
                       {renderValueWithStatus(item.oldWay, false)}
@@ -194,24 +166,16 @@ export const ComparisonSection: React.FC<ComparisonSectionProps> = ({ onCtaClick
 
           {/* Right Card: Engineered Build (Infrastructure-First) */}
           <div 
-            className={`rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-9 border flex flex-col justify-between transition-all duration-300 shadow-sm ${
-              isDark 
-                ? 'bg-white/[0.02] border-white/10 hover:border-[#B7E84B]/40' 
-                : 'bg-white/95 border-[#064E3B]/15 hover:border-[#064E3B]/30'
-            }`}
+            className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-9 border flex flex-col justify-between transition-all duration-300 shadow-sm bg-white/95 border-[#064E3B]/15 hover:border-[#064E3B]/30"
           >
             <div>
               {/* Column Title */}
-              <h3 className={`text-sm sm:text-base md:text-lg font-black uppercase tracking-wider ${
-                isDark ? 'text-white' : 'text-[#12241A]'
-              }`}>
+              <h3 className="text-sm sm:text-base md:text-lg font-black uppercase tracking-wider text-[#12241A]">
                 {newColumnTitle}
               </h3>
 
               {/* Thin Divider Line */}
-              <div className={`w-full border-b mt-3 sm:mt-4 mb-5 sm:mb-6 ${
-                isDark ? 'border-white/10' : 'border-[#064E3B]/10'
-              }`} />
+              <div className="w-full border-b mt-3 sm:mt-4 mb-5 sm:mb-6 border-[#064E3B]/10" />
 
               {/* Items List */}
               <ul className="space-y-4 sm:space-y-5">
@@ -222,11 +186,7 @@ export const ComparisonSection: React.FC<ComparisonSectionProps> = ({ onCtaClick
                   >
                     {/* Green Circular Icon with Checkmark */}
                     <div 
-                      className={`w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-full flex items-center justify-center shrink-0 border ${
-                        isDark 
-                          ? 'bg-emerald-950/60 border-emerald-800/60 text-[#B7E84B]' 
-                          : 'bg-emerald-100/90 border-emerald-200 text-[#064E3B]'
-                      }`}
+                      className="w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-full flex items-center justify-center shrink-0 border bg-emerald-100/90 border-emerald-200 text-[#064E3B]"
                       aria-hidden="true"
                     >
                       <Check className="w-3.5 h-3.5 stroke-[2.5]" />
@@ -234,7 +194,7 @@ export const ComparisonSection: React.FC<ComparisonSectionProps> = ({ onCtaClick
 
                     {/* Metric Text */}
                     <div className="flex-1">
-                      <span className={isDark ? 'text-white/90' : 'text-[#12241A]'}>
+                      <span className="text-[#12241A]">
                         {item.aspect}:{' '}
                       </span>
                       {renderValueWithStatus(item.rebuildWay, true)}
@@ -260,11 +220,7 @@ export const ComparisonSection: React.FC<ComparisonSectionProps> = ({ onCtaClick
                 window.location.href = url;
               }
             }}
-            className={`group inline-flex items-center justify-center gap-2.5 px-8 sm:px-10 py-3.5 sm:py-4 rounded-xl text-xs sm:text-sm font-black uppercase tracking-[0.14em] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg cursor-pointer ${
-              isDark
-                ? 'bg-[#0B0F17] text-white border-2 border-[#B7E84B]/70 hover:border-[#B7E84B] hover:shadow-[0_0_25px_rgba(183,232,75,0.35)]'
-                : 'bg-[#0E2016] text-white border-2 border-[#1E4D32] hover:border-[#B7E84B] hover:bg-[#143223] hover:shadow-[0_12px_28px_-6px_rgba(14,32,22,0.35)]'
-            }`}
+            className="group inline-flex items-center justify-center gap-2.5 px-8 sm:px-10 py-3.5 sm:py-4 rounded-xl text-xs sm:text-sm font-black uppercase tracking-[0.14em] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg cursor-pointer bg-[#0E2016] text-white border-2 border-[#1E4D32] hover:border-[#B7E84B] hover:bg-[#143223] hover:shadow-[0_12px_28px_-6px_rgba(14,32,22,0.35)]"
           >
             <span>{ctaButtonText}</span>
           </button>

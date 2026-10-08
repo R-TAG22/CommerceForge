@@ -88,9 +88,9 @@ export const DynamicSectionRenderer: React.FC<DynamicSectionRendererProps> = ({
     switch (section.backgroundStyle) {
       case 'dark-studio':
         return {
-          bgClass: 'bg-[#0B0F17] text-white border-white/10 shadow-2xl',
-          defaultText: '#FFFFFF',
-          defaultAccent: '#10B981',
+          bgClass: 'bg-[#F4F7F4] text-[#064E3B] border-[#064E3B]/10 shadow-md',
+          defaultText: '#064E3B',
+          defaultAccent: '#059669',
           isGlass: false,
         };
       case 'crisp-light':
@@ -102,16 +102,16 @@ export const DynamicSectionRenderer: React.FC<DynamicSectionRendererProps> = ({
         };
       case 'forest-muted':
         return {
-          bgClass: 'bg-[#12241A] text-white border-white/10 shadow-xl',
-          defaultText: '#FFFFFF',
-          defaultAccent: '#B7E84B',
+          bgClass: 'bg-[#E8F0E6] text-[#064E3B] border-[#064E3B]/10 shadow-md',
+          defaultText: '#064E3B',
+          defaultAccent: '#064E3B',
           isGlass: false,
         };
       case 'charcoal-glass':
         return {
-          bgClass: 'bg-white/5 backdrop-blur-md text-white border-white/10 shadow-2xl',
-          defaultText: '#FFFFFF',
-          defaultAccent: '#10B981',
+          bgClass: 'bg-white/90 backdrop-blur-md text-[#064E3B] border-[#064E3B]/10 shadow-md',
+          defaultText: '#064E3B',
+          defaultAccent: '#059669',
           isGlass: true,
         };
       default:
@@ -119,7 +119,7 @@ export const DynamicSectionRenderer: React.FC<DynamicSectionRendererProps> = ({
         return {
           bgClass: 'border-black/5 shadow-xs',
           defaultText: section.textColor || '#1E3A2B',
-          defaultAccent: section.accentColor || '#B7E84B',
+          defaultAccent: section.accentColor || '#059669',
           customBg: section.backgroundColor || '#EAF3E8',
           isGlass: false,
         };

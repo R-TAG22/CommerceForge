@@ -149,7 +149,7 @@ export const HeroContent: React.FC<HeroContentProps> = ({ onCtaClick }) => {
                 }`}
               >
                 {/* Header */}
-                <div className="flex items-start justify-between pb-4 border-b border-black/10 dark:border-white/10">
+                <div className="flex items-start justify-between pb-4 border-b border-black/10">
                   <div>
                     <div className="flex items-center gap-1.5 text-amber-500 mb-1">
                       {[...Array(5)].map((_, i) => (
@@ -223,7 +223,7 @@ export const HeroContent: React.FC<HeroContentProps> = ({ onCtaClick }) => {
                 </div>
 
                 {/* Footer action */}
-                <div className="mt-5 pt-4 border-t border-black/10 dark:border-white/10 flex items-center justify-between">
+                <div className="mt-5 pt-4 border-t border-black/10 flex items-center justify-between">
                   <div className="flex items-center gap-2 text-[11px] font-semibold text-[#059669]">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[#B7E84B]" />
                     <span>100% Verified Local Client Reviews</span>

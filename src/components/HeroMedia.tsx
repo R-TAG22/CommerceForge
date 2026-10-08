@@ -263,7 +263,7 @@ export const HeroMedia: React.FC = () => {
         {/* ========================================================================= */}
         {/* Dynamic Metric Badges Directly on Showcase Header (Requirement 2)         */}
         {/* ========================================================================= */}
-        <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-black/10 dark:border-white/10">
+        <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-black/10">
           <div className="flex items-center gap-2.5">
             <span className={`w-2.5 h-2.5 rounded-full ${isDark ? 'bg-[#B7E84B] shadow-[0_0_8px_#B7E84B]' : 'bg-[#059669]'}`} />
             <span className={`text-xs sm:text-sm font-black uppercase tracking-wider ${isDark ? 'text-white' : 'text-[#064E3B]'}`}>

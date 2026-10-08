@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type AdminTheme = 'light';
 
@@ -14,18 +14,22 @@ const THEME_STORAGE_KEY = 'commerceforge_admin_theme';
 const AdminThemeContext = createContext<AdminThemeContextType | undefined>(undefined);
 
 export const AdminThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [theme] = useState<AdminTheme>('light');
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      localStorage.removeItem(THEME_STORAGE_KEY);
+      localStorage.setItem(THEME_STORAGE_KEY, 'light');
+      // Ensure dark mode does not exist in the admin panel
       document.documentElement.classList.remove('dark');
       document.documentElement.classList.remove('admin-dark');
       document.documentElement.classList.add('admin-light');
       document.body.style.backgroundColor = '#F8FAFC';
       document.body.style.color = '#0F172A';
     }
-  }, []);
+  }, [theme]);
 
   const setTheme = () => {};
+
   const toggleTheme = () => {};
 
   return (

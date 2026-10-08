@@ -215,24 +215,24 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
           <button 
             type="button" 
             onClick={handleBack}
-            className="p-1.5 rounded-lg border hover:bg-slate-100 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-700 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg border hover:bg-slate-100 border-slate-200 transition-colors cursor-pointer"
             title="Back to Dashboard"
             aria-label="Back to Dashboard"
           >
             <ArrowLeft className="w-4 h-4"/>
           </button>
-          <div className="border-r pr-3 dark:border-slate-800 border-slate-200">
-            <span className="font-bold text-xs uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Theme Customizer</span>
+          <div className="border-r pr-3 border-slate-200">
+            <span className="font-bold text-xs uppercase tracking-wider text-emerald-600">Theme Customizer</span>
           </div>
           <span className="text-xs font-semibold">Homepage (Default Template)</span>
         </div>
 
         {/* Viewport Switcher */}
-        <div className="flex items-center gap-1 bg-slate-200/60 dark:bg-slate-800 p-1 rounded-lg">
+        <div className="flex items-center gap-1 bg-slate-200/60 p-1 rounded-lg">
           <button 
             type="button"
             onClick={() => setDevice('desktop')}
-            className={`p-1.5 rounded-md text-xs flex items-center gap-1.5 transition-colors cursor-pointer ${device === 'desktop' ? 'bg-white dark:bg-slate-700 shadow-xs font-bold text-slate-900 dark:text-white' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'}`}
+            className={`p-1.5 rounded-md text-xs flex items-center gap-1.5 transition-colors cursor-pointer ${device === 'desktop' ? 'bg-white shadow-xs font-bold text-slate-900' : 'text-slate-500 hover:text-slate-800'}`}
           >
             <Monitor className="w-3.5 h-3.5"/>
             <span className="hidden sm:inline">Desktop</span>
@@ -240,7 +240,7 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
           <button 
             type="button"
             onClick={() => setDevice('mobile')}
-            className={`p-1.5 rounded-md text-xs flex items-center gap-1.5 transition-colors cursor-pointer ${device === 'mobile' ? 'bg-white dark:bg-slate-700 shadow-xs font-bold text-slate-900 dark:text-white' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'}`}
+            className={`p-1.5 rounded-md text-xs flex items-center gap-1.5 transition-colors cursor-pointer ${device === 'mobile' ? 'bg-white shadow-xs font-bold text-slate-900' : 'text-slate-500 hover:text-slate-800'}`}
           >
             <Smartphone className="w-3.5 h-3.5"/>
             <span className="hidden sm:inline">Mobile (375px)</span>
@@ -265,7 +265,7 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
         
         {/* Left Sidebar: Section Tree */}
         <aside className="w-72 border-r flex flex-col bg-white border-slate-200">
-          <div className="p-3 border-b text-xs font-bold uppercase tracking-wider flex items-center justify-between text-slate-400 dark:border-slate-800 border-slate-100">
+          <div className="p-3 border-b text-xs font-bold uppercase tracking-wider flex items-center justify-between text-slate-400 border-slate-100">
             <div className="flex items-center gap-2">
               <Layers className="w-3.5 h-3.5"/>
               <span>Template Sections</span>
@@ -284,11 +284,11 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
           {isAddSectionOpen && (
             <form onSubmit={handleAddSection} className="p-3 border-b border-emerald-500/30 bg-emerald-500/5 space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold uppercase text-emerald-600 dark:text-emerald-400">New Section</span>
+                <span className="text-[11px] font-bold uppercase text-emerald-600">New Section</span>
                 <button 
                   type="button" 
                   onClick={() => setIsAddSectionOpen(false)}
-                  className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                  className="text-slate-400 hover:text-slate-600 cursor-pointer"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -299,13 +299,13 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
                 onChange={(e) => setNewSectionName(e.target.value)}
                 placeholder="e.g. Social Proof Reviews"
                 autoFocus
-                className="w-full text-xs px-2.5 py-1.5 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                className="w-full text-xs px-2.5 py-1.5 rounded border border-slate-300 bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500"
               />
               <div className="flex justify-end gap-1.5 pt-1">
                 <button
                   type="button"
                   onClick={() => setIsAddSectionOpen(false)}
-                  className="px-2.5 py-1 rounded text-[11px] text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                  className="px-2.5 py-1 rounded text-[11px] text-slate-500 hover:bg-slate-100 cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -330,8 +330,8 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
                 onClick={() => setSelectedSectionId(section.id)}
                 className={`flex items-center justify-between p-2 rounded-lg text-xs font-medium cursor-pointer transition-colors ${
                   selectedSectionId === section.id 
-                    ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30' 
-                    : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
+                    ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/30' 
+                    : 'hover:bg-slate-100 text-slate-700'
                 }`}
               >
                 <div className="flex items-center gap-2 truncate pr-1">
@@ -350,24 +350,24 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
             ))}
           </div>
 
-          <div className="p-3 border-t text-[11px] text-slate-400 dark:border-slate-800 border-slate-100">
+          <div className="p-3 border-t text-[11px] text-slate-400 border-slate-100">
             <span>Tip: Drag handles to reorder sections.</span>
           </div>
         </aside>
 
         {/* Center Live Canvas */}
-        <section className="flex-1 flex items-center justify-center p-6 overflow-hidden bg-slate-200/50 dark:bg-slate-950">
+        <section className="flex-1 flex items-center justify-center p-6 overflow-hidden bg-slate-200/50">
           <div 
             style={{ 
               backgroundColor: canvasColor,
               color: textColor 
             }}
-            className={`transition-all duration-300 rounded-xl shadow-2xl border border-slate-300 dark:border-slate-800 overflow-y-auto ${
+            className={`transition-all duration-300 rounded-xl shadow-2xl border border-slate-300 overflow-y-auto ${
               device === 'mobile' ? 'w-[375px] h-[667px]' : 'w-full h-full max-w-4xl'
             } ${useLargeText ? 'text-lg' : 'text-sm'} ${forceReducedMotion ? 'motion-reduce' : ''}`}
           >
             <div className="p-8 space-y-8">
-              <header className="flex justify-between items-center border-b pb-4 border-black/10 dark:border-white/10">
+              <header className="flex justify-between items-center border-b pb-4 border-black/10">
                 <div className="font-black text-sm tracking-tight">CommerceForge</div>
                 <div className="text-xs space-x-4 opacity-75">
                   <span>Work</span>
@@ -400,7 +400,7 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
               </div>
 
               {/* Active Section Preview Callout */}
-              <div className="p-4 rounded-xl border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] text-center space-y-1">
+              <div className="p-4 rounded-xl border border-black/10 bg-black/[0.02] text-center space-y-1">
                 <span className="text-[10px] uppercase font-bold tracking-wider opacity-60">Active Inspector Selection</span>
                 <p className="text-xs font-bold" style={{ color: primaryColor }}>
                   {sections.find((s) => s.id === selectedSectionId)?.name || 'Hero Media & Value Prop'}
@@ -412,11 +412,11 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
 
         {/* Right Drawer: Settings & Injections */}
         <aside className="w-80 border-l flex flex-col bg-white border-slate-200">
-          <div className="flex border-b text-xs font-bold dark:border-slate-800 border-slate-200">
+          <div className="flex border-b text-xs font-bold border-slate-200">
             <button 
               type="button" 
               onClick={() => setActiveTab('palette')}
-              className={`flex-1 py-3 text-center flex items-center justify-center gap-1.5 border-b-2 transition-colors cursor-pointer ${activeTab === 'palette' ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400' : 'border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'}`}
+              className={`flex-1 py-3 text-center flex items-center justify-center gap-1.5 border-b-2 transition-colors cursor-pointer ${activeTab === 'palette' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-slate-400 hover:text-slate-600'}`}
             >
               <Palette className="w-3.5 h-3.5"/>
               <span>Colors</span>
@@ -424,7 +424,7 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
             <button 
               type="button" 
               onClick={() => setActiveTab('scripts')}
-              className={`flex-1 py-3 text-center flex items-center justify-center gap-1.5 border-b-2 transition-colors cursor-pointer ${activeTab === 'scripts' ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400' : 'border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'}`}
+              className={`flex-1 py-3 text-center flex items-center justify-center gap-1.5 border-b-2 transition-colors cursor-pointer ${activeTab === 'scripts' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-slate-400 hover:text-slate-600'}`}
             >
               <Code className="w-3.5 h-3.5"/>
               <span>Scripts</span>
@@ -432,7 +432,7 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
             <button 
               type="button" 
               onClick={() => setActiveTab('a11y')}
-              className={`flex-1 py-3 text-center flex items-center justify-center gap-1.5 border-b-2 transition-colors cursor-pointer ${activeTab === 'a11y' ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400' : 'border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'}`}
+              className={`flex-1 py-3 text-center flex items-center justify-center gap-1.5 border-b-2 transition-colors cursor-pointer ${activeTab === 'a11y' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-slate-400 hover:text-slate-600'}`}
             >
               <Sliders className="w-3.5 h-3.5"/>
               <span>A11y</span>
@@ -442,17 +442,17 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
           <div className="flex-1 overflow-y-auto p-4 space-y-6">
             {activeTab === 'palette' && (
               <>
-                <div className="p-3 rounded-lg border dark:border-slate-800 border-slate-200 flex items-center justify-between">
+                <div className="p-3 rounded-lg border border-slate-200 flex items-center justify-between">
                   <div>
                     <p className="text-xs font-bold leading-tight">WCAG Compliance</p>
                     <p className="text-[11px] text-slate-400">Ratio: {contrast.ratio}:1</p>
                   </div>
                   <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
                     contrast.passesAAA 
-                      ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20' 
+                      ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' 
                       : contrast.passesAA 
-                        ? 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20' 
-                        : 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20'
+                        ? 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20' 
+                        : 'bg-red-500/10 text-red-600 border-red-500/20'
                   }`}>
                     {contrast.label}
                   </span>
@@ -471,7 +471,7 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
                       type="text" 
                       value={primaryColor} 
                       onChange={(e) => handlePrimaryColorChange(e.target.value)}
-                      className="w-28 text-xs font-mono px-2 py-1.5 rounded border dark:bg-slate-800 dark:border-slate-700 uppercase"
+                      className="w-28 text-xs font-mono px-2 py-1.5 rounded border border-slate-300 bg-white uppercase"
                     />
                   </div>
                 </div>
@@ -489,7 +489,7 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
                       type="text" 
                       value={canvasColor} 
                       onChange={(e) => handleCanvasColorChange(e.target.value)}
-                      className="w-28 text-xs font-mono px-2 py-1.5 rounded border dark:bg-slate-800 dark:border-slate-700 uppercase"
+                      className="w-28 text-xs font-mono px-2 py-1.5 rounded border border-slate-300 bg-white uppercase"
                     />
                   </div>
                 </div>
@@ -507,16 +507,16 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
                       type="text" 
                       value={textColor} 
                       onChange={(e) => handleTextColorChange(e.target.value)}
-                      className="w-28 text-xs font-mono px-2 py-1.5 rounded border dark:bg-slate-800 dark:border-slate-700 uppercase"
+                      className="w-28 text-xs font-mono px-2 py-1.5 rounded border border-slate-300 bg-white uppercase"
                     />
                   </div>
                 </div>
 
-                <div className="pt-2 border-t dark:border-slate-800 border-slate-200">
+                <div className="pt-2 border-t border-slate-200">
                   <button
                     type="button"
                     onClick={handleReset}
-                    className="w-full py-2 px-3 rounded-lg border border-slate-300 dark:border-slate-700 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                    className="w-full py-2 px-3 rounded-lg border border-slate-300 text-xs font-bold hover:bg-slate-100 transition-colors cursor-pointer"
                   >
                     Reset Palette to Defaults
                   </button>
@@ -550,7 +550,7 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
 
             {activeTab === 'a11y' && (
               <div className="space-y-4">
-                <label className="flex items-center justify-between p-3 rounded-lg border dark:border-slate-800 border-slate-200 cursor-pointer">
+                <label className="flex items-center justify-between p-3 rounded-lg border border-slate-200 cursor-pointer">
                   <div>
                     <p className="text-xs font-bold">Use Large Text Mode</p>
                     <p className="text-[11px] text-slate-400">Forces 18px+ minimum typography scale</p>
@@ -563,7 +563,7 @@ export const ThemeEditor: React.FC<ThemeEditorProps> = ({ onBack }) => {
                   />
                 </label>
 
-                <label className="flex items-center justify-between p-3 rounded-lg border dark:border-slate-800 border-slate-200 cursor-pointer">
+                <label className="flex items-center justify-between p-3 rounded-lg border border-slate-200 cursor-pointer">
                   <div>
                     <p className="text-xs font-bold">Force Reduced Motion</p>
                     <p className="text-[11px] text-slate-400">Disables animations and transitions</p>

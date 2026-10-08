@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { ArrowRight, Check } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useCMS } from '../context/CMSContext';
-import { usePublicTheme } from '../context/PublicThemeContext';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 
 interface CtaBannerProps {
@@ -11,7 +10,6 @@ interface CtaBannerProps {
 
 export const CtaBanner: React.FC<CtaBannerProps> = ({ onCtaClick }) => {
   const { activeContent } = useCMS();
-  const { isDark } = usePublicTheme();
   const prefersReducedMotion = useReducedMotion();
   const ctaData = activeContent?.cta;
 
@@ -41,17 +39,13 @@ export const CtaBanner: React.FC<CtaBannerProps> = ({ onCtaClick }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: prefersReducedMotion ? 0 : 0.4, ease: [0.21, 0.47, 0.32, 0.98] }}
-      className="w-full bg-white dark:bg-[#0B0F17] py-6 sm:py-10 transition-colors duration-300"
+      className="w-full bg-[#F8FAF8] py-6 sm:py-10 transition-colors duration-300"
       aria-label="Partner CTA Bar"
     >
       <div className="w-full max-w-6xl mx-auto px-5 sm:px-8 lg:px-10">
-        {/* Email Subscription Frame (Same as before: dark obsidian/forest green container with white text) */}
+        {/* Email Subscription Frame (Dark obsidian/forest green container with white text) */}
         <div
-          className={`w-full rounded-xl sm:rounded-2xl px-5 sm:px-8 py-4 sm:py-5 transition-all duration-300 border flex flex-col md:flex-row items-center justify-between gap-4 ${
-            isDark
-              ? 'bg-[#111620] border-white/10 text-white shadow-xl'
-              : 'bg-[#12241A] border-[#1E3A2B]/40 text-white shadow-xl'
-          }`}
+          className="w-full rounded-xl sm:rounded-2xl px-5 sm:px-8 py-4 sm:py-5 transition-all duration-300 border flex flex-col md:flex-row items-center justify-between gap-4 bg-[#12241A] border-[#1E3A2B]/40 text-white shadow-xl"
         >
           {/* Left Side: Prominent Minimal Headline */}
           <div className="flex items-center gap-3 text-center md:text-left">

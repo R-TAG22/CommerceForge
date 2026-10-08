@@ -3,7 +3,6 @@ import { ExternalLink, ArrowRight, Zap, Check, Sparkles, Pause, Play, ChevronLef
 import { motion } from 'motion/react';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { useCMS } from '../context/CMSContext';
-import { usePublicTheme } from '../context/PublicThemeContext';
 import { PortfolioProject } from '../types/cms';
 import { FALLBACK_STORE_IMAGE, handleImageError } from '../utils/imageFallbacks';
 
@@ -301,7 +300,6 @@ interface WorkSectionProps {
 }
 
 export const WorkSection: React.FC<WorkSectionProps> = ({ onHireClick }) => {
-  const { isDark } = usePublicTheme();
   const [selectedCase, setSelectedCase] = useState<ClientShowcaseItem | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
@@ -426,18 +424,10 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onHireClick }) => {
       >
         {/* Subtle Edge Vignette Gradients for smooth fade */}
         <div 
-          className={`absolute top-0 bottom-0 left-0 w-8 sm:w-16 z-20 pointer-events-none transition-colors duration-300 ${
-            isDark 
-              ? 'bg-gradient-to-r from-[#0B0F17] via-[#0B0F17]/80 to-transparent' 
-              : 'bg-gradient-to-r from-[#F8FAF8] via-[#F8FAF8]/80 to-transparent'
-          }`} 
+          className="absolute top-0 bottom-0 left-0 w-8 sm:w-16 z-20 pointer-events-none transition-colors duration-300 bg-gradient-to-r from-[#F8FAF8] via-[#F8FAF8]/80 to-transparent" 
         />
         <div 
-          className={`absolute top-0 bottom-0 right-0 w-8 sm:w-16 z-20 pointer-events-none transition-colors duration-300 ${
-            isDark 
-              ? 'bg-gradient-to-l from-[#0B0F17] via-[#0B0F17]/80 to-transparent' 
-              : 'bg-gradient-to-l from-[#F8FAF8] via-[#F8FAF8]/80 to-transparent'
-          }`} 
+          className="absolute top-0 bottom-0 right-0 w-8 sm:w-16 z-20 pointer-events-none transition-colors duration-300 bg-gradient-to-l from-[#F8FAF8] via-[#F8FAF8]/80 to-transparent" 
         />
 
         <div

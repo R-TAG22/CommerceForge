@@ -11,14 +11,13 @@ import {
   Check, 
   Filter, 
   TrendingUp,
-  Mail,
   Zap,
   Layers,
   ArrowUpRight
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useReducedMotion } from '../hooks/useReducedMotion';
-import { usePublicTheme } from '../context/PublicThemeContext';
+import { useRouter } from '../admin/router';
 
 interface BlogPageProps {
   onHireClick?: () => void;
@@ -287,12 +286,16 @@ const CATEGORIES = [
 
 export const BlogPage: React.FC<BlogPageProps> = ({ onHireClick }) => {
   const prefersReducedMotion = useReducedMotion();
+  const { navigate } = useRouter();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [readingArticle, setReadingArticle] = useState<BlogPostItem | null>(null);
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
-  const [newsletterEmail, setNewsletterEmail] = useState<string>('');
-  const [newsletterSubscribed, setNewsletterSubscribed] = useState<boolean>(false);
+
+  const handleOpenArticle = (articleId: string) => {
+    navigate(`/blog/${articleId}`);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Filtered Articles based on search & category
   const filteredArticles = useMemo(() => {
@@ -325,16 +328,6 @@ export const BlogPage: React.FC<BlogPageProps> = ({ onHireClick }) => {
       navigator.clipboard.writeText(window.location.href);
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2000);
-    }
-  };
-
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newsletterEmail.trim()) {
-      setNewsletterSubscribed(true);
-      setTimeout(() => {
-        setNewsletterEmail('');
-      }, 3000);
     }
   };
 
@@ -450,7 +443,8 @@ export const BlogPage: React.FC<BlogPageProps> = ({ onHireClick }) => {
                   initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.45 }}
-                  className="group grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 rounded-3xl border border-[#064E3B]/15 bg-white shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
+                  onClick={() => handleOpenArticle(featuredArticle.id)}
+                  className="group grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 rounded-3xl border border-[#064E3B]/15 bg-white shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer"
                 >
                   {/* Left: Big Media Frame */}
                   <div className="lg:col-span-7 relative aspect-[16/10] lg:aspect-auto overflow-hidden bg-black/5">
@@ -521,7 +515,10 @@ export const BlogPage: React.FC<BlogPageProps> = ({ onHireClick }) => {
                       </div>
 
                       <button
-                        onClick={() => setReadingArticle(featuredArticle)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenArticle(featuredArticle.id);
+                        }}
                         className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wider bg-[#064E3B] text-white hover:bg-[#047857] hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer shadow-sm"
                       >
                         <span>Read Full Story</span>
@@ -555,7 +552,8 @@ export const BlogPage: React.FC<BlogPageProps> = ({ onHireClick }) => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, amount: 0.1 }}
                     transition={{ duration: 0.35, delay: idx * 0.05 }}
-                    className="group flex flex-col justify-between rounded-3xl border border-[#064E3B]/15 bg-white shadow-xs hover:shadow-lg hover:border-[#064E3B]/40 transition-all duration-300 overflow-hidden"
+                    onClick={() => handleOpenArticle(article.id)}
+                    className="group flex flex-col justify-between rounded-3xl border border-[#064E3B]/15 bg-white shadow-xs hover:shadow-lg hover:border-[#064E3B]/40 transition-all duration-300 overflow-hidden cursor-pointer"
                   >
                     {/* Thumbnail */}
                     <div>
@@ -623,7 +621,10 @@ export const BlogPage: React.FC<BlogPageProps> = ({ onHireClick }) => {
                       </div>
 
                       <button
-                        onClick={() => setReadingArticle(article)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenArticle(article.id);
+                        }}
                         className="pt-3 inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-[#064E3B] group-hover:text-[#047857] hover:underline cursor-pointer"
                       >
                         <span>Read</span>
@@ -636,43 +637,6 @@ export const BlogPage: React.FC<BlogPageProps> = ({ onHireClick }) => {
             </div>
           </>
         )}
-
-        {/* ========================================================================= */}
-        {/* 3. NEWSLETTER / DISPATCH SUBSCRIPTION BANNER                              */}
-        {/* ========================================================================= */}
-        <div className="mt-16 sm:mt-24 p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-[#064E3B] to-[#047857] text-white shadow-xl">
-          <div className="max-w-2xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-bold uppercase tracking-wider mb-4">
-              <Mail className="w-3.5 h-3.5 text-[#B7E84B]" />
-              <span>THE PERFORMANCE DISPATCH</span>
-            </div>
-
-            <h3 className="text-2xl sm:text-3xl font-black uppercase tracking-tight">
-              Get Storefront Speed & CRO Breakdowns Bi-Weekly
-            </h3>
-
-            <p className="mt-2.5 text-xs sm:text-sm text-white/80 leading-relaxed font-medium">
-              Actionable engineering teardowns, sub-second code benchmarks, and conversion experiments sent to over 1,200+ direct-to-consumer store operators. No spam, ever.
-            </p>
-
-            <form onSubmit={handleNewsletterSubmit} className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <input
-                type="email"
-                required
-                value={newsletterEmail}
-                onChange={(e) => setNewsletterEmail(e.target.value)}
-                placeholder="Enter your work email address..."
-                className="w-full sm:w-80 px-4 py-3 rounded-full text-xs font-medium bg-white text-[#064E3B] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#B7E84B]"
-              />
-              <button
-                type="submit"
-                className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#B7E84B] text-[#0B0F17] text-xs font-black uppercase tracking-wider hover:bg-[#a5d83a] transition-all cursor-pointer shadow-md shrink-0"
-              >
-                {newsletterSubscribed ? 'Subscribed ✓' : 'Subscribe Free'}
-              </button>
-            </form>
-          </div>
-        </div>
       </main>
 
       {/* ========================================================================= */}

@@ -17,7 +17,6 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { useCMS } from '../context/CMSContext';
-import { usePublicTheme } from '../context/PublicThemeContext';
 import { DynamicSectionRenderer } from './DynamicSectionRenderer';
 import { FALLBACK_STORE_IMAGE, handleImageError } from '../utils/imageFallbacks';
 
@@ -546,7 +545,6 @@ export const CLIENT_SITES: ClientSite[] = [
 
 export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
   const prefersReducedMotion = useReducedMotion();
-  const { isDark } = usePublicTheme();
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
   const [selectedSite, setSelectedSite] = useState<ClientSite | null>(null);
@@ -646,18 +644,18 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
         className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 pt-8 sm:pt-14 pb-6"
       >
         <div className="text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EAF3E8] dark:bg-white/10 border border-[#B7E84B]/40 mb-4 shadow-xs">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EAF3E8] border border-[#B7E84B]/40 mb-4 shadow-xs">
             <span className="w-2 h-2 rounded-full bg-[#B7E84B] animate-pulse" />
-            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.16em] text-[#1E3A2B] dark:text-[#B7E84B]">
+            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.16em] text-[#1E3A2B]">
               SELECTED WORK &amp; CASE STUDIES
             </span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-[#1E3A2B] dark:text-white">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-[#1E3A2B]">
             REAL CLIENT REBUILDS. PROVEN METRICS.
           </h1>
 
-          <p className="mt-4 text-[#4A584E] dark:text-gray-300 text-base sm:text-lg leading-relaxed">
+          <p className="mt-4 text-[#4A584E] text-base sm:text-lg leading-relaxed">
             Every storefront we engineer is designed for sub-second speed, intuitive mobile ergonomics, and verified conversion lift.
           </p>
         </div>
@@ -671,7 +669,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
         transition={{ duration: prefersReducedMotion ? 0 : 0.5, ease: [0.21, 0.47, 0.32, 0.98] }}
         className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 pb-5"
       >
-        <div className="flex flex-wrap items-center justify-between gap-3 py-3 px-4 sm:px-6 rounded-2xl bg-white/80 dark:bg-[#111620]/90 backdrop-blur-xs border border-[#1E3A2B]/10 dark:border-white/10 shadow-xs">
+        <div className="flex flex-wrap items-center justify-between gap-3 py-3 px-4 sm:px-6 rounded-2xl bg-white/80 backdrop-blur-xs border border-[#1E3A2B]/10 shadow-xs">
           {/* Left: ALL PROJECTS + FILTER PROJECTS field/dropdown */}
           <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
             {/* ALL PROJECTS button */}
@@ -679,8 +677,8 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
               onClick={() => setSelectedFilter(null)}
               className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                 !selectedFilter
-                  ? 'bg-[#1E3A2B] dark:bg-[#B7E84B] text-white dark:text-[#0B0F17] shadow-xs'
-                  : 'bg-[#F1F6F0] dark:bg-white/5 text-[#4A584E] dark:text-gray-300 hover:text-[#1E3A2B] dark:hover:text-white border border-[#1E3A2B]/10 dark:border-white/10'
+                  ? 'bg-[#1E3A2B] text-white shadow-xs'
+                  : 'bg-[#F1F6F0] text-[#4A584E] hover:text-[#1E3A2B] border border-[#1E3A2B]/10'
               }`}
             >
               ALL PROJECTS ({CLIENT_SITES.length})
@@ -691,8 +689,8 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
               onClick={() => setIsFilterOpen(true)}
               className={`inline-flex items-center justify-between gap-3 px-4 py-2 rounded-xl border text-xs sm:text-sm font-medium transition-all cursor-pointer shadow-2xs group ${
                 selectedFilter
-                  ? 'bg-[#EAF3E8] dark:bg-[#B7E84B]/20 border-[#2D5A40] dark:border-[#B7E84B] text-[#1E3A2B] dark:text-[#B7E84B]'
-                  : 'bg-[#F4F5F6] dark:bg-white/10 hover:bg-[#EAECEF] dark:hover:bg-white/15 text-[#1E293B] dark:text-white border-slate-200/80 dark:border-white/10'
+                  ? 'bg-[#EAF3E8] border-[#2D5A40] text-[#1E3A2B]'
+                  : 'bg-[#F4F5F6] hover:bg-[#EAECEF] text-[#1E293B] border-slate-200/80'
               }`}
               aria-label="Filter Projects"
             >
@@ -700,7 +698,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
                 {selectedFilter ? `Filter: ${selectedFilter}` : 'Filter Projects'}
               </span>
               <svg
-                className="w-4 h-4 text-[#475569] dark:text-gray-300 group-hover:text-black dark:group-hover:text-white transition-colors"
+                className="w-4 h-4 text-[#475569] group-hover:text-black transition-colors"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -716,7 +714,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
             {selectedFilter && (
               <button
                 onClick={() => setSelectedFilter(null)}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 transition-colors cursor-pointer"
               >
                 <X className="w-3.5 h-3.5" />
                 <span>Clear</span>
@@ -725,13 +723,13 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
           </div>
 
           {/* Right: View Mode Toggle (Auto Carousel vs Grid View) */}
-          <div className="flex items-center bg-[#F1F6F0] dark:bg-white/5 p-1 rounded-xl border border-[#1E3A2B]/10 dark:border-white/10">
+          <div className="flex items-center bg-[#F1F6F0] p-1 rounded-xl border border-[#1E3A2B]/10">
             <button
               onClick={() => setViewMode('carousel')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                 viewMode === 'carousel'
-                  ? 'bg-[#1E3A2B] dark:bg-[#B7E84B] text-white dark:text-[#0B0F17] shadow-xs'
-                  : 'text-[#4A584E] dark:text-gray-400 hover:text-[#1E3A2B] dark:hover:text-white'
+                  ? 'bg-[#1E3A2B] text-white shadow-xs'
+                  : 'text-[#4A584E] hover:text-[#1E3A2B]'
               }`}
               title="View as continuous auto-moving carousel"
             >
@@ -741,8 +739,8 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
               onClick={() => setViewMode('grid')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                 viewMode === 'grid'
-                  ? 'bg-[#1E3A2B] dark:bg-[#B7E84B] text-white dark:text-[#0B0F17] shadow-xs'
-                  : 'text-[#4A584E] dark:text-gray-400 hover:text-[#1E3A2B] dark:hover:text-white'
+                  ? 'bg-[#1E3A2B] text-white shadow-xs'
+                  : 'text-[#4A584E] hover:text-[#1E3A2B]'
               }`}
               title="View as neat catalog grid"
             >
@@ -763,18 +761,10 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
         >
           {/* Subtle Side Vignettes for smooth edge fade */}
           <div 
-            className={`absolute top-0 bottom-0 left-0 w-8 sm:w-20 z-20 pointer-events-none transition-colors duration-300 ${
-              isDark 
-                ? 'bg-gradient-to-r from-[#0B0F17] via-[#0B0F17]/80 to-transparent' 
-                : 'bg-gradient-to-r from-[#F8FAF8] via-[#F8FAF8]/80 to-transparent'
-            }`} 
+            className="absolute top-0 bottom-0 left-0 w-8 sm:w-20 z-20 pointer-events-none transition-colors duration-300 bg-gradient-to-r from-[#F8FAF8] via-[#F8FAF8]/80 to-transparent" 
           />
           <div 
-            className={`absolute top-0 bottom-0 right-0 w-8 sm:w-20 z-20 pointer-events-none transition-colors duration-300 ${
-              isDark 
-                ? 'bg-gradient-to-l from-[#0B0F17] via-[#0B0F17]/80 to-transparent' 
-                : 'bg-gradient-to-l from-[#F8FAF8] via-[#F8FAF8]/80 to-transparent'
-            }`} 
+            className="absolute top-0 bottom-0 right-0 w-8 sm:w-20 z-20 pointer-events-none transition-colors duration-300 bg-gradient-to-l from-[#F8FAF8] via-[#F8FAF8]/80 to-transparent" 
           />
 
           {/* Smooth Continuous Scroll Container */}
@@ -1182,32 +1172,20 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
           onClick={() => setIsFilterOpen(false)}
         >
           <div 
-            className={`relative w-full max-w-4xl rounded-2xl sm:rounded-3xl border shadow-2xl p-6 sm:p-10 max-h-[90vh] overflow-y-auto ${
-              isDark 
-                ? 'bg-[#0E1520] border-white/10 text-white' 
-                : 'bg-white border-slate-200 text-[#111827]'
-            }`}
+            className="relative w-full max-w-4xl rounded-2xl sm:rounded-3xl border shadow-2xl p-6 sm:p-10 max-h-[90vh] overflow-y-auto bg-white border-slate-200 text-[#111827]"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
             aria-label="Filter Projects"
           >
             {/* Top Header */}
-            <div className={`flex items-center justify-between pb-6 border-b ${
-              isDark ? 'border-white/10' : 'border-slate-200'
-            }`}>
-              <h2 className={`text-xl sm:text-2xl font-black uppercase tracking-tight ${
-                isDark ? 'text-white' : 'text-[#111827]'
-              }`}>
+            <div className="flex items-center justify-between pb-6 border-b border-slate-200">
+              <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-[#111827]">
                 FILTER PROJECTS
               </h2>
               <button
                 onClick={() => setIsFilterOpen(false)}
-                className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
-                  isDark 
-                    ? 'bg-white/10 hover:bg-white/20 text-white' 
-                    : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                }`}
+                className="w-9 h-9 rounded-full flex items-center justify-center transition-colors cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-700"
                 aria-label="Close filters"
               >
                 <X className="w-5 h-5" />
@@ -1215,15 +1193,11 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
             </div>
 
             {/* Filter Categories Grid */}
-            <div className={`py-6 space-y-8 divide-y ${
-              isDark ? 'divide-white/5' : 'divide-slate-100'
-            }`}>
+            <div className="py-6 space-y-8 divide-y divide-slate-100">
               {/* 1. Industries */}
               <div className="pt-2 grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
                 <div className="md:col-span-3">
-                  <h3 className={`text-base font-bold ${
-                    isDark ? 'text-white' : 'text-slate-900'
-                  }`}>Industries</h3>
+                  <h3 className="text-base font-bold text-slate-900">Industries</h3>
                 </div>
                 <div className="md:col-span-9 flex flex-wrap gap-2">
                   {FILTER_INDUSTRIES.map((item) => {
@@ -1234,10 +1208,8 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
                         onClick={() => handleFilterToggle(item)}
                         className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${
                           isSelected
-                            ? 'bg-[#1E3A2B] dark:bg-[#B7E84B] text-white dark:text-[#0B0F17] shadow-xs font-semibold'
-                            : isDark
-                              ? 'bg-white/5 text-gray-300 hover:bg-white/10'
-                              : 'bg-[#F1F3F5] text-slate-700 hover:bg-[#E5E8EB]'
+                            ? 'bg-[#1E3A2B] text-white shadow-xs font-semibold'
+                            : 'bg-[#F1F3F5] text-slate-700 hover:bg-[#E5E8EB]'
                         }`}
                       >
                         {item}
@@ -1250,9 +1222,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
               {/* 2. Features */}
               <div className="pt-6 grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
                 <div className="md:col-span-3">
-                  <h3 className={`text-base font-bold ${
-                    isDark ? 'text-white' : 'text-slate-900'
-                  }`}>Features</h3>
+                  <h3 className="text-base font-bold text-slate-900">Features</h3>
                 </div>
                 <div className="md:col-span-9 flex flex-wrap gap-2">
                   {FILTER_FEATURES.map((item) => {
@@ -1263,10 +1233,8 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
                         onClick={() => handleFilterToggle(item)}
                         className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${
                           isSelected
-                            ? 'bg-[#1E3A2B] dark:bg-[#B7E84B] text-white dark:text-[#0B0F17] shadow-xs font-semibold'
-                            : isDark
-                              ? 'bg-white/5 text-gray-300 hover:bg-white/10'
-                              : 'bg-[#F1F3F5] text-slate-700 hover:bg-[#E5E8EB]'
+                            ? 'bg-[#1E3A2B] text-white shadow-xs font-semibold'
+                            : 'bg-[#F1F3F5] text-slate-700 hover:bg-[#E5E8EB]'
                         }`}
                       >
                         {item}
@@ -1279,9 +1247,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
               {/* 3. Partners */}
               <div className="pt-6 grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
                 <div className="md:col-span-3">
-                  <h3 className={`text-base font-bold ${
-                    isDark ? 'text-white' : 'text-slate-900'
-                  }`}>Partners</h3>
+                  <h3 className="text-base font-bold text-slate-900">Partners</h3>
                 </div>
                 <div className="md:col-span-9 flex flex-wrap gap-2">
                   {FILTER_PARTNERS.map((item) => {
@@ -1292,10 +1258,8 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
                         onClick={() => handleFilterToggle(item)}
                         className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${
                           isSelected
-                            ? 'bg-[#1E3A2B] dark:bg-[#B7E84B] text-white dark:text-[#0B0F17] shadow-xs font-semibold'
-                            : isDark
-                              ? 'bg-white/5 text-gray-300 hover:bg-white/10'
-                              : 'bg-[#F1F3F5] text-slate-700 hover:bg-[#E5E8EB]'
+                            ? 'bg-[#1E3A2B] text-white shadow-xs font-semibold'
+                            : 'bg-[#F1F3F5] text-slate-700 hover:bg-[#E5E8EB]'
                         }`}
                       >
                         {item}
@@ -1308,9 +1272,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
               {/* 4. Services */}
               <div className="pt-6 grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
                 <div className="md:col-span-3">
-                  <h3 className={`text-base font-bold ${
-                    isDark ? 'text-white' : 'text-slate-900'
-                  }`}>Services</h3>
+                  <h3 className="text-base font-bold text-slate-900">Services</h3>
                 </div>
                 <div className="md:col-span-9 flex flex-wrap gap-2">
                   {FILTER_SERVICES.map((item) => {
@@ -1321,10 +1283,8 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
                         onClick={() => handleFilterToggle(item)}
                         className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${
                           isSelected
-                            ? 'bg-[#1E3A2B] dark:bg-[#B7E84B] text-white dark:text-[#0B0F17] shadow-xs font-semibold'
-                            : isDark
-                              ? 'bg-white/5 text-gray-300 hover:bg-white/10'
-                              : 'bg-[#F1F3F5] text-slate-700 hover:bg-[#E5E8EB]'
+                            ? 'bg-[#1E3A2B] text-white shadow-xs font-semibold'
+                            : 'bg-[#F1F3F5] text-slate-700 hover:bg-[#E5E8EB]'
                         }`}
                       >
                         {item}
@@ -1336,21 +1296,17 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onHireClick }) => {
             </div>
 
             {/* Modal Bottom Actions */}
-            <div className={`pt-6 border-t flex items-center justify-between gap-4 ${
-              isDark ? 'border-white/10' : 'border-slate-200'
-            }`}>
+            <div className="pt-6 border-t flex items-center justify-between gap-4 border-slate-200">
               <button
                 onClick={() => setSelectedFilter(null)}
-                className={`text-xs font-semibold underline cursor-pointer ${
-                  isDark ? 'text-gray-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
-                }`}
+                className="text-xs font-semibold underline cursor-pointer text-slate-600 hover:text-slate-900"
               >
                 Reset All Filters
               </button>
 
               <button
                 onClick={() => setIsFilterOpen(false)}
-                className="px-6 py-2.5 rounded-xl bg-[#1E3A2B] dark:bg-[#B7E84B] text-white dark:text-[#0B0F17] text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-all cursor-pointer shadow-md"
+                className="px-6 py-2.5 rounded-xl bg-[#1E3A2B] text-white text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-all cursor-pointer shadow-md"
               >
                 View {filteredSites.length} {filteredSites.length === 1 ? 'Project' : 'Projects'}
               </button>

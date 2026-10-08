@@ -16,7 +16,7 @@ import { BlogFaqSection } from './components/BlogFaqSection';
 import { CtaBanner } from './components/CtaBanner';
 import { Footer } from './components/Footer';
 import { InquiryModal } from './components/InquiryModal';
-import { PublicThemeProvider, usePublicTheme } from './context/PublicThemeContext';
+import { PublicThemeProvider } from './context/PublicThemeContext';
 import { ThemeSyncProvider } from './context/ThemeSyncContext';
 
 // Dedicated Separate Pages
@@ -25,7 +25,8 @@ import { WorkPage } from './components/WorkPage';
 import { PackagesPage } from './components/PackagesPage';
 import { FaqsPage } from './components/FaqsPage';
 import { HireUsPage } from './components/HireUsPage';
-import { BlogPage } from './components/BlogPage';
+import { BlogPage, BLOG_POSTS_DATA } from './components/BlogPage';
+import { BlogPostPage } from './components/BlogPostPage';
 import { DynamicSectionRenderer } from './components/DynamicSectionRenderer';
 
 function PublicWebsite() {
@@ -33,7 +34,6 @@ function PublicWebsite() {
   const [selectedPackage, setSelectedPackage] = useState<string>('STANDARD ($260)');
   const { activeContent, isPreviewMode, setIsPreviewMode } = useCMS();
   const { currentPath, navigate } = useRouter();
-  const { isDark } = usePublicTheme();
   const prefersReducedMotion = useReducedMotion();
   const heroData = activeContent?.hero;
 
@@ -134,13 +134,22 @@ function PublicWebsite() {
 
   // SEO Page Title updates
   useEffect(() => {
+    if (currentPath === '/blog') {
+      document.title = 'Engineering Journal & Insights — CommerceForge';
+      return;
+    }
+    if (currentPath.startsWith('/blog/')) {
+      const slug = currentPath.replace(/^\/blog\//, '').split('/')[0].split('?')[0];
+      const post = BLOG_POSTS_DATA.find((p) => p.id === slug);
+      document.title = post ? `${post.title} — CommerceForge` : 'Engineering Story — CommerceForge';
+      return;
+    }
+
     const titles: Record<string, string> = {
       '/': 'CommerceForge — Web Design & Performance Dev Team',
       '/about': 'About Our Dev Team & Craft — CommerceForge',
       '/work': 'Selected Work & Rebuild Case Studies — CommerceForge',
       '/packages': 'Productized Packages & Rates — CommerceForge',
-      '/blog': 'Blog & Engineering Insights — CommerceForge',
-      '/blogs': 'Blog & Engineering Insights — CommerceForge',
       '/faqs': 'Frequently Asked Questions — CommerceForge',
       '/faq': 'Frequently Asked Questions — CommerceForge',
       '/hire-us': 'Hire Us & Start a Project — CommerceForge',
@@ -156,6 +165,28 @@ function PublicWebsite() {
 
   // Render content based on current route
   const renderCurrentPage = () => {
+    // Dedicated Separated Blog Archive Page
+    if (currentPath === '/blog') {
+      return (
+        <>
+          <BlogPage onHireClick={() => setIsInquiryOpen(true)} />
+          <DynamicSectionRenderer page="blog" onHireClick={() => setIsInquiryOpen(true)} />
+          <CtaBanner onCtaClick={() => setIsInquiryOpen(true)} />
+        </>
+      );
+    }
+
+    // Dedicated Separated Single Blog Post Page
+    if (currentPath.startsWith('/blog/')) {
+      const slug = currentPath.replace(/^\/blog\//, '').split('/')[0].split('?')[0];
+      return (
+        <>
+          <BlogPostPage postId={slug} onHireClick={() => setIsInquiryOpen(true)} />
+          <CtaBanner onCtaClick={() => setIsInquiryOpen(true)} />
+        </>
+      );
+    }
+
     switch (currentPath) {
       case '/about':
         return (
@@ -204,16 +235,6 @@ function PublicWebsite() {
           </>
         );
 
-      case '/blog':
-      case '/blogs':
-        return (
-          <>
-            <BlogPage onHireClick={() => setIsInquiryOpen(true)} />
-            <DynamicSectionRenderer page="blog" onHireClick={() => setIsInquiryOpen(true)} />
-            <CtaBanner onCtaClick={() => setIsInquiryOpen(true)} />
-          </>
-        );
-
       case '/':
       default: {
         const defaultHomeSections = [
@@ -225,14 +246,32 @@ function PublicWebsite() {
           { id: 'cta', name: 'Bottom Call To Action Banner', type: 'cta', visible: true, sortOrder: 5 },
         ];
 
-        let homeSections = (activeContent?.pageSections?.home && activeContent.pageSections.home.length > 0)
+        let rawHomeSections = (activeContent?.pageSections?.home && activeContent.pageSections.home.length > 0)
           ? [...activeContent.pageSections.home]
           : defaultHomeSections;
 
-        // Ensure Blog & FAQs section is always present directly below the Process section
-        if (!homeSections.some((s) => s.id === 'blog-faq' || s.type === 'blog-faq' || s.id === 'blog')) {
+        // Deduplicate any multiple Knowledge & Insights / FAQ / Blog sections so it is never doubled
+        let hasSeenKnowledgeSection = false;
+        const homeSections: typeof rawHomeSections = [];
+
+        for (const sec of rawHomeSections) {
+          const isKnowledgeSection = sec.id === 'blog-faq' || sec.type === 'blog-faq' || sec.id === 'faq' || sec.type === 'faq' || sec.id === 'blog' || sec.type === 'blog';
+          if (isKnowledgeSection) {
+            if (!hasSeenKnowledgeSection) {
+              hasSeenKnowledgeSection = true;
+              // Normalize id and type to 'blog-faq'
+              homeSections.push({ ...sec, id: 'blog-faq', type: 'blog-faq', name: 'Knowledge & Insights (Blog & FAQs)' });
+            }
+            // Skip any duplicate
+            continue;
+          }
+          homeSections.push(sec);
+        }
+
+        // Ensure single Blog & FAQs section is present directly below Process section if missing
+        if (!hasSeenKnowledgeSection) {
           const processIdx = homeSections.findIndex((s) => s.id === 'process' || s.type === 'process');
-          const blogFaqSection = { id: 'blog-faq', name: 'Blog Insights & FAQs', type: 'blog-faq', visible: true, sortOrder: 3.5 };
+          const blogFaqSection = { id: 'blog-faq', name: 'Knowledge & Insights (Blog & FAQs)', type: 'blog-faq', visible: true, sortOrder: 3.5 };
           if (processIdx !== -1) {
             homeSections.splice(processIdx + 1, 0, blogFaqSection);
           } else {
@@ -285,35 +324,23 @@ function PublicWebsite() {
                                 navigate(targetUrl);
                               }
                             }}
-                            className={`group relative inline-flex items-center justify-center gap-2.5 px-7 sm:px-8 py-3 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold tracking-[0.08em] uppercase border transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-[#B7E84B]/30 cursor-pointer shadow-lg ${
-                              isDark
-                                ? 'bg-[#B7E84B] text-[#0B0F17] border-[#B7E84B] hover:bg-[#a3d438] hover:shadow-[0_0_25px_rgba(183,232,75,0.4)]'
-                                : 'bg-gradient-to-r from-[#064E3B] to-[#047857] text-white border-[#B7E84B]/40 hover:from-[#059669] hover:to-[#064E3B] hover:shadow-[0_12px_28px_-6px_rgba(6,78,59,0.3)]'
-                            }`}
+                            className="group relative inline-flex items-center justify-center gap-2.5 px-7 sm:px-8 py-3 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold tracking-[0.08em] uppercase border transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-[#B7E84B]/30 cursor-pointer shadow-lg bg-gradient-to-r from-[#064E3B] to-[#047857] text-white border-[#B7E84B]/40 hover:from-[#059669] hover:to-[#064E3B] hover:shadow-[0_12px_28px_-6px_rgba(6,78,59,0.3)]"
                           >
                             <span>{heroData?.primaryCtaText || 'GET A FREE QUOTE'}</span>
-                            <ArrowRight className={`w-4 h-4 transition-transform duration-300 group-hover:translate-x-1.5 ${
-                              isDark ? 'text-[#0B0F17]' : 'text-[#B7E84B]'
-                            }`} />
+                            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1.5 text-[#B7E84B]" />
                           </button>
 
                           <button
                             id="hero-packages-cta-btn"
                             onClick={() => navigate(heroData?.secondaryCtaUrl || '/packages')}
-                            className={`inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold tracking-[0.08em] uppercase border transition-all duration-200 shadow-xs cursor-pointer ${
-                              isDark
-                                ? 'bg-white/5 hover:bg-white/10 text-white border-white/20 hover:border-[#B7E84B]'
-                                : 'bg-white text-[#064E3B] border-[#064E3B]/15 hover:border-[#059669] hover:text-[#064E3B] hover:bg-[#FAFAF9]'
-                            }`}
+                            className="inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold tracking-[0.08em] uppercase border transition-all duration-200 shadow-xs cursor-pointer bg-white text-[#064E3B] border-[#064E3B]/15 hover:border-[#059669] hover:text-[#064E3B] hover:bg-[#FAFAF9]"
                           >
                             <span>{heroData?.secondaryCtaText || 'VIEW PACKAGES'}</span>
                           </button>
                         </div>
 
                         {/* Subtle Micro-Trust Line */}
-                        <div className={`mt-3 sm:mt-3.5 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-[11px] sm:text-xs font-semibold tracking-wide transition-colors ${
-                          isDark ? 'text-white/70' : 'text-[#064E3B]/80'
-                        }`}>
+                        <div className="mt-3 sm:mt-3.5 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-[11px] sm:text-xs font-semibold tracking-wide transition-colors text-[#064E3B]/80">
                           {heroData?.guarantees && heroData.guarantees.length > 0 ? (
                             heroData.guarantees.map((g, idx) => (
                               <React.Fragment key={g.id || idx}>
@@ -368,9 +395,7 @@ function PublicWebsite() {
   return (
     <div 
       id="scrollable-team-website"
-      className={`min-h-screen w-full relative selection:bg-[#B7E84B]/40 selection:text-[#0F241A] transition-colors duration-300 flex flex-col ${
-        isDark ? 'bg-[#0B0F17] text-white' : 'bg-[#F8FAF8] text-[#064E3B]'
-      }`}
+      className="min-h-screen w-full relative selection:bg-[#B7E84B]/40 selection:text-[#0F241A] transition-colors duration-300 flex flex-col bg-[#F8FAF8] text-[#064E3B]"
     >
       {/* WCAG 2.1 AA Skip to Content Link */}
       <a
@@ -407,18 +432,10 @@ function PublicWebsite() {
 
       {/* Ambient Radial Accents */}
       <div 
-        className={`fixed top-0 right-0 w-[600px] h-[600px] pointer-events-none opacity-80 blur-3xl -z-10 transition-opacity duration-500 ${
-          isDark 
-            ? 'bg-radial from-[#B7E84B]/10 via-[#064E3B]/10 to-transparent' 
-            : 'bg-radial from-[#B7E84B]/15 via-[#8FA98F]/5 to-transparent'
-        }`} 
+        className="fixed top-0 right-0 w-[600px] h-[600px] pointer-events-none opacity-80 blur-3xl -z-10 transition-opacity duration-500 bg-radial from-[#B7E84B]/15 via-[#8FA98F]/5 to-transparent" 
       />
       <div 
-        className={`fixed -bottom-20 -left-20 w-[500px] h-[500px] pointer-events-none rounded-full blur-3xl -z-10 transition-opacity duration-500 ${
-          isDark 
-            ? 'bg-radial from-[#064E3B]/15 to-transparent' 
-            : 'bg-radial from-[#064E3B]/8 to-transparent'
-        }`} 
+        className="fixed -bottom-20 -left-20 w-[500px] h-[500px] pointer-events-none rounded-full blur-3xl -z-10 transition-opacity duration-500 bg-radial from-[#064E3B]/8 to-transparent" 
       />
 
       {/* 1. Sticky Navigation Header */}
